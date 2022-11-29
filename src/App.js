@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import AdminCajeros from "./components/AdminCajeros/AdminCajeros";
-import Cajeros from "./components/Cajeros/Cajeros";
-import Inicio from "./components/Inicio/Inicio";
+import AdminCajeros from "./Layout/AdminCajeros/AdminCajeros";
+import Cajeros from "./Layout/Cajeros/Cajeros";
+import Inicio from "./Layout/Inicio/Inicio";
 import Login from "./components/Login/Login";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./Layout/Navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 
