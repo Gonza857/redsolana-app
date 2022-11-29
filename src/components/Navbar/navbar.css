@@ -1,0 +1,13 @@
+.navbarMod {
+    background-color: #8c81ec;
+  }
+
+  .brand-text {
+    text-decoration: none !important;
+    list-style: none;
+    color: #fff;
+  }
+
+  .brand-text:hover {
+    color: #fff;
+  }

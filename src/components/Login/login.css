@@ -1,0 +1,22 @@
+.redB {
+    border: 1px solid red;
+}
+
+.greenB {
+    border: 2px solid green;
+}
+
+.login-form {
+    height: 250px;
+    background-color: aquamarine;
+}
+
+.form-inputs {
+    padding: 5px;
+}
+
+.form-btn {
+    padding: 5px;
+    border: 0;
+    background-color: violet;
+}

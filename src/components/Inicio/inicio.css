@@ -1,0 +1,22 @@
+.imagen-box {
+    border: 5px solid red;
+    height: 180px;
+  }
+  
+  .imagen {
+    border: 2px solid blue;
+    width: fit-content;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  main {
+    background-color: #000000;
+    margin: 0;
+    padding: 0;
+  }
+
+  .red {
+    text-align: center;
+    background-color: cadetblue;
+    }
