@@ -16,12 +16,11 @@ function ModalSetCajeros({ onClose, show }) {
 
   const onSubmit = (data) => {
     console.log(data);
-    addCajero(data);
     onClose();
     postCajeros(data).then((respuesta)=>{
     console.log(respuesta)})
   };
-  
+
   return (
     <>
       {/* <Button variant="primary" onClick={handleShow}>

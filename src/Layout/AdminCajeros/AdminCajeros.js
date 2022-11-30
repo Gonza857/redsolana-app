@@ -5,17 +5,28 @@ import { adminContext } from "../../storage/AdminContext";
 import CajeroAdmin from "../../components/CajeroAdmin/CajeroAdmin";
 import Table from "react-bootstrap/Table";
 import { Button } from "react-bootstrap";
+import { getAllCajeros } from "../../firebase/firebase";
 
 function AdminCajeros() {
-  const { cajeros, traerCajeros, cantidadCajeros } = useContext(adminContext);
+  const { cajeros, cantidadCajeros, setCajeros } = useContext(adminContext);
   const [showAdd, setShowAdd] = useState(false);
 
   // td columna
   // tr fila
   // th encabezado (negrita)
 
+  const getCajeros = async () => {
+    try {
+      let response = await getAllCajeros();
+      console.log(response);
+      setCajeros(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    traerCajeros();
+    getCajeros();
   }, []);
 
   useEffect(() => {

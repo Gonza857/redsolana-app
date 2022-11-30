@@ -6,28 +6,28 @@ export const AdminContextProvider = (props) => {
   const [cajeros, setCajeros] = useState([]);
 
   // AÑADIR CAJEROS
-  function addCajero(cajeroObj) {
-    let ultimoId = cantidadCajeros();
-    console.log(ultimoId);
-    if (ultimoId === undefined) {
-      const newCajero = {
-        ...cajeroObj,
-        id: 1,
-      };
-      console.log(newCajero);
-      let copyCajeros = [...cajeros];
-      copyCajeros.push(newCajero);
-      setCajeros(copyCajeros);
-    } else {
-      const newCajero = {
-        ...cajeroObj,
-        id: ultimoId,
-      };
-      let copyCajeros = [...cajeros];
-      copyCajeros.push(newCajero);
-      setCajeros(copyCajeros);
-    }
-  }
+//   function addCajero(cajeroObj) {
+//     let ultimoId = cantidadCajeros();
+//     console.log(ultimoId);
+//     if (ultimoId === undefined) {
+//       const newCajero = {
+//         ...cajeroObj,
+//         id: 1,
+//       };
+//       console.log(newCajero);
+//       let copyCajeros = [...cajeros];
+//       copyCajeros.push(newCajero);
+//       setCajeros(copyCajeros);
+//     } else {
+//       const newCajero = {
+//         ...cajeroObj,
+//         id: ultimoId,
+//       };
+//       let copyCajeros = [...cajeros];
+//       copyCajeros.push(newCajero);
+//       setCajeros(copyCajeros);
+//     }
+//   }
 
   // EDITAR CAJEROS
   function updateCajeros(cajerosArr) {
@@ -56,21 +56,11 @@ export const AdminContextProvider = (props) => {
     setCajeros(copyCajeros);
   }
 
-  function cantidadCajeros() {
-    if (cajeros.length > 0) {
-      let ultimo = cajeros.length - 1;
-      let lastCajero = cajeros[ultimo];
-      const { id } = lastCajero;
-      return id + 1;
-    }
-  }
-
   const value = {
     cajeros,
-    addCajero,
+    setCajeros,
     traerCajeros,
     handleDelete,
-    cantidadCajeros,
     updateCajeros,
   };
   return (

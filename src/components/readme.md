@@ -4,3 +4,7 @@ avance2:
     29/11/22: se avanzo con el agregado y quitado de cajeros, tambien se llevo a la parte cajeros los cajeros creados. Se configuro los cajeros individuales para renderizar condicionalmente si es mujer u hombre. Se uso react bootstrap para tablas. Se agrega firestore basico.
     Se borro la carpeta data
 avance3:
+    29/11/22:
+        - funcion de traer cajeros de la coleccion
+        - funcion de enviar cajeros a la coleccion
+        - se empezo apenas con el auth de usuarios
