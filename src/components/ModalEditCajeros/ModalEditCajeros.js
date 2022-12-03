@@ -1,29 +1,33 @@
+import { reload } from "firebase/auth";
 import React, { useState, useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { updateCajeroInfo } from "../../firebase/firebase";
 import { adminContext } from "../../storage/AdminContext";
+import ModalSetCajeros from "../ModalSetCajeros/ModalSetCajeros";
 
 function ModalEditCajeros({ onClose, show, cajeroData }) {
-  const { addCajero, cajeros, updateCajeros } = useContext(adminContext);
+  const { cajeros, setCajeros } = useContext(adminContext);
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-    reset,
   } = useForm();
 
   const onSubmit = (data) => {
+    const newCajero = {
+      ...data,
+      id: cajeroData.id,
+    };
     let copyCajeros = [...cajeros];
-    let modCajeros = copyCajeros.map((cajero) => {
-      if (cajero.id === cajeroData.id) {
-        return {
-          ...data,
-          id: cajeroData.id,
-        };
-      } else return cajero;
-    });
-    updateCajeros(modCajeros);
+    const searchCajeroPosition = cajeros.findIndex(
+      (cajero) => cajero.id === newCajero.id
+    );
+    copyCajeros.splice(searchCajeroPosition, 1);
+    copyCajeros.push(newCajero);
+    setCajeros(copyCajeros);
+    updateCajeroInfo(newCajero);
     onClose();
   };
 
@@ -39,10 +43,6 @@ function ModalEditCajeros({ onClose, show, cajeroData }) {
 
   return (
     <>
-      {/* <Button variant="primary" onClick={handleShow}>
-          Launch static backdrop modal
-        </Button> */}
-
       <Modal
         show={show}
         onHide={onClose}
@@ -168,7 +168,8 @@ function ModalEditCajeros({ onClose, show, cajeroData }) {
               <Button variant="danger" onClick={onClose}>
                 Cancelar
               </Button>
-              <input type="submit" className="btn btn-primary" />
+              <Button variant="success">{cajeroData.id}</Button>
+              <Button type="submit">Actualizar datos</Button>
             </div>
           </form>
         </Modal.Body>

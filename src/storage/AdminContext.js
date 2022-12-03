@@ -1,44 +1,49 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { set } from "react-hook-form";
+import { deleteCajero, getAllCajeros } from "../firebase/firebase";
 
 export const adminContext = createContext();
 
 export const AdminContextProvider = (props) => {
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchedName, setSearchedName] = useState("");
+  const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   const [cajeros, setCajeros] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(
+    false || localStorage.getItem("active")
+  );
 
   // AÑADIR CAJEROS
-//   function addCajero(cajeroObj) {
-//     let ultimoId = cantidadCajeros();
-//     console.log(ultimoId);
-//     if (ultimoId === undefined) {
-//       const newCajero = {
-//         ...cajeroObj,
-//         id: 1,
-//       };
-//       console.log(newCajero);
-//       let copyCajeros = [...cajeros];
-//       copyCajeros.push(newCajero);
-//       setCajeros(copyCajeros);
-//     } else {
-//       const newCajero = {
-//         ...cajeroObj,
-//         id: ultimoId,
-//       };
-//       let copyCajeros = [...cajeros];
-//       copyCajeros.push(newCajero);
-//       setCajeros(copyCajeros);
-//     }
-//   }
+  function addCajero(cajeroObj) {
+    let copyCajeros = [...cajeros];
+    copyCajeros.push(cajeroObj);
+    setCajeros(copyCajeros);
+  }
 
   // EDITAR CAJEROS
   function updateCajeros(cajerosArr) {
     setCajeros(cajerosArr);
   }
 
-  // FETCH CAJEROS
+  // BUSCAR CAJERO
+  function buscarCajero(cajeroData) {
+    setIsSearchingCajero(true);
+    setSearchedName(cajeroData.nombre);
+    const search = cajeros.filter((caj) =>
+      caj.nombre.includes(cajeroData.nombre)
+    );
+    console.log(search);
+    if (search.length === 0) {
+      console.log("No se encontró");
+    } else {
+      setSearchResult(search);
+    }
+  }
+
+  // SET CAJEROS
   async function traerCajeros() {
     try {
-      let resolve = await fetch("./data/data.json");
-      let result = await resolve.json();
+      const result = await getAllCajeros();
       setCajeros(result);
     } catch (error) {
       console.log(error);
@@ -54,14 +59,27 @@ export const AdminContextProvider = (props) => {
     let copyCajeros = [...cajeros];
     copyCajeros.splice(searchPosition, 1);
     setCajeros(copyCajeros);
+    deleteCajero(cajeroEliminado);
   }
+
+  useEffect(() => {
+    traerCajeros();
+  }, []);
 
   const value = {
     cajeros,
     setCajeros,
     traerCajeros,
     handleDelete,
+    addCajero,
     updateCajeros,
+    isAdmin,
+    setIsAdmin,
+    setIsSearchingCajero,
+    isSearchingCajero,
+    buscarCajero,
+    searchResult,
+    searchedName,
   };
   return (
     <adminContext.Provider value={value}>

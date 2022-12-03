@@ -8,3 +8,15 @@ avance3:
         - funcion de traer cajeros de la coleccion
         - funcion de enviar cajeros a la coleccion
         - se empezo apenas con el auth de usuarios
+avance4:
+    30/11/22:
+        - se estilizo el login, ya esta funcional con 1 usuario.
+        - alertas cuando hay errores como, correo equivocado, contraseña equivocado, muchos intentos. 
+        - uso de LocalStorage para guardar sesión
+        - formulario esponsive
+    2/12/22:
+        - se configuraron los toast
+        - se configuro loader enn el login
+        - se agrego barra de busquedad
+        - se agrego la funcion de cerrar sesión
+        

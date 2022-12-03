@@ -1,14 +1,19 @@
 .cajeros-box {
     background-color: #000;
+    /* background-image: linear-gradient(to bottom, #66cdff, #35bcff); */
+    height: calc(100vh - 70px);
+    padding-top: 50px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 15px;
 }
 
 .cajero {
     border: 1px solid red;
-    min-width: 200px;
+    width: 200px;
     background-color: darkcyan;
+    border-radius: 30px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -34,4 +39,6 @@
 .cajero-number {
     display: flex;
     justify-content: center;
+    text-decoration: none;
+    color: #fff;
 }

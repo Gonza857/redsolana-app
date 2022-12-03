@@ -1,41 +1,155 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../firebase/firebase";
 import "./login.css";
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { adminContext } from "../../storage/AdminContext";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { Ring } from "@uiball/loaders";
 
 function Login() {
+  AOS.init();
+  const navigate = useNavigate();
+  const { isAdmin, setIsAdmin } = useContext(adminContext);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isAdmin) navigate("/adminCajeros");
+  }, []);
+
+  const signInToast = () =>
+    toast.success("Iniciaste sesión correctamente", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "colored",
+    });
+
+  const errorSignIn = (error) => {
+    console.log(error);
+    toast.error(`${error}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
+
+  const onSubmit = (data) => {
+    setIsLoading(true);
+    loginUser(data.adminMail, data.adminPass)
+      .then((respuesta) => {
+        if (respuesta.user.uid === "INdShNqqCJS6pMg8g9iZmLd7hBo1") {
+          signInToast();
+          navigate("/adminCajeros");
+          setIsAdmin(true);
+          localStorage.setItem("active", true);
+        }
+      })
+      .catch((error) => {
+        errorSignIn(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <>
-      <div className="m-auto greenB">
-        <form className="col-3 redB d-flex flex-column m-auto login-form justify-content-evenly my-5">
-          <h2 className="p-0 m-0 text-center">Iniciar sesion</h2>
-          <input className="form-inputs" type="text" placeholder="Usuario" />
-          <input
-            className="form-inputs"
-            type="password"
-            placeholder="Contraseña"
-          />
-          <Link to="/adminCajeros">
-            <button type="submit" className="form-btn">
-              Iniciar Sesión
-            </button>
-          </Link>
-        </form>
-      </div>
-      <div className="m-auto greenB">
-        <form className="col-3 redB d-flex flex-column m-auto login-form justify-content-evenly my-5">
-          <h2 className="p-0 m-0 text-center">Registrarse</h2>
-          <input className="form-inputs" type="text" placeholder="Usuario" />
-          <input
-            className="form-inputs"
-            type="password"
-            placeholder="Contraseña"
-          />
-          <Link to="/adminCajeros">
-            <button type="submit" className="form-btn">
-              Registrarse
-            </button>
-          </Link>
-        </form>
+      <div className="m-auto authContainer">
+        <ToastContainer />
+        {isLoading ? (
+          <>
+            <form className="signIn-form-loader col-8 col-sm-6 col-md-5 col-xl-3 my-5 py-5 px-3 px-md-5">
+              <div className="m-auto">
+                <Ring size={35} color="#231F20" />
+              </div>
+            </form>
+          </>
+        ) : (
+          <>
+            <form
+              className="signIn-form col-8 col-sm-6 col-md-5 col-xl-3 my-5 py-5 px-3 px-md-5 gap-3"
+              onSubmit={handleSubmit(onSubmit)}
+              data-aos="zoom-in"
+            >
+              {/* IMAGEN */}
+              <div className="signIn-form_img">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" />
+              </div>
+              {/* CONTENEDOR INPUTS */}
+              <div className="d-flex flex-column">
+                {/* EMAIL */}
+                <div className="d-flex flex-column signIn-inputs mb-4">
+                  <input
+                    className="signIn-mail_input"
+                    type="mail"
+                    placeholder="Correo electrónico"
+                    name="adminMail"
+                    {...register("adminMail", {
+                      required: true,
+                    })}
+                  />
+                  {errors.adminMail?.type === "required" && (
+                    <small
+                      role="alert"
+                      className="text-danger"
+                      data-aos="zoom-in"
+                    >
+                      Campo requerido
+                    </small>
+                  )}
+                </div>
+                {/* CONTRASEÑA */}
+                <div className="d-flex flex-column signIn-inputs">
+                  <input
+                    className="signIn-pass_input"
+                    type="text"
+                    placeholder="Contraseña"
+                    name="adminPass"
+                    {...register("adminPass", {
+                      required: true,
+                    })}
+                  />
+                  {errors.adminPass?.type === "required" && (
+                    <small
+                      role="alert"
+                      className="text-danger"
+                      data-aos="zoom-in"
+                    >
+                      Campo requerido
+                    </small>
+                  )}
+                </div>
+              </div>
+              <input
+                type="submit"
+                className="btn signIn-submit_btn"
+                value="Iniciar sesión"
+              />
+            </form>
+          </>
+        )}
       </div>
     </>
   );

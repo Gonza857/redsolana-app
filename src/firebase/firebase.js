@@ -4,12 +4,15 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc,
-  where,
-  query,
+  deleteDoc,
+  updateDoc,
   addDoc,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAK4e4YOjznBLfoupessvj8QnzNRfIULzA",
@@ -54,17 +57,62 @@ export async function postCajeros(cajero) {
   }
 }
 
-export function setUser() {
+export function setUser(email, password) {
   const auth = getAuth();
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
+      console.log(userCredential);
+      console.log(userCredential.user);
+
       // ...
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      console.log(errorCode);
+      console.log(errorMessage);
       // ..
     });
+}
+
+export async function loginUser(email, password) {
+  const auth = getAuth();
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential;
+  } catch (error) {
+    if (error.code === "auth/too-many-requests") {
+      throw new Error(
+        "Muchos intentos de inicio de sesión, tu cuenta esta bloqueda. Intentalo de nuevo más tarde."
+      );
+    } else if (error.code === "auth/user-not-found") {
+      throw new Error("Usuario incorrecto o no encontrado.");
+    } else if (error.code === "auth/wrong-password") {
+      throw new Error("Contraseña incorrecta.");
+    } else if (error.code === "auth/invalid-email") {
+      throw new Error("Formato de e-mail invalido.");
+    } else {
+      console.log(error.code);
+      throw new Error("Intentalo de nuevo más tarde.");
+    }
+  }
+}
+
+// ACTUALIZAR CAJERO }
+export async function updateCajeroInfo(cajeroUpdated) {
+  console.log(cajeroUpdated);
+  const docRef = doc(DataBase, "cajeros", cajeroUpdated.id);
+  const updateInfo = await updateDoc(docRef, cajeroUpdated);
+  console.log(updateInfo);
+}
+
+export async function deleteCajero(cajero) {
+  const deleteCajero = await deleteDoc(doc(DataBase, "cajeros", cajero.id));
+  console.log(deleteCajero);
 }

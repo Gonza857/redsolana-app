@@ -6,17 +6,78 @@
     border: 2px solid green;
 }
 
-.login-form {
-    height: 250px;
-    background-color: aquamarine;
-}
-
-.form-inputs {
-    padding: 5px;
+.oranB {
+    border: 3px solid orange;
 }
 
 .form-btn {
     padding: 5px;
     border: 0;
     background-color: violet;
+}
+
+.authContainer {
+    height: 100vh;
+    border: 0.0001px solid transparent;
+    background-color: #333;
+}
+
+.signIn-form {
+    margin: 0;
+    padding: 0;
+    background-color: #66cdff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: auto;
+}
+
+.signIn-form_img {
+    justify-content: center;
+    width: fit-content;
+    margin: auto;
+}
+
+.signIn-form_img img {
+    padding: 0;
+    margin: 0;
+    width: 100px;
+    height: 100px;
+}
+
+.signIn-inputs {
+    padding-bottom: 25px;
+    position: relative;
+}
+
+.signIn-inputs small {
+    position: absolute;
+    bottom: 0;
+}
+
+.signIn-pass_input , .signIn-mail_input {
+    padding: 5px 10px;
+    outline: none;
+    border: none;
+}
+
+.signIn-submit_btn {
+    width: fit-content;
+    margin: auto;
+    background-color: #8c81ec !important;
+    color: #fff !important;
+    font-weight: 300;
+}
+
+.signIn-form-loader {
+    margin: 0;
+    padding: 0;
+    background-color: #66cdff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: auto;
+    height: 408px;
 }

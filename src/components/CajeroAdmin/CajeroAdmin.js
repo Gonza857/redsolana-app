@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Button } from "react-bootstrap";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { adminContext } from "../../storage/AdminContext";
 import ModalEditCajeros from "../ModalEditCajeros/ModalEditCajeros";
@@ -22,22 +23,22 @@ function CajeroAdmin({ cajero, onClose, show }) {
         <td>{cajero.numero}</td>
         <td>{cajero.enlace}</td>
         <td>
-          <button
+          <Button
             onClick={() => {
               handleShowEdit(cajero);
             }}
           >
             <FaPen />
-          </button>
+          </Button>
         </td>
         <td>
-          <button
+          <Button
             onClick={() => {
               handleDelete(cajero);
             }}
           >
             <FaTrash />
-          </button>
+          </Button>
         </td>
       </tr>
       <ModalEditCajeros
