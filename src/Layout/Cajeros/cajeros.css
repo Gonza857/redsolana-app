@@ -1,30 +1,38 @@
 .cajeros-box {
-    background-color: #000;
-    /* background-image: linear-gradient(to bottom, #66cdff, #35bcff); */
-    height: calc(100vh - 70px);
+    background-image: url(https://t3.ftcdn.net/jpg/04/61/21/46/360_F_461214675_2AixWpR2TqYr0jwDPrt1QvGJBSePq4z6.jpg);
+    background-position: center center;
+    background-repeat: repeat;
     padding-top: 50px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 15px;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .cajero {
     border: 1px solid red;
     width: 200px;
-    background-color: darkcyan;
+    height: 220px;
     border-radius: 30px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
 .cajero-name {
     text-align: center;
+    background-color: aqua;
+    width: fit-content;
+    margin: 0;
 }
 
 .cajero-img {
+    border: 3px solid orange;
     text-align: center;
     height: 100px;
 }
@@ -36,9 +44,26 @@
     object-fit: contain;
 }
 
+.cajero-number-box {
+    background-image: linear-gradient(to left, #8c81ec ,  #66cdff);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.cajero-number-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
 .cajero-number {
+    border: 3px solid orange;
+    margin: 0;
     display: flex;
     justify-content: center;
     text-decoration: none;
     color: #fff;
+}
+
+::-webkit-scrollbar{
+    display: none;
 }

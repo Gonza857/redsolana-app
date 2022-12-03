@@ -10,7 +10,10 @@ function Cajeros() {
   AOS.init();
   const { cajeros } = useContext(adminContext);
   return (
-    <main className="cajeros-box col-10 m-auto justify-content-evenly">
+    <main
+      className="cajeros-box col-10 m-auto justify-content-evenly"
+      data-aos="fade-left"
+    >
       {cajeros.map((cajero) => {
         return (
           <div
@@ -19,16 +22,16 @@ function Cajeros() {
             data-aos="zoom-in"
             data-aos-duration="2000"
           >
-            <h3 className="cajero-name">{cajero.nombre}</h3>
+            <p className="cajero-name redB">{cajero.nombre}</p>
             <div className="cajero-img">
               {cajero.genero === "M" ? (
-                <img src="https://cdn-icons-png.flaticon.com/512/0/93.png" />
+                <img src="./assets/images/hombre.png" />
               ) : (
-                <img src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/woman-female-icon.png" />
+                <img src="./assets/images/mujer.png" />
               )}
             </div>
-            <div className="d-flex align-items-center cajero-number">
-              <FaWhatsapp />
+            <div className="d-flex align-items-center cajero-number redB cajero-number-box">
+              <FaWhatsapp className="cajero-number-icon" />
               <Link to="google.com" className="m-0 p-0 cajero-number">
                 {cajero.numero}
               </Link>

@@ -1,53 +1,74 @@
 import React from "react";
 import "./inicio.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function Inicio() {
+  AOS.init();
   return (
-    <main className="py-5">
-      <div className="col-8 m-auto d-flex flex-row flex-wrap justify-content-center gap-2">
-        <div className="col-5 red">
-          <div className="imagen-box">
+    <main className="inicioMod p-0 m-0">
+      <div
+        className="col-12 p-1 col-md-11 col-lg-10 col-xl-9 col-xxl-8 m-auto d-flex flex-row flex-wrap justify-content-center gap-5 oranB redesBox"
+        data-aos="fade-left"
+      >
+        <div className="red inicio-casino">
+          <div className="inicio-imagen-box1 inicio-imagen-boxes">
             <img
-              className="imagen"
-              src="https://uning.es/wp-content/uploads/2016/08/ef3-placeholder-image.jpg"
+              className="inicio-imagenes inicio-imagen1"
+              src="./assets/images/megaFaraon.png"
             />
           </div>
-          <p className="m-0">
-            Haz click <strong>aqui</strong> para entrar a la Red 1
-          </p>
+          <div className="inicio-text">
+            <p className="m-0">
+              Haz click <a href="https://megafaraon.com">aqui</a> para ir a Mega
+              Faraon
+            </p>
+          </div>
         </div>
-        <div className="col-5 red">
-          <div className="imagen-box">
+
+        <div className="red inicio-casino">
+          <div className="inicio-imagen-box4 inicio-imagen-boxes">
             <img
-              className="imagen"
-              src="https://uning.es/wp-content/uploads/2016/08/ef3-placeholder-image.jpg"
+              className="inicio-imagenes inicio-imagen4"
+              src="./assets/images/magiplay-logo.svg"
             />
           </div>
-          <p className="m-0">
-            Haz click <strong>aqui</strong> para entrar a la Red 2
-          </p>
+          <div className="inicio-text">
+            <p className="m-0">
+              Haz click <a href="https://magiplay.net/">aqui</a> para ir a
+              MagiPlay
+            </p>
+          </div>
         </div>
-        <div className="col-5 red">
-          <div className="imagen-box">
+
+        <div className="red inicio-casino">
+          <div className="inicio-imagen-box2 inicio-imagen-boxes">
             <img
-              className="imagen"
-              src="https://uning.es/wp-content/uploads/2016/08/ef3-placeholder-image.jpg"
+              className="inicio-imagenes inicio-imagen2"
+              src="./assets/images/konabet-logo.svg"
             />
           </div>
-          <p className="m-0">
-            Haz click <strong>aqui</strong> para entrar a la Red 3
-          </p>
+          <div className="inicio-text">
+            <p className="m-0">
+              Haz click <a href="https://konabet.com/">aqui</a> para ir a
+              Konabet
+            </p>
+          </div>
         </div>
-        <div className="col-5 red">
-          <div className="imagen-box">
+
+        <div className="red inicio-casino">
+          <div className="inicio-imagen-box3 inicio-imagen-boxes">
             <img
-              className="imagen"
-              src="https://uning.es/wp-content/uploads/2016/08/ef3-placeholder-image.jpg"
+              className="inicio-imagenes inicio-imagen3"
+              src="./assets/images/aJugar-logo.png"
             />
           </div>
-          <p className="m-0">
-            Haz click <strong>aqui</strong> para entrar a la Red 4
-          </p>
+          <div className="inicio-text">
+            <p className="m-0">
+              Haz click <a href="https://ajugar.net/">aqui</a> para ir a
+              ajugar.net
+            </p>
+          </div>
         </div>
       </div>
     </main>

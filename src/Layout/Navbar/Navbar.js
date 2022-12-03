@@ -20,19 +20,23 @@ function Navbar() {
     });
   }
   return (
-    <nav className="navbar border justify-content-around navbarMod">
-      <ToastContainer />
-      <div className="border">
-        <Link to="/" className="border p-0 m-0 brand-text">
-          ¡Bienvenid@s a la red Solana!
+    <nav className="navbar justify-content-evenly align-content-center navbarMod">
+      <div className="">
+        <ToastContainer />
+        <Link to="/" className="p-0 m-0 d-flex align-items-center brand-text">
+          <img src="./assets/images/logo2.png" className="navbar-brand-logo" />
+          <h2 className="p-0 m-0 ms-4">Casino Solana</h2>
         </Link>
       </div>
-      <div className="col-2 d-flex flex-row justify-content-around align-items-center border">
-        <Link to="/" className="navbar-brand border m-0 p-0 active">
+      <div className="col-5 d-flex flex-row justify-content-around align-items-center">
+        <Link to="/" className="navbar-link m-0 p-0 active">
           Home
         </Link>
-        <Link to="/cajeros" className="navbar-brand border m-0 p-0">
+        <Link to="/cajeros" className="navbar-link m-0 p-0">
           Cajeros
+        </Link>
+        <Link to="/tyc" className="navbar-link m-0 p-0 active">
+          Terminos y condiciones
         </Link>
         {isAdmin ? (
           <Button

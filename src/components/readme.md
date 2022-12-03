@@ -21,4 +21,8 @@ avance4:
         - se agrego la funcion de cerrar sesión
 avance5:
     2/12/22: 
-    -
+        - se avanzo con la busqueda de cajero por nombre
+        - buscador implementado
+        - se actualizaron las funciones de borrar y agregar a firestore
+    3/12/22:
+        - se avanzo con el diseño de la pagina inicial
