@@ -19,4 +19,6 @@ avance4:
         - se configuro loader enn el login
         - se agrego barra de busquedad
         - se agrego la funcion de cerrar sesión
-        
+avance5:
+    2/12/22: 
+    -
