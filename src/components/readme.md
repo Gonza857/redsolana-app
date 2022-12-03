@@ -30,3 +30,6 @@ avance6:
     3/12/22: 
     - se solucionaron warning para deploy en netlify
     //FIXME: - se agrego un boton para ir al formulario de login
+avance7:
+    3/12/22:
+        - saque unos bordes para subirlo a netlify y mostrar al cliente

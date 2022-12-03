@@ -8,7 +8,7 @@ function Inicio() {
   return (
     <main className="inicioMod p-0 m-0">
       <div
-        className="col-12 p-1 col-md-11 col-lg-10 col-xl-9 col-xxl-8 m-auto d-flex flex-row flex-wrap justify-content-center gap-5 oranB redesBox"
+        className="col-12 p-1 col-md-11 col-lg-10 col-xl-9 col-xxl-8 m-auto d-flex flex-row flex-wrap justify-content-center gap-5 redesBox"
         data-aos="fade-left"
       >
         <div className="red inicio-casino">
