@@ -33,3 +33,6 @@ avance6:
 avance7:
     3/12/22:
         - saque unos bordes para subirlo a netlify y mostrar al cliente
+avance8:
+    3/12/22:
+        - archivo redirects en public para redireccionar al actualizar la pagina.
