@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 function AdminBar({ busquedad }) {
   const { setIsSearchingCajero, buscarCajero } = useContext(adminContext);
   console.log(busquedad);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit } = useForm();
   const [showAdd, setShowAdd] = useState(false);
 
   const handleCloseAdd = () => setShowAdd(false);

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../firebase/firebase";
 import "./login.css";
 import { useForm } from "react-hook-form";
@@ -18,14 +18,13 @@ function Login() {
     register,
     formState: { errors },
     handleSubmit,
-    reset,
   } = useForm();
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isAdmin) navigate("/adminCajeros");
-  }, []);
+  }, [isAdmin, navigate]);
 
   const signInToast = () =>
     toast.success("Iniciaste sesión correctamente", {
@@ -95,7 +94,10 @@ function Login() {
             >
               {/* IMAGEN */}
               <div className="signIn-form_img">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                  alt="foto"
+                />
               </div>
               {/* CONTENEDOR INPUTS */}
               <div className="d-flex flex-column">

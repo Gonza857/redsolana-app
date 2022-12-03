@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { postCajeros } from "../../firebase/firebase";
 import { adminContext } from "../../storage/AdminContext";
 
 function ModalSetCajeros({ onClose, show }) {
-  const { addCajero, cajeros } = useContext(adminContext);
+  const { addCajero } = useContext(adminContext);
 
   const {
     register,
@@ -17,8 +17,9 @@ function ModalSetCajeros({ onClose, show }) {
     console.log(data);
     addCajero(data);
     onClose();
-    postCajeros(data).then((respuesta)=>{
-    console.log(respuesta)})
+    postCajeros(data).then((respuesta) => {
+      console.log(respuesta);
+    });
   };
   return (
     <>

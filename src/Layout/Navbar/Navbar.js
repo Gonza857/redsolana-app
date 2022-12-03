@@ -24,7 +24,11 @@ function Navbar() {
       <div className="">
         <ToastContainer />
         <Link to="/" className="p-0 m-0 d-flex align-items-center brand-text">
-          <img src="./assets/images/logo2.png" className="navbar-brand-logo" />
+          <img
+            src="./assets/images/logo2.png"
+            className="navbar-brand-logo"
+            alt="brand-logo"
+          />
           <h2 className="p-0 m-0 ms-4">Casino Solana</h2>
         </Link>
       </div>
@@ -37,6 +41,9 @@ function Navbar() {
         </Link>
         <Link to="/tyc" className="navbar-link m-0 p-0 active">
           Terminos y condiciones
+        </Link>
+        <Link to="/admin" className="navbar-link m-0 p-0 active">
+          Admin
         </Link>
         {isAdmin ? (
           <Button

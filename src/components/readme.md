@@ -26,3 +26,7 @@ avance5:
         - se actualizaron las funciones de borrar y agregar a firestore
     3/12/22:
         - se avanzo con el diseño de la pagina inicial
+avance6: 
+    3/12/22: 
+    - se solucionaron warning para deploy en netlify
+    //FIXME: - se agrego un boton para ir al formulario de login

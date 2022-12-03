@@ -62,9 +62,9 @@ export function setUser(email, password) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
-      const user = userCredential.user;
-      console.log(userCredential);
-      console.log(userCredential.user);
+      // const user = userCredential.user;
+      // console.log(userCredential);
+      // console.log(userCredential.user);
 
       // ...
     })

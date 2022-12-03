@@ -25,9 +25,9 @@ function Cajeros() {
             <p className="cajero-name redB">{cajero.nombre}</p>
             <div className="cajero-img">
               {cajero.genero === "M" ? (
-                <img src="./assets/images/hombre.png" />
+                <img src="./assets/images/hombre.png" alt="foto" />
               ) : (
-                <img src="./assets/images/mujer.png" />
+                <img src="./assets/images/mujer.png" alt="foto" />
               )}
             </div>
             <div className="d-flex align-items-center cajero-number redB cajero-number-box">

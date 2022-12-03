@@ -1,10 +1,8 @@
-import { reload } from "firebase/auth";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { updateCajeroInfo } from "../../firebase/firebase";
 import { adminContext } from "../../storage/AdminContext";
-import ModalSetCajeros from "../ModalSetCajeros/ModalSetCajeros";
 
 function ModalEditCajeros({ onClose, show, cajeroData }) {
   const { cajeros, setCajeros } = useContext(adminContext);

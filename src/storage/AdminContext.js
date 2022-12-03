@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { set } from "react-hook-form";
 import { deleteCajero, getAllCajeros } from "../firebase/firebase";
 
 export const adminContext = createContext();

@@ -16,6 +16,7 @@ function Inicio() {
             <img
               className="inicio-imagenes inicio-imagen1"
               src="./assets/images/megaFaraon.png"
+              alt="foto"
             />
           </div>
           <div className="inicio-text">
@@ -31,6 +32,7 @@ function Inicio() {
             <img
               className="inicio-imagenes inicio-imagen4"
               src="./assets/images/magiplay-logo.svg"
+              alt="foto"
             />
           </div>
           <div className="inicio-text">
@@ -46,6 +48,7 @@ function Inicio() {
             <img
               className="inicio-imagenes inicio-imagen2"
               src="./assets/images/konabet-logo.svg"
+              alt="foto"
             />
           </div>
           <div className="inicio-text">
@@ -61,6 +64,7 @@ function Inicio() {
             <img
               className="inicio-imagenes inicio-imagen3"
               src="./assets/images/aJugar-logo.png"
+              alt="foto"
             />
           </div>
           <div className="inicio-text">
