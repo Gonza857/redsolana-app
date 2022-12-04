@@ -32,9 +32,9 @@ function Cajeros() {
             </div>
             <div className="d-flex align-items-center cajero-number redB cajero-number-box">
               <FaWhatsapp className="cajero-number-icon" />
-              <Link to="google.com" className="m-0 p-0 cajero-number">
+              <a href={cajero.enlace} className="m-0 p-0 cajero-number">
                 {cajero.numero}
-              </Link>
+              </a>
             </div>
           </div>
         );

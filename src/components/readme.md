@@ -45,3 +45,6 @@ avance10:
     4/12/22: 
         - se agregaron animaciones
         - se esta trabajando en el responsive de la table
+avance11:
+    4/12/22:
+        - se trabajo en la responsive de la tabla de admin

@@ -25,7 +25,7 @@ function AdminCajeros() {
   return (
     <>
       {isAdmin ? (
-        <div className="col-12 col-lg-8 m-auto d-flex flex-column mt-5 greenB text-center">
+        <div className="col-12 col-sm-10 col-md-8 col-lg-7 m-auto d-flex flex-column mt-2 text-center">
           <AdminBar busquedad={searchResult !== [] || false} />
           {console.log(searchedName)}
           {isSearchingCajero ? (
@@ -44,14 +44,15 @@ function AdminCajeros() {
           )}
           <Table striped bordered hover responsive className="align-middle">
             <thead>
-              <tr>
-                <th>Red</th>
-                <th className="">Nombre</th>
-                <th className="d-none">Genero</th>
-                <th>Numero</th>
-                <th>Enlace</th>
+              <tr className="align-middle">
+                <th className="p-0">Red</th>
+                <th className="p-0">Nombre</th>
+                <th className="d-md-none p-0">Info</th>
+                <th className="d-none d-md-table-cell p-0">Genero</th>
+                <th className="d-none d-md-table-cell p-0">Numero</th>
+                <th className="d-none d-md-table-cell p-0">Enlace</th>
                 <th>Editar</th>
-                <th>Eliminar</th>
+                <th className="p-0">Eliminar</th>
               </tr>
             </thead>
             <tbody>

@@ -41,30 +41,29 @@ function AdminBar({ busquedad }) {
   };
 
   return (
-    <div className="d-flex oranB justify-content-evenly py-2">
+    <div className="d-flex justify-content-evenly py-2">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
       <Button onClick={() => handleAddCajero()}>
         Nuevo cajero
         <AiOutlineUserAdd className="addCajeroIcon" />
       </Button>
-      <div>
+      <div className="col-5">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="d-flex searchForm align-content-center"
+          className="d-flex searchForm align-content-center justify-content-between"
         >
           <span
-            className="d-flex align-items-center ms-2 timesIcon"
+            className="d-flex align-items-center px-2 timesIcon"
             onClick={() => {
-              console.log("clickeado");
               setIsSearchingCajero(false);
             }}
           >
             <FaTimes />
           </span>
           <input
-            className="searchInput"
+            className="searchInput w-100"
             type="text"
-            placeholder="Busquedad por nombre de cajero"
+            placeholder="Busqueda por nombre de cajero"
             name="searchInput"
             {...register("nombre")}
           />
