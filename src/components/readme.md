@@ -41,3 +41,7 @@ avance9:
         - se agrego libreria de animated.css porque aos es mala
         - se acomodo el formulario de login
         - se esta testeando los alertas porque se envian 2 teniendo 1 error al completar los campos.
+avance10:
+    4/12/22: 
+        - se agregaron animaciones
+        - se esta trabajando en el responsive de la table

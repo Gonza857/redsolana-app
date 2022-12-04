@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { FaTrash, FaPen } from "react-icons/fa";
+import { FaTrash, FaPen, FaEye } from "react-icons/fa";
 import { adminContext } from "../../storage/AdminContext";
 import ModalEditCajeros from "../ModalEditCajeros/ModalEditCajeros";
+import "animate.css";
 
-function CajeroAdmin({ cajero, onClose, show }) {
+function CajeroAdmin({ cajero, onClose }) {
   const { handleDelete } = useContext(adminContext);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -14,14 +15,19 @@ function CajeroAdmin({ cajero, onClose, show }) {
     setShowEdit(true);
     console.log(cajero);
   };
+
   return (
     <>
-      <tr key={cajero.id}>
+      <tr key={cajero.id} className="animate__animated animate__fadeIn">
         <td>{cajero.red}</td>
         <td>{cajero.nombre}</td>
-        <td>{cajero.genero}</td>
+        <td className="d-none">{cajero.genero}</td>
         <td>{cajero.numero}</td>
-        <td>{cajero.enlace}</td>
+        <td>
+          <Button>
+            <FaEye />
+          </Button>
+        </td>
         <td>
           <Button
             onClick={() => {
