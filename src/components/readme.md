@@ -36,3 +36,8 @@ avance7:
 avance8:
     3/12/22:
         - archivo redirects en public para redireccionar al actualizar la pagina.
+avance9:
+    4/12/22: 
+        - se agrego libreria de animated.css porque aos es mala
+        - se acomodo el formulario de login
+        - se esta testeando los alertas porque se envian 2 teniendo 1 error al completar los campos.

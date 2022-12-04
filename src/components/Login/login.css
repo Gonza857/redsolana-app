@@ -17,20 +17,42 @@
 }
 
 .authContainer {
-    height: 100vh;
+    height: calc(100vh - 70px);
     border: 0.0001px solid transparent;
     background-color: #333;
+    display: grid;
+    align-items: center;
+}
+
+.signIn-container {
+    background-color: #66cdff;
+    margin: auto;
+    height: 408px;
+    display: grid;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 15px;
 }
 
 .signIn-form {
     margin: 0;
     padding: 0;
-    background-color: #66cdff;
-    border-radius: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+.signIn-loader {
+    margin: 0;
+    padding: 0;
+    background-color: #66cdff;
+    border-radius: 15px;
+    height: 100%;
     margin: auto;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .signIn-form_img {
@@ -54,12 +76,14 @@
 .signIn-inputs small {
     position: absolute;
     bottom: 0;
+    left: 30px;
 }
 
 .signIn-pass_input , .signIn-mail_input {
     padding: 5px 10px;
     outline: none;
     border: none;
+    border-radius: 10px;
 }
 
 .signIn-submit_btn {
