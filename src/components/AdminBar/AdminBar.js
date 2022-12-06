@@ -67,7 +67,7 @@ function AdminBar({ busquedad }) {
             name="searchInput"
             {...register("nombre")}
           />
-          <Button type="submit">
+          <Button type="submit" className="searchBtn">
             <AiOutlineSearch />
           </Button>
         </form>

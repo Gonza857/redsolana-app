@@ -29,7 +29,7 @@ function Navbar() {
             className="navbar-brand-logo"
             alt="brand-logo"
           />
-          <h2 className="p-0 m-0 ms-4">Casino Solana</h2>
+          <h2 className="p-0 m-0 ms-4">Red Solana</h2>
         </Link>
       </div>
       <div className="col-5 d-flex flex-row justify-content-around align-items-center">

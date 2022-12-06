@@ -48,3 +48,5 @@ avance10:
 avance11:
     4/12/22:
         - se trabajo en la responsive de la tabla de admin
+avance12:
+    6/11/22: se trabajo en el formulario para agregar cajeros, en diseño. Se agrego toast para avisar que se agrego correctamente.

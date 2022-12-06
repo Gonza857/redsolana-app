@@ -4,7 +4,6 @@
 }
 
 .searchForm {
-    border: 1px solid #777777;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -16,5 +15,19 @@
 }
 
 .timesIcon {
+    color: #fff;
     cursor: pointer;
+    background-color: #0d6efd;
+    transition: all .15s;
+}
+.timesIcon:hover {
+    background-color: #0b5ed7;
+}
+
+.searchBtn {
+    border-radius: 0 !important;
+}
+
+body {
+    background-color: #424242 !important;
 }

@@ -1,8 +1,7 @@
 .cajeroBtn {
-    background-image: linear-gradient(to bottom, #8c81ec ,  #66cdff) !important;
     padding: 5px 8px;
     border-radius: 50px !important;
-    color: #000 !important;
+    color: #fff;
 }
 
 .cajeroBtn svg {

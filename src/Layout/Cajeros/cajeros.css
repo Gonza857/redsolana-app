@@ -1,62 +1,90 @@
+.cajerosMain {
+    /* background-image: url(https://rare-gallery.com/uploads/posts/1148058-poker-play-gambling-recreation-games-card-game.jpg); */
+    background-repeat: repeat;
+    /* background-position: center center; */
+    background-size: contain;
+    /* background: radial-gradient(circle, #000000, #838383); */
+    background-image: url(../../../public/assets/images/fondoc.jpeg)
+}
+
 .cajeros-box {
-    background-image: url(https://t3.ftcdn.net/jpg/04/61/21/46/360_F_461214675_2AixWpR2TqYr0jwDPrt1QvGJBSePq4z6.jpg);
+    /* background-image: url(https://t3.ftcdn.net/jpg/04/61/21/46/360_F_461214675_2AixWpR2TqYr0jwDPrt1QvGJBSePq4z6.jpg); */
     background-position: center center;
     background-repeat: repeat;
-    padding-top: 50px;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 15px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    gap: 40px;
+    /* border: 3px solid yellow; */
 }
 
 .cajero {
-    border: 1px solid red;
-    width: 200px;
+    width: 170px;
     height: 220px;
-    border-radius: 30px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
+    /* box-shadow: 0px 0px 29px -3px #fff;
+    -webkit-box-shadow: 0px 0px 29px -3px #fff;
+    -moz-box-shadow: 0px 0px 29px -3px #fff; */
 }
 
 .cajero-name {
-    text-align: center;
-    background-color: aqua;
-    width: fit-content;
+    /* border: 3px solid blue; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(88,88,88,1) 100%);
+    color: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    text-align: center;
+    width: 130px;
+    height: 40px;
+}
+.cajero-name p {
+    padding: 0;
+    margin: 0;
+    color: #fff;
 }
 
 .cajero-img {
-    border: 3px solid orange;
+    width: fit-content;
+    /* border: 3px solid orange; */
     text-align: center;
     height: 100px;
 }
 
 .cajero-img img {
-    border: 2px solid blue;
+    /* border: 3px solid red; */
     width: fit-content;
     height: 100%;
     object-fit: contain;
 }
 
 .cajero-number-box {
-    background-image: linear-gradient(to left, #8c81ec ,  #66cdff);
-    padding: 5px 10px;
-    border-radius: 20px;
+    margin: 0;
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(88,88,88,1) 100%);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    /* border: 3px solid blue !important; */
+    width: 130px;
+    height: 40px;
 }
 
 .cajero-number-icon {
-    font-size: 20px;
+    font-size: 25px;
     margin-right: 10px;
+    /* border: 3px solid red; */
 }
 
 .cajero-number {
-    border: 3px solid orange;
+    /* border: 3px solid orange; */
     margin: 0;
     display: flex;
     justify-content: center;

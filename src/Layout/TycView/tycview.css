@@ -1,0 +1,12 @@
+.tycContainer {
+    border: 3px solid red;
+    width: 100%;
+    height: calc(100vh - 70px);
+}
+
+.tycImage {
+    border: 3px solid green;
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}

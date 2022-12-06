@@ -40,3 +40,8 @@
     color: #fff;
 
   }
+
+  .offcanvas-close-btn {
+    color: #66cdff !important;
+    background-color: #66cdff !important;
+  }
