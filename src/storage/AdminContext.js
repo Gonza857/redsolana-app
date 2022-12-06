@@ -28,9 +28,10 @@ export const AdminContextProvider = (props) => {
   function buscarCajero(cajeroData) {
     setIsSearchingCajero(true);
     setSearchedName(cajeroData.nombre);
-    const search = cajeros.filter((caj) =>
-      caj.nombre.includes(cajeroData.nombre)
-    );
+    const search = cajeros.filter((caj) => {
+      let param = caj.nombre.toLowerCase();
+      return param.includes(cajeroData.nombre);
+    });
     console.log(search);
     if (search.length === 0) {
       console.log("No se encontró");

@@ -41,13 +41,13 @@ function AdminBar({ busquedad }) {
   };
 
   return (
-    <div className="d-flex flex-column gap-3 flex-lg-row justify-content-evenly py-2 px-3">
+    <div className="d-flex flex-column align-items-center justify-content-evenly gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
-      <Button onClick={() => handleAddCajero()}>
+      <Button onClick={() => handleAddCajero()} className="addCajeroBtn">
         Nuevo cajero
         <AiOutlineUserAdd className="addCajeroIcon" />
       </Button>
-      <div className="m-auto col-10 col-lg-4">
+      <div className="col-10 col-sm-9 col-md-8 col-lg-4">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="d-flex searchForm align-content-center justify-content-between"
@@ -61,7 +61,7 @@ function AdminBar({ busquedad }) {
             <FaTimes />
           </span>
           <input
-            className="searchInput w-100"
+            className="searchInput w-100 text-center"
             type="text"
             placeholder="Buscar cajero"
             name="searchInput"

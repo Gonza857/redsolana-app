@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { adminContext } from "../../storage/AdminContext";
-import { Ring } from "@uiball/loaders";
 import { Animated } from "react-animated-css";
+import { AiOutlineUser } from "react-icons/ai";
+import { Metronome } from "@uiball/loaders";
 
 function Login() {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ function Login() {
   ) {
     completeFields();
   }
-  
+
   return (
     <>
       <div className="m-auto authContainer">
@@ -105,7 +106,7 @@ function Login() {
             {isLoading ? (
               <>
                 <div className="m-auto">
-                  <Ring size={35} color="#231F20" />
+                  <Metronome size={40} speed={1.6} color="#fff" />
                 </div>
               </>
             ) : (
@@ -121,10 +122,7 @@ function Login() {
                   >
                     {/* IMAGEN */}
                     <div className="signIn-form_img">
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-                        alt="foto"
-                      />
+                      <AiOutlineUser className="signIn-form_icon" />
                     </div>
                     {/* CONTENEDOR INPUTS */}
                     <div className="d-flex flex-column">

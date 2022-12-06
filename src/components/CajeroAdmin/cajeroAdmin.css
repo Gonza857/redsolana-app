@@ -1,8 +1,4 @@
-.cajeroBtn {
-    padding: 5px 8px;
-    border-radius: 50px !important;
-    color: #fff;
-}
+
 
 .cajeroBtn svg {
     padding: 0;
@@ -13,3 +9,50 @@
     padding: 0;
     margin: 0;
 }
+
+@media (min-width: 320px) {
+    td {
+        font-size: 12px;
+    }
+    .cajeroBtn {
+        padding: 0 !important; 
+        background-color: unset !important;
+        border: unset !important;
+        border-radius: 50px !important;
+    }
+    .cajeroBtn svg {
+        font-size: 15px;
+    }
+  }
+  
+  @media (min-width: 600px) {
+    td {
+        font-size: 15px;
+    }
+    .cajeroBtn {
+        padding: inherit;
+        background-color: #0d6efd !important;
+        border: inherit !important;
+        border-radius: 50px !important;
+        transition: all .3s;
+    }
+    .cajeroBtn:hover {
+        background-color: #0b5ed7 !important;   
+    }
+    .cajeroBtn svg {
+        padding: 5px 8px;
+        color: #fff;
+        font-size: 28px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    td {
+        font-size: 16px;
+    }
+    .cajeroBtn svg {
+        padding: 7px 10px;
+        color: #fff;
+        font-size: 35px;
+    }
+  }

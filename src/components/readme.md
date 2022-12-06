@@ -52,4 +52,13 @@ avance12:
     6/11/22: 
         - se trabajo en el formulario para agregar cajeros, en diseño. Se agrego toast para avisar que se agrego correctamente.
 corrección1:
-    6/12/22: me tira un error al darle click a el link de un cajero y no vuelve. busque en internet solucion y agregue la etiqueta <base> al html de public.
+    6/12/22: 
+        - me tira un error al darle click a el link de un cajero y no vuelve. busque en internet solucion y agregue la etiqueta <base> al html de public.
+avance13:
+    6/12/22:
+        - tabla responsive
+avance14:
+    6/12/22:
+        - avance con el diseño.
+        - se cambio el loader
+        - se cambio el diseño del login, de los cajeros y de la parte admin

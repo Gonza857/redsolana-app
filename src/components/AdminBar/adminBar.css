@@ -6,6 +6,7 @@
 .searchForm {
     border-radius: 10px;
     overflow: hidden;
+    border: 0.1px solid #464646;
 }
 
 .searchInput {
@@ -30,4 +31,8 @@
 
 body {
     background-color: #424242 !important;
+}
+
+.addCajeroBtn {
+    width: fit-content;
 }
