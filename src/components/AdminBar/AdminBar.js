@@ -41,13 +41,13 @@ function AdminBar({ busquedad }) {
   };
 
   return (
-    <div className="d-flex justify-content-evenly py-2">
+    <div className="d-flex flex-column gap-3 flex-lg-row justify-content-evenly py-2 px-3">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
       <Button onClick={() => handleAddCajero()}>
         Nuevo cajero
         <AiOutlineUserAdd className="addCajeroIcon" />
       </Button>
-      <div className="col-5">
+      <div className="m-auto col-10 col-lg-4">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="d-flex searchForm align-content-center justify-content-between"
@@ -63,7 +63,7 @@ function AdminBar({ busquedad }) {
           <input
             className="searchInput w-100"
             type="text"
-            placeholder="Busqueda por nombre de cajero"
+            placeholder="Buscar cajero"
             name="searchInput"
             {...register("nombre")}
           />
