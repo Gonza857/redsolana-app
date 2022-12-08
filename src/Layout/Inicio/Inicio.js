@@ -21,8 +21,11 @@ function Inicio() {
             </div>
             <div className="inicio-text">
               <p className="m-0">
-                Haz click <a href="https://megafaraon.com">aqui</a> para ir a
-                Mega Faraon
+                Haz click{" "}
+                <a href="https://megafaraon.com" target="_blank">
+                  aqui
+                </a>{" "}
+                para ir a Mega Faraon
               </p>
             </div>
           </div>
@@ -38,8 +41,11 @@ function Inicio() {
             </div>
             <div className="inicio-text">
               <p className="m-0">
-                Haz click <a href="https://magiplay.net/">aqui</a> para ir a
-                MagiPlay
+                Haz click{" "}
+                <a href="https://magiplay.net/" target="_blank">
+                  aqui
+                </a>{" "}
+                para ir a MagiPlay
               </p>
             </div>
           </div>
@@ -55,8 +61,11 @@ function Inicio() {
             </div>
             <div className="inicio-text">
               <p className="m-0">
-                Haz click <a href="https://konabet.com/">aqui</a> para ir a
-                Konabet
+                Haz click{" "}
+                <a href="https://konabet.com/" target="_blank">
+                  aqui
+                </a>{" "}
+                para ir a Konabet
               </p>
             </div>
           </div>
@@ -72,8 +81,11 @@ function Inicio() {
             </div>
             <div className="inicio-text">
               <p className="m-0">
-                Haz click <a href="https://ajugar.net/">aqui</a> para ir a
-                ajugar.net
+                Haz click{" "}
+                <a href="https://ajugar.net/" target="_blank">
+                  aqui
+                </a>{" "}
+                para ir a ajugar.net
               </p>
             </div>
           </div>

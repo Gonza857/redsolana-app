@@ -8,6 +8,7 @@ import Navbar from "./Layout/Navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import TycView from "./Layout/TycView/TycView";
+import Footer from "./Layout/Footer/Footer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/adminCajeros" element={<AdminCajeros />}></Route>
           <Route path="/tyc" element={<TycView />}></Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );
