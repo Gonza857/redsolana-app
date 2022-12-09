@@ -2,13 +2,13 @@
     /* background-image: url(https://rare-gallery.com/uploads/posts/1148058-poker-play-gambling-recreation-games-card-game.jpg); */
     background-repeat: repeat;
     /* background-position: center center; */
-    background-size: 500px 300px;
+    background-size: contain;
     /* background: radial-gradient(circle, #000000, #838383); */
-    background-image: url(../../../public/assets/images/fondobyn.jpeg)
+    background-image: url(../../../public/assets/images/fondoceleste.jpeg)
 }
 
 .cajeroMainLoading {
-    background-image: url(../../../public/assets/images/fondoc.jpeg);
+    background-image: url(../../../public/assets/images/fondoceleste.jpeg);
     background-size: contain;
     background-repeat: repeat;
     width: 100%;
