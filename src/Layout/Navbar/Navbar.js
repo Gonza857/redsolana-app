@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 import { adminContext } from "../../storage/AdminContext";
-import { Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 
@@ -35,6 +34,11 @@ function Navbar() {
     }
   }
 
+  function linkNavigateAction() {
+    setIsOpenMenu(false);
+    window.scrollTo(0, 0);
+  }
+
   return (
     <NavbarContainer className="fixed-top">
       <ToastContainer />
@@ -55,7 +59,7 @@ function Navbar() {
               <Link
                 to="/"
                 className="m-0 menuItemLink"
-                onClick={() => setIsOpenMenu(false)}
+                onClick={() => linkNavigateAction()}
               >
                 Home
               </Link>
@@ -64,18 +68,18 @@ function Navbar() {
               <Link
                 to="/cajeros"
                 className="m-0 menuItemLink"
-                onClick={() => setIsOpenMenu(false)}
+                onClick={() => linkNavigateAction()}
               >
                 Cajeros
               </Link>
             </MenuItem>
             <MenuItem>
               <Link
-                to="/tyc"
+                to="/cronograma"
                 className="m-0 menuItemLink"
-                onClick={() => setIsOpenMenu(false)}
+                onClick={() => linkNavigateAction()}
               >
-                Terminos y condiciones
+                Cronograma de pagos
               </Link>
             </MenuItem>
             {isAdmin ? (
@@ -84,7 +88,7 @@ function Navbar() {
                   <Link
                     to="/admin"
                     className="m-0 menuItemLink"
-                    onClick={() => setIsOpenMenu(false)}
+                    onClick={() => linkNavigateAction()}
                   >
                     Admin
                   </Link>
@@ -124,7 +128,6 @@ function Navbar() {
 export default Navbar;
 
 const NavbarContainer = styled.nav`
-  border: 1px solid #fff;
   width: 100%;
   height: 70px;
   background: radial-gradient(
@@ -136,7 +139,6 @@ const NavbarContainer = styled.nav`
 `;
 
 const Wrapper = styled.div`
-  border: 3px solid yellow;
   width: 100%;
   max-width: 1300px;
   height: 100%;
@@ -145,14 +147,10 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: auto;
-
-  background-color: rgba(0, 0, 0, 0.375);
-
   .showMenuOverlay {
     opacity: 1;
     pointer-events: unset;
   }
-
   @media screen and (max-width: 960px) {
     padding: 0 20px;
   }
@@ -172,9 +170,14 @@ const MenuOverlay = styled.div`
   position: fixed;
   inset: 70px 0 0 0;
   opacity: 0;
-  pointer-events: none;
   transition: 0.3s opacity;
-  border: 3px solid green;
+  pointer-events: auto;
+  @media screen and (min-width: 960px) {
+    background-color: unset;
+    position: unset;
+    inset: unset;
+    opacity: 1;
+  }
 `;
 
 const Menu = styled.ul`
@@ -182,7 +185,6 @@ const Menu = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-  border: 3px solid red !important;
   @media screen and (min-width: 960px) {
     align-items: center;
   }
@@ -200,9 +202,8 @@ const Menu = styled.ul`
     align-items: center;
     gap: 10px;
     transition: all 0.5s ease;
-    border: 1px solid red;
     overflow: auto;
-    /* border-right: 0.5px solid #fff; */
+    border-right: 0.5px solid #fff;
   }
   li {
     &:nth-child(1) {
@@ -312,10 +313,10 @@ const MenuItem = styled.li`
     align-items: flex-start;
     cursor: pointer;
     transition: all 0.5s ease;
-    color: #fff;
+    color: #d4a747;
 
     &:hover {
-      color: #d4a747;
+      color: #fff;
     }
     @media screen and (max-width: 960px) {
       width: 100px;

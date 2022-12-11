@@ -7,7 +7,12 @@ import { Metronome } from "@uiball/loaders";
 
 function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);
-  const { cajeros } = useContext(adminContext);
+  const { cajeros, setNumberSection, numberSection } = useContext(adminContext);
+
+  useEffect(()=>{
+    setNumberSection(1)
+  },[])
+
   useEffect(() => {
     if (cajeros.length === 0) {
       setIsLoading(true);
@@ -18,7 +23,7 @@ function Cajeros() {
 
   return (
     <main
-      className={`col-12  ${
+      className={`col-12 ${
         isLoading
           ? `cajeroMainLoading {
       `
@@ -28,7 +33,10 @@ function Cajeros() {
       <h4 className="cajerosTitle text-center text-white">
         Cajeros verificados
       </h4>
-      <div className="cajeros-box col-12 col-sm-11 col-md-10 m-auto justify-content-evenly">
+      <div
+        className="cajeros-box col-12 col-sm-11 col-md-10 m-auto justify-content-evenly"
+        id="section-two-wrapper"
+      >
         {isLoading ? (
           <div className="m-auto">
             <Metronome size={40} speed={1.6} color="#fff" />

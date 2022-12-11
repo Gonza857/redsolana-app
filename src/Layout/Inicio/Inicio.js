@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import styled from "styled-components";
+import { adminContext } from "../../storage/AdminContext";
 
 function Inicio() {
+  const { numberSection, setNumberSection } = useContext(adminContext);
+
+  useEffect(() => {
+    setNumberSection(0);
+    console.log(numberSection);
+  }, []);
+
+  useEffect(() => {
+    console.log(window.location.href);
+  }, [numberSection]);
+
   return (
     <InicioContainer className="pt-3 pb-sm-0">
-      <Wrapper className="col-11 gap-4 p-1 col-lg-10 col-xl-9 col-xxl-8">
+      <Wrapper
+        className="col-11 gap-4 p-1 col-lg-10 col-xl-9 col-xxl-8"
+        id="section-one-wrapper"
+      >
         <CasinoCard
           cardNumber={1}
           bgColor={``}
@@ -54,6 +69,7 @@ function Inicio() {
 export default Inicio;
 
 const InicioContainer = styled.main`
+  margin-top: 70px;
   min-height: calc(100vh - 70px);
   overflow: hidden;
   display: grid;

@@ -96,7 +96,7 @@ function Login() {
 
   return (
     <>
-      <div className="m-auto authContainer">
+      <div className="authContainer">
         <Animated
           animationIn="bounceInLeft"
           animationOut="fadeOut"

@@ -11,6 +11,7 @@ export const AdminContextProvider = (props) => {
   const [isAdmin, setIsAdmin] = useState(
     false || localStorage.getItem("active")
   );
+  const [numberSection, setNumberSection] = useState(null);
 
   // AÑADIR CAJEROS
   function addCajero(cajeroObj) {
@@ -62,9 +63,20 @@ export const AdminContextProvider = (props) => {
     deleteCajero(cajeroEliminado);
   }
 
+  //
+  function verificarUrl() {
+    const actualUrl = window.location.href;
+    console.log(actualUrl);
+    return actualUrl;
+  }
+
   useEffect(() => {
     traerCajeros();
   }, []);
+
+  useEffect(() => {
+    console.log(numberSection);
+  }, [numberSection]);
 
   const value = {
     cajeros,
@@ -80,6 +92,9 @@ export const AdminContextProvider = (props) => {
     buscarCajero,
     searchResult,
     searchedName,
+    verificarUrl,
+    numberSection,
+    setNumberSection,
   };
   return (
     <adminContext.Provider value={value}>

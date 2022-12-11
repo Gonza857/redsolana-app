@@ -1,19 +1,66 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./footer.css";
 import { BsInstagram } from "react-icons/bs";
 import styled from "styled-components";
+import { adminContext } from "../../storage/AdminContext";
 
 function Footer() {
+  const { verificarUrl } = useContext(adminContext);
+
+  const navigate = useNavigate();
+
+  const subir = () => {
+    console.log(window.scrollY);
+    if (window.screenY > 500) {
+      console.log("pasaste los 300px");
+    } else {
+      console.log("todavia no pasaste los 300");
+    }
+  };
+
+  useEffect(() => {
+    const verUrl = verificarUrl();
+    console.log(verUrl);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      subir();
+    });
+  }, [window.screenY]);
+
   return (
     <FooterContainer className="d-flex flex-column">
       <FooterWrapper className="col-12 gap-2 gap-md-0">
         <PageSections className="col-12 col-md-6 px-2 px-sm-0">
           <PageSectionsWrapper className="gap-2">
             <h5>Secciones</h5>
-            <a>Home</a>
-            <a>Cajeros</a>
-            <a>Terminos y condiciones</a>
+            <a
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate("/");
+              }}
+            >
+              Home
+            </a>
+            <a
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate("/cajeros");
+              }}
+            >
+              Cajeros
+            </a>
+            <a
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate("/tyc");
+              }}
+            >
+              Terminos y condiciones
+            </a>
           </PageSectionsWrapper>
         </PageSections>
         <CopyrightColumn className="col-12 col-md-6 gap-3 px-2 px-sm-0">

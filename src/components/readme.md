@@ -75,3 +75,8 @@ avance17:
 avance18:
     11/12/22:
         - arreglo de navbar responsive
+detalles1:
+    11/12/22:
+        - correcion de funcionamiento navbar
+        - se agrego que se suba al principio al cambiar de sección
+        - se optimizo el apartado antiguo "tyc" por "cronograma" y se muestra la foto con el fondo

@@ -1,7 +1,7 @@
 import React from "react";
-import "./tycview.css";
+import "./paymentInfo.css";
 
-function TycView() {
+function PaymentInfo() {
   return (
     <div className="tycContainer">
       <img src="./assets/images/crono.jpeg" className="tycImage" />
@@ -9,4 +9,4 @@ function TycView() {
   );
 }
 
-export default TycView;
+export default PaymentInfo;

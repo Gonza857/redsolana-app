@@ -7,7 +7,7 @@ import Login from "./components/Login/Login";
 import Navbar from "./Layout/Navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
-import TycView from "./Layout/TycView/TycView";
+import TycView from "./Layout/PaymentInfo/PaymentInfo";
 import Footer from "./Layout/Footer/Footer";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
         <Route path="/cajeros" element={<Cajeros />}></Route>
         <Route path="/admin" element={<Login />}></Route>
         <Route path="/adminCajeros" element={<AdminCajeros />}></Route>
-        <Route path="/tyc" element={<TycView />}></Route>
+        <Route path="/cronograma" element={<TycView />}></Route>
       </Routes>
       <Footer />
     </BrowserRouter>

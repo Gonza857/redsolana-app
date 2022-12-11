@@ -30,13 +30,14 @@
   }
 
   .navbar-link {
-    color: #D4AF37;
+    color: #fff;
+
     transition: color .3s;
     font-weight: 500;
   }
 
   .navbar-link:hover {
-    color: #fff;
+    color: #D4AF37;
 
   }
 
