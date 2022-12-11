@@ -36,3 +36,7 @@ body {
 .addCajeroBtn {
     width: fit-content;
 }
+
+.adminBarContainer {
+    margin-top: 70px;
+}

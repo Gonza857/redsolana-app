@@ -1,5 +1,8 @@
+.footer {
+    height: fit-content;
+}
+
 .columnas {
-    border: 3px solid blue;
     height: 300px;
     background: radial-gradient(circle, rgba(0,0,0,1) 0%,  rgba(88,88,88,1) 100%);
 }

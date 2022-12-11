@@ -68,3 +68,10 @@ avance15:
 avance16:
     9/12/22:
         - navbar responsive 2
+avance17:
+    9/12/22:
+        - inicio responsive
+        - optimización de componentes de inicio
+avance18:
+    11/12/22:
+        - arreglo de navbar responsive

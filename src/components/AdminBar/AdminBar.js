@@ -41,7 +41,7 @@ function AdminBar({ busquedad }) {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center justify-content-evenly gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0">
+    <div className="d-flex flex-column align-items-center justify-content-evenly gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 adminBarContainer">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
       <Button onClick={() => handleAddCajero()} className="addCajeroBtn">
         Nuevo cajero

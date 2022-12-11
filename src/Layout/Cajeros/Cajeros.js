@@ -10,10 +10,8 @@ function Cajeros() {
   const { cajeros } = useContext(adminContext);
   useEffect(() => {
     if (cajeros.length === 0) {
-      console.log("cargando..");
       setIsLoading(true);
     } else {
-      console.log("ya cargue...");
       setIsLoading(false);
     }
   }, [cajeros]);
@@ -27,13 +25,10 @@ function Cajeros() {
           : `cajerosMain`
       }`}
     >
-      <h4
-        className="cajerosTitle text-center text-white
-      p-0 py-4 m-0"
-      >
+      <h4 className="cajerosTitle text-center text-white">
         Cajeros verificados
       </h4>
-      <div className="cajeros-box col-10 m-auto justify-content-evenly">
+      <div className="cajeros-box col-12 col-sm-11 col-md-10 m-auto justify-content-evenly">
         {isLoading ? (
           <div className="m-auto">
             <Metronome size={40} speed={1.6} color="#fff" />

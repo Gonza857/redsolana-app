@@ -4,7 +4,8 @@
     /* background-position: center center; */
     background-size: contain;
     /* background: radial-gradient(circle, #000000, #838383); */
-    background-image: url(../../../public/assets/images/fondoceleste.jpeg)
+    background-image: url(../../../public/assets/images/fondoceleste.jpeg);
+    padding-top: 10px;
 }
 
 .cajeroMainLoading {
@@ -13,21 +14,21 @@
     background-repeat: repeat;
     width: 100%;
     height: 5000px;
+    padding-top: 10px;
 }
 
 .cajeros-box {
     /* background-image: url(https://t3.ftcdn.net/jpg/04/61/21/46/360_F_461214675_2AixWpR2TqYr0jwDPrt1QvGJBSePq4z6.jpg); */
     background-position: center center;
     background-repeat: repeat;
-    padding-top: 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 40px;
+    padding-bottom: 40px;
 }
 
 .cajero {
-    width: 170px;
+    width: 130px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -37,10 +38,34 @@
     border: 0.8px solid #D4AF37;
     border-radius: 25px;
     overflow: hidden;
-    /* box-shadow: 0px 0px 29px -3px #fff;
-    -webkit-box-shadow: 0px 0px 29px -3px #fff;
-    -moz-box-shadow: 0px 0px 29px -3px #fff; */
+    margin-top: 15px;
+    
 }
+
+@media screen and (min-width: 388px) {
+    .cajero {
+        width: 155px;
+    }
+}
+
+@media screen and (min-width: 460px) {
+    .cajeros-box {
+        gap: 20px;
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .cajero {
+        width: 165px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .cajero {
+        width: 170px;
+    }
+}
+
 
 .cajero-name {
     display: flex;
@@ -100,4 +125,15 @@
 
 ::-webkit-scrollbar{
     display: none;
+}
+
+.cajerosTitle {
+    padding: 20px;
+    margin: auto;
+    width: fit-content;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 80%);
+    box-shadow: 0px 1px 106px 6px rgba(212,175,55,1);
+    -webkit-box-shadow: 0px 1px 106px 6px rgba(212,175,55,1);
+    -moz-box-shadow: 0px 1px 106px 6px rgba(212,175,55,1);
 }

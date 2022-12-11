@@ -12,19 +12,17 @@ import Footer from "./Layout/Footer/Footer";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Inicio />}></Route>
-          <Route path="/cajeros" element={<Cajeros />}></Route>
-          <Route path="/admin" element={<Login />}></Route>
-          <Route path="/adminCajeros" element={<AdminCajeros />}></Route>
-          <Route path="/tyc" element={<TycView />}></Route>
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Inicio />}></Route>
+        <Route path="/cajeros" element={<Cajeros />}></Route>
+        <Route path="/admin" element={<Login />}></Route>
+        <Route path="/adminCajeros" element={<AdminCajeros />}></Route>
+        <Route path="/tyc" element={<TycView />}></Route>
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
 
