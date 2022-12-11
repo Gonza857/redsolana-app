@@ -148,6 +148,7 @@ const Wrapper = styled.div`
   align-items: center;
   margin: auto;
   .showMenuOverlay {
+    inset: 70px 0 0 0;
     opacity: 1;
     pointer-events: unset;
   }
@@ -168,7 +169,7 @@ const LogoContainer = styled.div`
 const MenuOverlay = styled.div`
   background-color: #000000a7;
   position: fixed;
-  inset: 70px 0 0 0;
+  inset: 5000px;
   opacity: 0;
   transition: 0.3s opacity;
   pointer-events: auto;
