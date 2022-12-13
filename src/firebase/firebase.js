@@ -6,6 +6,7 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  setDoc,
   addDoc,
 } from "firebase/firestore";
 import {
@@ -13,6 +14,16 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+
+import { v4 } from "uuid";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAK4e4YOjznBLfoupessvj8QnzNRfIULzA",
@@ -25,6 +36,7 @@ const firebaseConfig = {
 
 const FirebaseApp = initializeApp(firebaseConfig);
 const DataBase = getFirestore(FirebaseApp);
+const storage = getStorage(FirebaseApp);
 
 export async function getAllCajeros() {
   try {
@@ -65,7 +77,6 @@ export function setUser(email, password) {
       // const user = userCredential.user;
       // console.log(userCredential);
       // console.log(userCredential.user);
-
       // ...
     })
     .catch((error) => {
@@ -105,14 +116,31 @@ export async function loginUser(email, password) {
 }
 
 // ACTUALIZAR CAJERO }
-export async function updateCajeroInfo(cajeroUpdated) {
-  console.log(cajeroUpdated);
-  const docRef = doc(DataBase, "cajeros", cajeroUpdated.id);
-  const updateInfo = await updateDoc(docRef, cajeroUpdated);
-  console.log(updateInfo);
+export async function updateCajeroInfo(cajeroId, newCajero) {
+  console.log("Informacion para actualizar recibida");
+  console.log("Id del cajero recibido -->", cajeroId);
+  console.log("Info del cajero recibido -->", newCajero);
+  await updateDoc(doc(DataBase, "cajeros", cajeroId), newCajero);
+  console.log("información actualizada");
 }
 
 export async function deleteCajero(cajero) {
   const deleteCajero = await deleteDoc(doc(DataBase, "cajeros", cajero.id));
   console.log(deleteCajero);
+}
+
+export async function prePostImg(file) {
+  const randomId = v4();
+  console.log(randomId);
+  const storageRef = ref(storage, randomId);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+  console.log("imagen subida");
+  return { url, randomId };
+}
+
+export async function deleteImg(imgId) {
+  console.log("id de la imagen recibida -->", imgId);
+  const desertRef = ref(storage, imgId);
+  return await deleteObject(desertRef);
 }

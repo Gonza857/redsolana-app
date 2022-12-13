@@ -72,7 +72,10 @@ function Login() {
     setIsLoading(true);
     loginUser(data.adminMail, data.adminPass)
       .then((respuesta) => {
-        if (respuesta.user.uid === "INdShNqqCJS6pMg8g9iZmLd7hBo1") {
+        if (
+          respuesta.user.uid === "INdShNqqCJS6pMg8g9iZmLd7hBo1" ||
+          respuesta.user.uid === "SG6i2m7MaVSTuXGo83hfwPNKido1"
+        ) {
           signInToast();
           navigate("/adminCajeros");
           setIsAdmin(true);

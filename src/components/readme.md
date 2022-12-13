@@ -82,3 +82,5 @@ avance19:
         - se optimizo el apartado antiguo "tyc" por "cronograma" y se muestra la foto con el fondo
 detalles1:
     11/12/22: correccion de navbar que no dejaba escribir en el login por el inset
+avance20:
+    13/12/22: se agrego TODO el funcionamiento CRUD de foto de el cajero usando storage de firebase

@@ -9,9 +9,9 @@ function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);
   const { cajeros, setNumberSection, numberSection } = useContext(adminContext);
 
-  useEffect(()=>{
-    setNumberSection(1)
-  },[])
+  useEffect(() => {
+    setNumberSection(1);
+  }, []);
 
   useEffect(() => {
     if (cajeros.length === 0) {
@@ -53,10 +53,14 @@ function Cajeros() {
                     <p className="">{cajero.nombre}</p>
                   </div>
                   <div className="cajero-img">
-                    {cajero.genero === "M" ? (
-                      <img src="./assets/images/hombre.png" alt="foto" />
+                    {cajero.imagen === null ? (
+                      cajero.genero === "M" ? (
+                        <img src="./assets/images/hombre.png" alt="foto" />
+                      ) : (
+                        <img src="./assets/images/mujer.png" alt="foto" />
+                      )
                     ) : (
-                      <img src="./assets/images/mujer.png" alt="foto" />
+                      <img src={cajero.imagen.url} alt="foto" />
                     )}
                   </div>
                   <div className="cajero-number-box">

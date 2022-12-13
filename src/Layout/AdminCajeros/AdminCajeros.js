@@ -25,14 +25,7 @@ function AdminCajeros() {
   return (
     <>
       {isAdmin ? (
-        <div
-          className={`col-12 p-1 ${
-            isLoading
-              ? `cajerosAdminTableLoader {
-      `
-              : `adminCajeroContainer`
-          }`}
-        >
+        <div className="col-12 p1 adminCajeroContainer">
           <div className="col-12 col-sm-10 col-lg-8 col-xl-7 m-auto d-flex flex-column mt-2 text-center">
             <AdminBar busquedad={searchResult !== [] || false} />
             {console.log(searchedName)}

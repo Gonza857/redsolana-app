@@ -11,25 +11,25 @@ function Footer() {
 
   const navigate = useNavigate();
 
-  const subir = () => {
-    console.log(window.scrollY);
-    if (window.screenY > 500) {
-      console.log("pasaste los 300px");
-    } else {
-      console.log("todavia no pasaste los 300");
-    }
-  };
+  // const subir = () => {
+  //   console.log(window.scrollY);
+  //   if (window.screenY > 500) {
+  //     console.log("pasaste los 300px");
+  //   } else {
+  //     console.log("todavia no pasaste los 300");
+  //   }
+  // };
 
-  useEffect(() => {
-    const verUrl = verificarUrl();
-    console.log(verUrl);
-  }, []);
+  // useEffect(() => {
+  //   const verUrl = verificarUrl();
+  //   console.log(verUrl);
+  // }, []);
 
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      subir();
-    });
-  }, [window.screenY]);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", () => {
+  //     subir();
+  //   });
+  // }, [window.screenY]);
 
   return (
     <FooterContainer className="d-flex flex-column">

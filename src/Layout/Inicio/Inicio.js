@@ -1,26 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import styled from "styled-components";
-import { adminContext } from "../../storage/AdminContext";
 
 function Inicio() {
-  const { numberSection, setNumberSection } = useContext(adminContext);
-
-  useEffect(() => {
-    setNumberSection(0);
-    console.log(numberSection);
-  }, []);
-
-  useEffect(() => {
-    console.log(window.location.href);
-  }, [numberSection]);
-
   return (
     <InicioContainer className="pt-3 pb-sm-0">
-      <Wrapper
-        className="col-11 gap-4 p-1 col-lg-10 col-xl-9 col-xxl-8"
-        id="section-one-wrapper"
-      >
+      <Wrapper className="col-11 gap-4 p-1 col-lg-10 col-xl-9 col-xxl-8">
         <CasinoCard
           cardNumber={1}
           bgColor={``}
@@ -57,8 +42,8 @@ function Inicio() {
           bgImageUrl={``}
           bgPadding={`60px`}
           casinoLink="https://ajugar.net"
-          casinoName="Mega Faraon"
-          imgAlt="Casino Mega Faraon"
+          casinoName="ajugar.net"
+          imgAlt="Casino ajugar.net"
           imgRoute="aJugar-logo.png"
         />
       </Wrapper>

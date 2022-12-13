@@ -7,19 +7,37 @@ import Login from "./components/Login/Login";
 import Navbar from "./Layout/Navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
-import TycView from "./Layout/PaymentInfo/PaymentInfo";
+import PaymentInfo from "./Layout/PaymentInfo/PaymentInfo";
 import Footer from "./Layout/Footer/Footer";
+import ErrorPage from "./Layout/ErrorPage/ErrorPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Inicio />}></Route>
-        <Route path="/cajeros" element={<Cajeros />}></Route>
-        <Route path="/admin" element={<Login />}></Route>
+        <Route
+          path="/"
+          element={<Inicio />}
+          errorElement={<ErrorPage />}
+        ></Route>
+        <Route
+          path="/cajeros"
+          element={<Cajeros />}
+          errorElement={<ErrorPage />}
+        ></Route>
+        <Route
+          path="/admin"
+          element={<Login />}
+          errorElement={<ErrorPage />}
+        ></Route>
         <Route path="/adminCajeros" element={<AdminCajeros />}></Route>
-        <Route path="/cronograma" element={<TycView />}></Route>
+        <Route
+          path="/cronograma"
+          element={<PaymentInfo />}
+          errorElement={<ErrorPage />}
+        ></Route>
+        <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>
       <Footer />
     </BrowserRouter>

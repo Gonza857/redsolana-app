@@ -9,7 +9,7 @@ export const AdminContextProvider = (props) => {
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   const [cajeros, setCajeros] = useState([]);
   const [isAdmin, setIsAdmin] = useState(
-    false || localStorage.getItem("active")
+    true || localStorage.getItem("active") //FIXME:
   );
   const [numberSection, setNumberSection] = useState(null);
 
@@ -17,7 +17,8 @@ export const AdminContextProvider = (props) => {
   function addCajero(cajeroObj) {
     let copyCajeros = [...cajeros];
     copyCajeros.push(cajeroObj);
-    setCajeros(copyCajeros);
+    setCajeros([]);
+    traerCajeros();
   }
 
   // EDITAR CAJEROS
@@ -73,6 +74,10 @@ export const AdminContextProvider = (props) => {
   useEffect(() => {
     traerCajeros();
   }, []);
+
+  useEffect(() => {
+    console.log(cajeros);
+  }, [cajeros]);
 
   useEffect(() => {
     console.log(numberSection);

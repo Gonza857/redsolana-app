@@ -1,13 +1,13 @@
 .redB {
-    border: 1px solid red;
+    border: 1px solid red !important;
 }
 
 .greenB {
-    border: 2px solid green;
+    border: 2px solid green !important;
 }
 
 .oranB {
-    border: 3px solid orange;
+    border: 3px solid orange !important;
 }
 
 .form-btn {
