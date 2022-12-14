@@ -9,7 +9,7 @@ export const AdminContextProvider = (props) => {
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   const [cajeros, setCajeros] = useState([]);
   const [isAdmin, setIsAdmin] = useState(
-    true || localStorage.getItem("active") //FIXME:
+    false || localStorage.getItem("active")
   );
   const [numberSection, setNumberSection] = useState(null);
 

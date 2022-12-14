@@ -1,19 +1,18 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { adminContext } from "../../storage/AdminContext";
 import {
   deleteImg,
   prePostImg,
   updateCajeroInfo,
 } from "../../firebase/firebase";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import { BsFillTrashFill } from "react-icons/bs";
 
 function EditCajerosForm({ onClose, show, cajeroData }) {
-  const { cajeros, setCajeros, traerCajeros } = useContext(adminContext);
   const [hasImage, setHasImage] = useState(false);
   const [recentlyDeleted, setRecentlyDeleted] = useState(false);
 
@@ -313,21 +312,26 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
 
         {hasImage ? (
           <>
-            <div className="d-flex justify-content-evenly flex-wrap col-12 p-0">
-              <p className="col-12 p-0 m-0 mb-1">Imagen actual:</p>
-              <div className="col-6 p-0 m-0">
+            <div className="d-flex flex-column justify-content-evenly flex-wrap col-12 p-0 imagenContainer gap-2 mt-1">
+              <TextContainer className="d-flex justify-content-between align-items-center">
+                <p className="p-0 m-0 mb-1">Imagen actual:</p>
+                <Button
+                  className="d-flex align-items-center gap-2"
+                  onClick={() => deleteHandler()}
+                  variant="danger"
+                >
+                  Borrar imagen
+                  <BsFillTrashFill />
+                </Button>
+              </TextContainer>
+              <div className="col-6 m-auto p-0 m-0 mt-1">
                 <CajeroPhoto
                   src={cajeroData.imagen?.url}
                   alto="fotito"
                   className="p-0 m-0"
                 />
               </div>
-              <div className="col-6 p-0 px-3 d-flex flex-column justify-content-evenly">
-                <Button className="">Cambiar imagen</Button>
-                <Button className="" onClick={() => deleteHandler()}>
-                  Borrar imagen
-                </Button>
-              </div>
+              <div className="col-6 p-0 px-3 d-flex flex-column justify-content-evenly"></div>
             </div>
           </>
         ) : (
@@ -337,7 +341,6 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
             </InputContainer3>
           </>
         )}
-        {hasImage ? <h3>Tiene imagen</h3> : <h3>No tiene imagen</h3>}
       </Wrapper>
 
       <SubmitContainer className="flex-wrap py-3 gap-2">
@@ -359,15 +362,19 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
         >
           Cancelar
         </Button>
-        <Button type="submit" variant="success">
-          Guardar cambios
-        </Button>
+        <Button type="submit">Guardar cambios</Button>
       </SubmitContainer>
     </AddForm>
   );
 }
 
 export default EditCajerosForm;
+
+const ViewImageContainer = styled.div``;
+
+const TextContainer = styled.div`
+  width: 100%;
+`;
 
 const AddForm = styled.form`
   display: flex;

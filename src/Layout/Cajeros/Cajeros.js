@@ -4,6 +4,7 @@ import "./cajeros.css";
 import { adminContext } from "../../storage/AdminContext";
 import "animate.css";
 import { Metronome } from "@uiball/loaders";
+import { Animated } from "react-animated-css";
 
 function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +34,7 @@ function Cajeros() {
       <h4 className="cajerosTitle text-center text-white">
         Cajeros verificados
       </h4>
-      <div
-        className="cajeros-box col-12 col-sm-11 col-md-10 m-auto justify-content-evenly"
-        id="section-two-wrapper"
-      >
+      <div className="cajeros-box col-12 col-sm-11 col-md-10 m-auto justify-content-evenly">
         {isLoading ? (
           <div className="m-auto">
             <Metronome size={40} speed={1.6} color="#fff" />
@@ -45,8 +43,11 @@ function Cajeros() {
           <>
             {cajeros.map((cajero) => {
               return (
-                <div
-                  className="animate__animated cajero animate__fadeIn"
+                <Animated
+                  animationIn="fadeIn"
+                  animationOut="fadeOut"
+                  isVisible={true}
+                  className="cajero"
                   key={cajero.id}
                 >
                   <div className="cajero-name">
@@ -73,7 +74,7 @@ function Cajeros() {
                       {cajero.numero}
                     </a>
                   </div>
-                </div>
+                </Animated>
               );
             })}
           </>

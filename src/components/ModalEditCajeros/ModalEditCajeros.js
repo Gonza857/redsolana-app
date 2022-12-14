@@ -63,9 +63,3 @@ function ModalEditCajeros({ onClose, show, cajeroData }) {
 
 export default ModalEditCajeros;
 
-const CajeroPhoto = styled.img`
-  width: 100%;
-  height: 100%;
-  border: 3px solid red;
-  object-fit: contain;
-`;

@@ -84,3 +84,5 @@ detalles1:
     11/12/22: correccion de navbar que no dejaba escribir en el login por el inset
 avance20:
     13/12/22: se agrego TODO el funcionamiento CRUD de foto de el cajero usando storage de firebase
+avance21: 
+    14/12/22: se optimizo las vistas de informacion (modales) y se acomodo la foto de los cajeros.

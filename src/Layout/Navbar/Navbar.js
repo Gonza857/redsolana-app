@@ -152,7 +152,7 @@ const Wrapper = styled.div`
     opacity: 1;
     pointer-events: unset;
   }
-  @media screen and (max-width: 960px) {
+  @media screen and (max-width: 1440px) {
     padding: 0 20px;
   }
 `;

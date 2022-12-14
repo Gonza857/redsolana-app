@@ -1,7 +1,9 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import styled from "styled-components";
 
 function ModalViewInfo({ onClose, show, cajeroData }) {
+  console.log(cajeroData);
   return (
     <Modal
       show={show}
@@ -15,18 +17,56 @@ function ModalViewInfo({ onClose, show, cajeroData }) {
       </Modal.Header>
       <Modal.Body>
         <div>
+          <div></div>
           <p>Red: {cajeroData.red}</p>
           <p>Nombre: {cajeroData.nombre}</p>
-          <p>Genero: {cajeroData.genero}</p>
+          <p>
+            Genero:
+            {cajeroData.genero !== "M" ? " Femenino" : " Masculino"}
+          </p>
           <p>Numero: {cajeroData.numero}</p>
-          <p>Enlace: {cajeroData.enlace}</p>
+          <p>
+            Enlace:
+            {cajeroData.enlace !== ""
+              ? ` ${cajeroData.enlace}`
+              : " No establecido."}
+          </p>
         </div>
-        <Button variant="info" onClick={onClose}>
-          Cerrar
-        </Button>
+        {cajeroData.imagen !== null ? (
+          <>
+            <p>Imagen: Establecida.</p>
+            <div className="col-5 m-auto p-0 m-0 my-2">
+              <CajeroPhoto
+                src={cajeroData.imagen?.url}
+                alto="fotito"
+                className="p-0 m-0"
+              />
+            </div>
+            <div className="col-6 p-0 px-3 d-flex flex-column justify-content-evenly"></div>
+          </>
+        ) : (
+          <p>Imagen: No establecida.</p>
+        )}
+
+        <SubmitContainer>
+          <Button onClick={onClose}>Cerrar</Button>
+        </SubmitContainer>
       </Modal.Body>
     </Modal>
   );
 }
 
 export default ModalViewInfo;
+
+const CajeroPhoto = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`;
+
+const SubmitContainer = styled.div`
+  border-top: 1px solid #c7c7c7;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;

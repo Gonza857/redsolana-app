@@ -26,12 +26,12 @@ import {
 import { v4 } from "uuid";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAK4e4YOjznBLfoupessvj8QnzNRfIULzA",
+  apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
   authDomain: "redsolana-91cb9.firebaseapp.com",
-  projectId: "redsolana-91cb9",
+  projectId: process.env.REACT_APP_PROJECT_ID,
   storageBucket: "redsolana-91cb9.appspot.com",
   messagingSenderId: "970544333838",
-  appId: "1:970544333838:web:a0652af3cc89f17338a85f",
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 const FirebaseApp = initializeApp(firebaseConfig);
