@@ -25,14 +25,14 @@ function CasinoCard({
     >
       <CardContainer>
         <ImgContainer style={style}>
-          <a href={casinoLink} target="_blank">
+          <a href={casinoLink} target="_blank" rel="noreferrer">
             <RedImg src={`./assets/images/${imgRoute}`} alt={imgAlt} />
           </a>
         </ImgContainer>
         <TextContainer>
           <p>
             Haz click{" "}
-            <a href={casinoLink} target="_blank">
+            <a href={casinoLink} target="_blank" rel="noreferrer">
               aqui
             </a>{" "}
             para ir a {casinoName}

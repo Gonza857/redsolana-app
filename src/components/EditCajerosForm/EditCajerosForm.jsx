@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import {
   deleteImg,
   prePostImg,
+  updateAllCajeros,
   updateCajeroInfo,
 } from "../../firebase/firebase";
 import { Button } from "react-bootstrap";
@@ -11,26 +12,34 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
+import { adminContext } from "../../storage/AdminContext";
 
-function EditCajerosForm({ onClose, show, cajeroData }) {
+function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
   const [hasImage, setHasImage] = useState(false);
-  const [recentlyDeleted, setRecentlyDeleted] = useState(false);
+  const { cajeros, setCajeros, moveCajerosPosition } = useContext(adminContext);
 
   useEffect(() => {
     if (cajeroData.imagen === null) {
-      console.log("llego sin imagen");
       setHasImage(false);
     } else {
       setHasImage(true);
-      console.log("llego con imagen");
     }
-  }, []);
+  }, [cajeroData.imagen]);
 
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-primary mx-2",
+      cancelButton: "btn btn-danger",
+      denyButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
 
   const updateInfo = async (data) => {
     /*
@@ -39,161 +48,308 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
         CASO 3) LLEGA SIN IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN
         CASO 4) LLEGA SIN IMAGEN, AGREGAMOS, ENVIAMOS SIN IMAGEN
     */
+
     if (cajeroData.imagen === null) {
-      //CASO 1,3,4
+      //CASO 3,4
       if (data.imagen.length === 0) {
-        //CASO 4) LLEGA SIN IMAGEN, AGREGAMOS, ENVIAMOS SIN IMAGEN
-        console.log("envio sin imagen");
+        // console.log("CASO 4) LLEGA SIN IMAGEN, AGREGAMOS, ENVIAMOS SIN IMAGEN");
         data.imagen = null;
-        cajeroData.nombre = data.nombre;
-        cajeroData.red = data.red;
-        cajeroData.enlace = data.enlace;
-        cajeroData.genero = data.genero;
-        cajeroData.numero = data.numero;
-        updateCajeroInfo(cajeroData.id, data);
-        onClose();
-        toast.success("Información editada correctamente!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        data.pos = Number(data.pos);
+        if (data.pos - 1 !== cajeroData.pos) {
+          // console.log("CASO 4) Y CAMBIO DE POSICION");
+          data.id = cajeroData.id;
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
+          console.table(newArray);
+          setCajeros(newArray);
+          updateAllCajeros(newArray).catch((error) => {
+            toast.error(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+          onClose();
+        } else {
+          // console.log("CASO 4) Y NO CAMBIO DE POSICION");
+          cajeroData.red = data.red;
+          cajeroData.nombre = data.nombre;
+          cajeroData.genero = data.genero;
+          cajeroData.estado = data.estado;
+          cajeroData.numero = data.numero;
+          cajeroData.pos = data.pos - 1;
+          cajeroData.enlace = data.enlace;
+          updateCajeroInfo(cajeroData.id, data)
+            .then(() => {
+              onClose();
+            })
+            .catch((error) => {
+              toast.error(error.message, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: false,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+              });
+            });
+        }
       } else {
-        // CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN
-        //CASO 3) LLEGA SIN IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN
-        console.log("envio con imagen");
+        // console.log("CASO 3) LLEGA SIN IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN");
+        data.pos = Number(data.pos);
         const result = await prePostImg(data.imagen[0]);
-        console.log(result);
         let { url, randomId } = result;
         data.imagen = {
           url,
           randomId,
         };
-        cajeroData.nombre = data.nombre;
-        cajeroData.red = data.red;
-        cajeroData.enlace = data.enlace;
-        cajeroData.genero = data.genero;
-        cajeroData.numero = data.numero;
-        cajeroData.imagen = {
+        if (data.pos - 1 !== cajeroData.pos) {
+          // console.log("CASO 3) Y CAMBIO DE POSICION");
+          data.id = cajeroData.id;
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
+          console.table(newArray);
+          setCajeros(newArray);
+          updateAllCajeros(newArray).catch((error) => {
+            toast.error(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+          onClose();
+        } else {
+          // console.log("CASO 3) Y NO CAMBIO DE POSICION");
+          cajeroData.nombre = data.nombre;
+          cajeroData.estado = data.estado;
+          cajeroData.pos = data.pos;
+          cajeroData.red = data.red;
+          cajeroData.enlace = data.enlace;
+          cajeroData.genero = data.genero;
+          cajeroData.numero = data.numero;
+          cajeroData.imagen = {
+            url,
+            randomId,
+          };
+          cajeros.forEach((caj, i) => {
+            caj.pos = i;
+          });
+          data.pos = cajeroData.pos;
+          updateCajeroInfo(cajeroData.id, data);
+          onClose();
+        }
+      }
+      // FIN CASO 3,4
+    } else {
+      // CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN
+      // CASO 2) LLEGA CON IMAGEN, ENVIAMOS IMAGEN
+      // CASO 2.A) LLEGA CON IMAGEN, ACTUALIZAMOS, MANDAMOS UNA DIFERENTE
+      // CASO 2.B) LLEGA CON IMAGEN, ENVIAMOS LA MISMA
+
+      data.pos = Number(data.pos);
+
+      if (hasImage === false && data.imagen.length !== 0) {
+        // console.log(
+        //   "CASO 2.A) LLEGA CON IMAGEN, ACTUALIZAMOS, MANDAMOS UNA DIFERENTE"
+        // );
+        await deleteImg(cajeroData.imagen.randomId);
+        const result = await prePostImg(data.imagen[0]);
+        let { url, randomId } = result;
+        data.imagen = {
           url,
           randomId,
         };
-        updateCajeroInfo(cajeroData.id, data);
-        onClose();
-        toast.success("Información editada correctamente!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
-    } else {
-      //CASO 2) LLEGA CON IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN
-      if (hasImage) {
-        cajeroData.nombre = data.nombre;
-        cajeroData.red = data.red;
-        cajeroData.enlace = data.enlace;
-        cajeroData.genero = data.genero;
-        cajeroData.numero = data.numero;
-        data.imagen = cajeroData.imagen;
-        updateCajeroInfo(cajeroData.id, data);
-        onClose();
-        toast.success("Información editada correctamente!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } else {
-        console.log(cajeroData.imagen);
-        console.log("id de la imagen -->", cajeroData.imagen.randomId);
-        const deleteAction = await deleteImg(cajeroData.imagen.ramdomId);
-        console.log(deleteAction);
-        data.imagen = null;
+
+        if (data.pos - 1 !== cajeroData.pos) {
+          data.id = cajeroData.id;
+          // console.log("CASO 2.A) Y CAMBIO DE POSICION");
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
+          console.table(newArray);
+          setCajeros(newArray);
+          updateAllCajeros(newArray).catch((error) => {
+            toast.error(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+          onClose();
+        } else {
+          // console.log("CASO 2.A) Y NO CAMBIO DE POSICION");
+          cajeroData.red = data.red;
+          cajeroData.nombre = data.nombre;
+          cajeroData.genero = data.genero;
+          cajeroData.estado = data.estado;
+          cajeroData.numero = data.numero;
+          cajeroData.pos = data.pos - 1;
+          cajeroData.enlace = data.enlace;
+          cajeroData.imagen = data.imagen;
+          cajeros.forEach((caj, i) => {
+            caj.pos = i;
+          });
+          data.pos = cajeroData.pos;
+          updateCajeroInfo(cajeroData.id, data);
+          onClose();
+        }
+      } else if (hasImage === false) {
+        // console.log(
+        //   "CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN"
+        // );
+        await deleteImg(cajeroData.imagen.randomId);
         cajeroData.imagen = null;
-        cajeroData.nombre = data.nombre;
-        cajeroData.red = data.red;
-        cajeroData.enlace = data.enlace;
-        cajeroData.genero = data.genero;
-        cajeroData.numero = data.numero;
-        setHasImage(false);
-        setRecentlyDeleted(true);
-        updateCajeroInfo(cajeroData.id, data);
-        onClose();
-        toast.success("Información editada correctamente!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        data.pos = Number(data.pos);
+        data.imagen = null;
+
+        if (data.pos - 1 !== cajeroData.pos) {
+          data.id = cajeroData.id;
+          // console.log("CASO 1) Y CAMBIO DE POSICION");
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
+          setCajeros(newArray);
+          updateAllCajeros(newArray).catch((error) => {
+            toast.error(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+          onClose();
+        } else {
+          // console.log("CASO 1) Y NO CAMBIO DE POSICION");
+          cajeroData.red = data.red;
+          cajeroData.nombre = data.nombre;
+          cajeroData.genero = data.genero;
+          cajeroData.estado = data.estado;
+          cajeroData.numero = data.numero;
+          cajeroData.pos = data.pos;
+          cajeroData.enlace = data.enlace;
+          cajeros.forEach((caj, i) => {
+            caj.pos = i;
+          });
+          data.pos = cajeroData.pos;
+          updateCajeroInfo(cajeroData.id, data);
+          onClose();
+        }
+      } else {
+        // console.log("CASO 2.B) LLEGA CON IMAGEN, ENVIAMOS LA MISMA");
+        data.imagen = cajeroData.imagen;
+
+        if (data.pos - 1 !== cajeroData.pos) {
+          // console.log("CASO 2.B) Y CAMBIO DE POSICION");
+          data.id = cajeroData.id;
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
+          console.table(newArray);
+          setCajeros(newArray);
+          updateAllCajeros(newArray).catch((error) => {
+            toast.error(error.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+          onClose();
+        } else {
+          // console.log("CASO 2.B) Y NO CAMBIO DE POSICION");
+          cajeroData.red = data.red;
+          cajeroData.nombre = data.nombre;
+          cajeroData.genero = data.genero;
+          cajeroData.estado = data.estado;
+          cajeroData.numero = data.numero;
+          cajeroData.pos = data.pos;
+          cajeroData.enlace = data.enlace;
+          cajeros.forEach((caj, i) => {
+            caj.pos = i;
+          });
+          data.pos = cajeroData.pos;
+          updateCajeroInfo(cajeroData.id, data);
+          onClose();
+        }
       }
     }
   };
 
   const onSubmit = (data) => {
-    console.log("información del cajero traida de la base -->", cajeroData);
-    console.log("informacion actualizada -->", data);
-    console.log(cajeroData.imagen);
-
-    Swal.fire({
-      title: "¿Estas seguro que quieres actualizar la información?",
-      text: "Los cambios no se pueden deshacer.",
-      showDenyButton: true,
-      confirmButtonText: "Guardar",
-      denyButtonText: `No guardar`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        updateInfo(data);
-        toast.success("Información editada correctamente!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } else if (result.isDenied) {
-        onClose();
-        toast.info("No se guardaron los cambios.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
-    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "¿Estas seguro que quieres actualizar la información?",
+        text: "Los cambios no se pueden deshacer.",
+        showDenyButton: true,
+        denyButtonText: `No guardar`,
+        confirmButtonText: "Guardar",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          updateInfo(data);
+          toast.success("Información editada correctamente!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else if (result.isDenied) {
+          onClose();
+          toast.info("No se guardaron los cambios.", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      });
   };
 
   const deleteHandler = () => {
-    console.log("boton de borrar presionado");
     if (cajeroData.imagen !== null) {
-      // VERIFICAMOS QUE LLEGUE CON IMAGEN
-      console.log("verificado que tiene imagen");
-      cajeroData.imagen = null;
       setHasImage(false);
-      setRecentlyDeleted(true);
+      Swal.fire(
+        "Se quitó la imagen.",
+        "Si guarda los cambios se aplicarán y no se puede deshacer. Si desea cancelar el cambio, cancele los cambios.",
+        "success"
+      );
     }
   };
 
@@ -221,7 +377,7 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
             )}
           </InputsBox>
           {/* NOMBRE */}
-          <InputsBox className="col-5">
+          <InputsBox className="col-6">
             <label htmlFor="nombre">Nombre</label>
             <StyledInput
               type="text"
@@ -278,24 +434,86 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
           )}
         </InputContainer2>
 
-        <InputContainer3 className="col-12">
-          {/* NUMERO */}
-          <label htmlFor="numero">Teléfono</label>
-          <StyledInput
-            className="col-5"
-            type="number"
-            placeholder="Telefono"
-            defaultValue={cajeroData.numero}
-            name="numero"
-            {...register("numero", {
-              required: true,
-            })}
-          />
-          {errors.numero?.type === "required" && (
-            <small role="alert" className="text-danger">
-              Campo requerido
+        <InputContainer2>
+          {/* ESTADO*/}
+          <div className="d-flex gap-3">
+            <p className="m-0">Estado:</p>
+            <div className="d-flex gap-4">
+              {/* OPCION 1 */}
+              <div className="d-flex flex-row gap-1">
+                <StyledInput
+                  type="radio"
+                  value="conectado"
+                  defaultChecked={
+                    cajeroData.estado === "conectado" ? true : false
+                  }
+                  {...register("estado", {
+                    required: "Selecciona un estado",
+                  })}
+                />
+                <p className="m-0">Conectado</p>
+              </div>
+              {/* OPCION 2 */}
+              <div className="d-flex flex-row gap-1">
+                <StyledInput
+                  type="radio"
+                  value="desconectado"
+                  defaultChecked={
+                    cajeroData.estado === "desconectado" ? true : false
+                  }
+                  {...register("estado", {
+                    required: "Selecciona un estado",
+                  })}
+                />
+                <p className="m-0">Desconectado</p>
+              </div>
+            </div>
+          </div>
+          {errors.genero && (
+            <small className="text-danger col-12">
+              {errors.estado.message}
             </small>
           )}
+        </InputContainer2>
+
+        <InputContainer3 className="col-12 flex-row border justify-content-start gap-5">
+          <div className="d-flex flex-column col-4">
+            {/* NUMERO */}
+            <label htmlFor="numero">Teléfono</label>
+            <StyledInput
+              type="number"
+              placeholder="Telefono"
+              defaultValue={cajeroData.numero}
+              name="numero"
+              {...register("numero", {
+                required: true,
+              })}
+            />
+            {errors.numero?.type === "required" && (
+              <small role="alert" className="text-danger">
+                Campo requerido
+              </small>
+            )}
+          </div>
+
+          <div className="d-flex flex-column col-3">
+            {/* POSICION */}
+            <label htmlFor="numero">Posición</label>
+            <StyledInput
+              type="number"
+              placeholder="Posición"
+              defaultValue={cajeroIndex}
+              name="pos"
+              {...register("pos", {
+                required: true,
+              })}
+            />
+            {errors.pos?.type === "required" && (
+              <small role="alert" className="text-danger">
+                Campo requerido
+              </small>
+            )}
+          </div>
         </InputContainer3>
 
         <InputContainer3 className="col-12">
@@ -369,8 +587,6 @@ function EditCajerosForm({ onClose, show, cajeroData }) {
 }
 
 export default EditCajerosForm;
-
-const ViewImageContainer = styled.div``;
 
 const TextContainer = styled.div`
   width: 100%;

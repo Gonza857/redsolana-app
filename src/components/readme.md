@@ -86,3 +86,11 @@ avance20:
     13/12/22: se agrego TODO el funcionamiento CRUD de foto de el cajero usando storage de firebase
 avance21: 
     14/12/22: se optimizo las vistas de informacion (modales) y se acomodo la foto de los cajeros.
+avance22:
+    23/12/22: no anote lo anterior, anoto mejoras
+        - se agrego controlador de posiciones
+        - se optimizaron y testearon sistemas de agregar/sacar imagenes y de actualiza info y posiciones
+        - se agrego el distintivo de cajero conectado/desconectado
+avance23:
+    23/12/22:
+        - se agrego iconos a los TH de la table de admin

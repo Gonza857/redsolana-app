@@ -6,7 +6,6 @@ import {
   doc,
   deleteDoc,
   updateDoc,
-  setDoc,
   addDoc,
 } from "firebase/firestore";
 import {
@@ -23,7 +22,11 @@ import {
   deleteObject,
 } from "firebase/storage";
 
+import { getAnalytics, logEvent } from "firebase/analytics";
+
 import { v4 } from "uuid";
+
+import { toast } from "react-toastify";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
@@ -32,20 +35,21 @@ const firebaseConfig = {
   storageBucket: "redsolana-91cb9.appspot.com",
   messagingSenderId: "970544333838",
   appId: process.env.REACT_APP_APP_ID,
+  measurementId: "G-1R1R028564",
 };
 
 const FirebaseApp = initializeApp(firebaseConfig);
 const DataBase = getFirestore(FirebaseApp);
-const storage = getStorage(FirebaseApp);
+const storage = getStorage();
+const analytics = getAnalytics(FirebaseApp);
+
+export function logearEvento() {
+  logEvent(analytics, "notification_received");
+}
 
 export async function getAllCajeros() {
   try {
-    // Collection, es como una referencia que apunta a la coleccion, es como un puente entre la app y la coleccion
-    // 1) Conectarse a la coleccion
-    // darle la colección y a cual base de datos
     const collectionCajeros = collection(DataBase, "cajeros");
-    // 2) Traer documentos existentes
-    // getDocs() es una promesa
     const response = await getDocs(collectionCajeros);
     let cajeros = response.docs.map((cajero) => {
       return {
@@ -53,9 +57,22 @@ export async function getAllCajeros() {
         id: cajero.id,
       };
     });
-    return cajeros;
+    let copyCajeros = [...cajeros];
+    let sortCajerosByPos = copyCajeros.sort((a, b) => {
+      return a.pos - b.pos;
+    });
+    return sortCajerosByPos;
   } catch (error) {
-    console.log(error);
+    toast.error(`Error: ${error}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   }
 }
 
@@ -63,29 +80,29 @@ export async function postCajeros(cajero) {
   try {
     const collectionRef = collection(DataBase, "cajeros");
     const docRef = await addDoc(collectionRef, cajero);
-    return docRef.id;
+    return {
+      ...cajero,
+      id: docRef.id,
+    };
   } catch (error) {
-    console.log(error);
+    toast.error(`Error: ${error}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   }
 }
 
 export function setUser(email, password) {
   const auth = getAuth();
   createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      // const user = userCredential.user;
-      // console.log(userCredential);
-      // console.log(userCredential.user);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-      // ..
-    });
+    .then(() => {})
+    .catch(() => {});
 }
 
 export async function loginUser(email, password) {
@@ -109,7 +126,6 @@ export async function loginUser(email, password) {
     } else if (error.code === "auth/invalid-email") {
       throw new Error("Formato de e-mail invalido.");
     } else {
-      console.log(error.code);
       throw new Error("Intentalo de nuevo más tarde.");
     }
   }
@@ -117,30 +133,34 @@ export async function loginUser(email, password) {
 
 // ACTUALIZAR CAJERO }
 export async function updateCajeroInfo(cajeroId, newCajero) {
-  console.log("Informacion para actualizar recibida");
-  console.log("Id del cajero recibido -->", cajeroId);
-  console.log("Info del cajero recibido -->", newCajero);
+
   await updateDoc(doc(DataBase, "cajeros", cajeroId), newCajero);
-  console.log("información actualizada");
+}
+
+export async function updateAllCajeros(arrayCajeros) {
+  console.table(arrayCajeros);
+  for (let cajero of arrayCajeros) {
+    const docRef = doc(DataBase, "cajeros", cajero.id);
+    updateDoc(docRef, cajero);
+  }
 }
 
 export async function deleteCajero(cajero) {
-  const deleteCajero = await deleteDoc(doc(DataBase, "cajeros", cajero.id));
-  console.log(deleteCajero);
+  await deleteDoc(doc(DataBase, "cajeros", cajero.id));
+  if (cajero.imagen !== null) {
+    deleteImg(cajero.imagen.randomId);
+  }
 }
 
 export async function prePostImg(file) {
   const randomId = v4();
-  console.log(randomId);
   const storageRef = ref(storage, randomId);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
-  console.log("imagen subida");
   return { url, randomId };
 }
 
 export async function deleteImg(imgId) {
-  console.log("id de la imagen recibida -->", imgId);
   const desertRef = ref(storage, imgId);
   return await deleteObject(desertRef);
 }

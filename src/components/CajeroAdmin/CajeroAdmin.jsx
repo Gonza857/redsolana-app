@@ -5,14 +5,13 @@ import { adminContext } from "../../storage/AdminContext";
 import ModalEditCajeros from "../ModalEditCajeros/ModalEditCajeros";
 import "animate.css";
 import ModalViewInfo from "../ModalViewInfo/ModalViewInfo";
-import ModalViewLink from "../ModalViewLink/ModalViewLink";
 import "./cajeroAdmin.css";
+import { BsCircleFill } from "react-icons/bs";
 
-function CajeroAdmin({ cajero, onClose }) {
-  const { handleDelete } = useContext(adminContext);
+function CajeroAdmin({ cajero }) {
+  const { handleDelete, cajeros } = useContext(adminContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [showLink, setShowLink] = useState(false);
 
   const handleCloseEdit = () => setShowEdit(false);
   const handleShowEdit = () => {
@@ -24,17 +23,32 @@ function CajeroAdmin({ cajero, onClose }) {
     setShowInfo(true);
   };
 
-  const handleCloseLink = () => setShowLink(false);
-  const handleShowLink = () => {
-    setShowLink(true);
-  };
+  useEffect(() => {
+    if (cajero.nombre.length >= 11) {
+      let cambio = cajero.nombre.substring(10, -1);
+      let nameUpdate = cambio.concat(" ...");
+      cajero.nombre = nameUpdate;
+    }
+  }, [cajeros, cajero]);
 
   return (
     <>
-      <tr key={cajero.id} className="animate__animated animate__fadeIn">
+      <tr className="animate__animated animate__fadeIn">
+        <td>{cajero.pos + 1}</td>
         <td>{cajero.red}</td>
         <td>{cajero.nombre}</td>
-        <td className="d-md-none">
+        <td className="d-none d-md-table-cell">{cajero.numero}</td>
+        <td className="d-none d-md-table-cell">
+          {cajero.genero === "M" ? "M" : "F"}
+        </td>
+        <td>
+          {cajero.estado === "desconectado" ? (
+            <BsCircleFill style={{ color: "red" }} />
+          ) : (
+            <BsCircleFill style={{ color: "green" }} />
+          )}
+        </td>
+        <td className="">
           <Button
             className="cajeroBtn"
             onClick={() => {
@@ -44,18 +58,7 @@ function CajeroAdmin({ cajero, onClose }) {
             <FaEye />
           </Button>
         </td>
-        <td className="d-none d-md-table-cell">{cajero.genero}</td>
-        <td className="d-none d-md-table-cell">{cajero.numero}</td>
-        <td className="d-none d-md-table-cell">
-          <Button
-            className="cajeroBtn"
-            onClick={() => {
-              handleShowLink(cajero);
-            }}
-          >
-            <FaEye />
-          </Button>
-        </td>
+
         <td>
           <Button
             className="cajeroBtn"
@@ -81,16 +84,13 @@ function CajeroAdmin({ cajero, onClose }) {
         onClose={handleCloseEdit}
         show={showEdit}
         cajeroData={cajero}
+        cajeroIndex={cajero.pos + 1}
       />
       <ModalViewInfo
         onClose={handleCloseInfo}
         show={showInfo}
         cajeroData={cajero}
-      />
-      <ModalViewLink
-        onClose={handleCloseLink}
-        show={showLink}
-        cajeroData={cajero}
+        cajeroIndex={cajero.pos + 1}
       />
     </>
   );

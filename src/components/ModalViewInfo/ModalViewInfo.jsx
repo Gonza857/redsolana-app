@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
+import { BsCircleFill } from "react-icons/bs";
 
 function ModalViewInfo({ onClose, show, cajeroData }) {
-  console.log(cajeroData);
   return (
     <Modal
       show={show}
@@ -23,6 +23,14 @@ function ModalViewInfo({ onClose, show, cajeroData }) {
           <p>
             Genero:
             {cajeroData.genero !== "M" ? " Femenino" : " Masculino"}
+          </p>
+          <p>
+            Estado: {" "}
+            {cajeroData.estado === "desconectado" ? (
+              <BsCircleFill style={{ color: "red" }} />
+            ) : (
+              <BsCircleFill style={{ color: "green" }} />
+            )}
           </p>
           <p>Numero: {cajeroData.numero}</p>
           <p>

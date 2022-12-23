@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../firebase/firebase";
-import "./login.css";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,6 +8,7 @@ import { adminContext } from "../../storage/AdminContext";
 import { Animated } from "react-animated-css";
 import { AiOutlineUser } from "react-icons/ai";
 import { Metronome } from "@uiball/loaders";
+import styled from "styled-components";
 
 function Login() {
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ function Login() {
   } = useForm();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [errorAlert, setErrorAlert] = useState(false);
 
   useEffect(() => {
     if (isAdmin) navigate("/adminCajeros");
@@ -40,7 +39,6 @@ function Login() {
     });
 
   const errorSignIn = (error) => {
-    console.log(error);
     toast.error(`${error}`, {
       position: "top-right",
       autoClose: 2000,
@@ -73,8 +71,8 @@ function Login() {
     loginUser(data.adminMail, data.adminPass)
       .then((respuesta) => {
         if (
-          respuesta.user.uid === "INdShNqqCJS6pMg8g9iZmLd7hBo1" ||
-          respuesta.user.uid === "SG6i2m7MaVSTuXGo83hfwPNKido1"
+          respuesta.user.uid === process.env.REACT_APP_USER2 ||
+          respuesta.user.uid === process.env.REACT_APP_USER1
         ) {
           signInToast();
           navigate("/adminCajeros");
@@ -99,13 +97,13 @@ function Login() {
 
   return (
     <>
-      <div className="authContainer">
+      <LoginContainer>
         <Animated
           animationIn="bounceInLeft"
           animationOut="fadeOut"
           isVisible={true}
         >
-          <div className="signIn-container col-11 col-sm-8 px-sm-5 col-sm-6 col-md-5 px-md-4 px-lg-3 col-xl-3">
+          <LoginFormContainer className="col-11 col-sm-8 px-sm-5 col-sm-6 col-md-5 px-md-4 px-lg-3 col-xl-3">
             {isLoading ? (
               <>
                 <div className="m-auto">
@@ -119,20 +117,20 @@ function Login() {
                   animationOut="fadeOut"
                   isVisible={true}
                 >
-                  <form
-                    className="signIn-form gap-3"
+                  <LoginForm
+                    className="gap-3"
                     onSubmit={handleSubmit(onSubmit)}
                   >
                     {/* IMAGEN */}
-                    <div className="signIn-form_img">
-                      <AiOutlineUser className="signIn-form_icon" />
-                    </div>
+                    <LoginImage>
+                      <AiOutlineUser />
+                    </LoginImage>
                     {/* CONTENEDOR INPUTS */}
-                    <div className="d-flex flex-column">
+                    <InputsContainer>
                       {/* EMAIL */}
-                      <div className="d-flex flex-column signIn-inputs mb-4">
-                        <input
-                          className="signIn-mail_input col-10 m-auto"
+                      <InputContainer className="d-flex flex-column signIn-inputs mb-4">
+                        <StyledInput
+                          className="col-10"
                           type="mail"
                           placeholder="Correo electrónico"
                           name="adminMail"
@@ -141,16 +139,14 @@ function Login() {
                           })}
                         />
                         {errors.adminMail?.type === "required" && (
-                          <small role="alert" className="text-danger">
-                            Campo requerido
-                          </small>
+                          <AlertText role="alert">Campo requerido</AlertText>
                         )}
-                      </div>
+                      </InputContainer>
                       {/* CONTRASEÑA */}
-                      <div className="d-flex flex-column signIn-inputs">
-                        <input
-                          className="signIn-pass_input col-10 m-auto"
-                          type="text"
+                      <InputContainer className="d-flex flex-column signIn-inputs">
+                        <StyledInput
+                          className="col-10"
+                          type="password"
                           placeholder="Contraseña"
                           name="adminPass"
                           {...register("adminPass", {
@@ -158,33 +154,106 @@ function Login() {
                           })}
                         />
                         {errors.adminPass?.type === "required" && (
-                          <small role="alert" className="text-danger">
-                            Campo requerido
-                          </small>
+                          <AlertText role="alert">Campo requerido</AlertText>
                         )}
-                      </div>
-                    </div>
-                    <input
-                      type="submit"
-                      className="btn signIn-submit_btn"
-                      value="Iniciar sesión"
-                    />
-                  </form>
+                      </InputContainer>
+                    </InputsContainer>
+                    <SubmitInput type="submit" value="Iniciar sesión" />
+                  </LoginForm>
                 </Animated>
               </>
             )}
-          </div>
+          </LoginFormContainer>
         </Animated>
         <ToastContainer />
-      </div>
+      </LoginContainer>
     </>
   );
 }
 
 export default Login;
 
-{
-  /* <form
-                  className="signIn-form col-8 col-sm-6 col-md-5 col-xl-3 my-5 py-5 px-3 px-md-5 gap-3 redB"
-                  on */
-}
+const LoginContainer = styled.div`
+  margin-top: 70px;
+  height: calc(100vh - 70px);
+  display: grid;
+  align-items: center;
+  background-color: #020006;
+  background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23d4af37' fill-opacity='0.4'%3E%3Cpath d='M0 0h42v44H0V0zm1 1h40v20H1V1zM0 23h20v20H0V23zm22 0h20v20H22V23z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+`;
+
+const LoginFormContainer = styled.div`
+  margin: auto;
+  height: 408px;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 15px;
+  background: radial-gradient(
+    circle,
+    rgba(88, 88, 88, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  border: 1px solid #424242;
+`;
+
+const LoginForm = styled.form`
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;
+
+const LoginImage = styled.div`
+  justify-content: center;
+  width: fit-content;
+  margin: auto;
+  svg {
+    color: #fff;
+    font-size: 90px;
+  }
+`;
+
+const InputsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputContainer = styled.div`
+  padding-bottom: 25px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledInput = styled.input`
+  margin: auto;
+  padding: 5px 10px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+`;
+
+const AlertText = styled.small`
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 40px;
+`;
+
+const SubmitInput = styled.input`
+  width: fit-content;
+  margin: auto;
+  background-color: #d4af37;
+  padding: 7px 15px;
+  border-radius: 15px;
+  color: #000;
+  font-weight: 600;
+  transition: all 0.15s;
+  border: 0.3px solid #c7c7c7;
+  &:hover {
+    background-color: #d4af37c2;
+    border: 0.3px solid #000;
+  }
+`;

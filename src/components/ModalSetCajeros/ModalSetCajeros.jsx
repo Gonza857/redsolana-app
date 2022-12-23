@@ -1,19 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCajerosForm from "../AddCajerosForm/AddCajerosForm";
+import AddCajerosForm from "../InputCajeros/AddCajerosForm";
 
 function ModalSetCajeros({ onClose, show }) {
-  // if (
-  //   errors.red?.type === "required" ||
-  //   errors.adminPass?.type === "required" ||
-  //   errors.nombre?.type ||
-  //   errors.genero ||
-  //   errors.numero?.type
-  // ) {
-  //   completeFields();
-  // }
-
   return (
     <Modal
       show={show}

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import "./navbar.css";
 import { adminContext } from "../../storage/AdminContext";
 import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
@@ -25,15 +24,6 @@ function Navbar() {
     if (this.window.innerWidth > 960) setIsOpenMenu(false);
   });
 
-  function openMenu() {
-    setIsOpenMenu(!isOpenMenu);
-    if (!isOpenMenu) {
-      console.log("Menu abierto");
-    } else {
-      console.log("Menu cerrado");
-    }
-  }
-
   function linkNavigateAction() {
     setIsOpenMenu(false);
     window.scrollTo(0, 0);
@@ -44,13 +34,9 @@ function Navbar() {
       <ToastContainer />
       <Wrapper>
         <LogoContainer>
-          <Link to="/" className="p-0 m-0 d-flex align-items-center brand-text">
-            <img
-              src="./assets/images/logo2.png"
-              className="navbar-brand-logo"
-              alt="brand-logo"
-            />
-            <h2 className="p-0 m-0 ms-4">Red Solana</h2>
+          <Link to="/" className="d-flex align-items-center brand-text">
+            <BrandLogo src="./assets/images/logo2.png" alt="brand-logo" />
+            <BrandText className="ms-4">Red Solana</BrandText>
           </Link>
         </LogoContainer>
         <MenuOverlay className={`${isOpenMenu ? "showMenuOverlay" : ""}`}>
@@ -100,6 +86,7 @@ function Navbar() {
                       localStorage.removeItem("active");
                       setIsAdmin(false);
                       logOut();
+                      linkNavigateAction();
                     }}
                   >
                     Cerrar sesión
@@ -114,7 +101,7 @@ function Navbar() {
 
         <HamburguerContainer
           className={`icon nav-icon-5 ${isOpenMenu ? "open" : " "}`}
-          onClick={() => openMenu()}
+          onClick={() => setIsOpenMenu(!isOpenMenu)}
         >
           <span></span>
           <span></span>
@@ -136,6 +123,7 @@ const NavbarContainer = styled.nav`
     rgba(88, 88, 88, 1) 100%
   );
   border-bottom: 1px solid #fff;
+  /* background: transparent; */
 `;
 
 const Wrapper = styled.div`
@@ -162,6 +150,31 @@ const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   h1 {
+    color: #fff;
+  }
+`;
+
+const BrandLogo = styled.img`
+  width: 50px;
+  height: 50px;
+  background-color: #d4af37;
+  background-image: linear-gradient(to bottom, #8c81ec, #66cdff);
+  padding: 10px;
+  border-radius: 50%;
+  transition: transform 1s;
+  &:hover {
+    transform: rotate(360deg) scale(1.15);
+  }
+`;
+
+const BrandText = styled.h2`
+  padding: 0;
+  margin: 0;
+  text-decoration: none !important;
+  list-style: none;
+  color: #d4af37;
+  transition: color 0.3s;
+  &:hover {
     color: #fff;
   }
 `;

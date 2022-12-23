@@ -1,85 +1,66 @@
-import React, { useEffect, useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import "./footer.css";
-import { BsInstagram } from "react-icons/bs";
 import styled from "styled-components";
-import { adminContext } from "../../storage/AdminContext";
 
 function Footer() {
-  const { verificarUrl } = useContext(adminContext);
-
-  const navigate = useNavigate();
-
-  // const subir = () => {
-  //   console.log(window.scrollY);
-  //   if (window.screenY > 500) {
-  //     console.log("pasaste los 300px");
-  //   } else {
-  //     console.log("todavia no pasaste los 300");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const verUrl = verificarUrl();
-  //   console.log(verUrl);
-  // }, []);
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", () => {
-  //     subir();
-  //   });
-  // }, [window.screenY]);
-
   return (
     <FooterContainer className="d-flex flex-column">
       <FooterWrapper className="col-12 gap-2 gap-md-0">
         <PageSections className="col-12 col-md-6 px-2 px-sm-0">
           <PageSectionsWrapper className="gap-2">
             <h5>Secciones</h5>
-            <a
+            <Link
+              to="/"
               onClick={() => {
                 window.scrollTo(0, 0);
-                navigate("/");
               }}
             >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
+              to="/cajeros"
               onClick={() => {
                 window.scrollTo(0, 0);
-                navigate("/cajeros");
               }}
             >
               Cajeros
-            </a>
-            <a
+            </Link>
+            <Link
+              to="/cronograma"
               onClick={() => {
                 window.scrollTo(0, 0);
-                navigate("/tyc");
               }}
             >
-              Terminos y condiciones
-            </a>
+              Cronograma de pagos
+            </Link>
           </PageSectionsWrapper>
         </PageSections>
         <CopyrightColumn className="col-12 col-md-6 gap-3 px-2 px-sm-0">
           <Link to="/" className="p-0 m-0 d-flex align-items-center brand-text">
-            <img
-              src="./assets/images/logo2.png"
-              className="navbar-brand-logo"
-              alt="brand-logo"
-            />
-            <h2 className="p-0 m-0 ms-4">Red Solana</h2>
+            <BrandLogo src="./assets/images/logo2.png" alt="brand-logo" />
+            <BrandText className="ms-4">Red Solana</BrandText>
           </Link>
           <div className="text-white text-center">
             © Red Solana - 2022. Todos los derechos reservados.
           </div>
         </CopyrightColumn>
       </FooterWrapper>
-      <div className="col-12 text-white meritos bg-primary d-flex align-items-center justify-content-center">
-        <p className="m-0 p-0">Creado y diseñado por Gonzalo Ramos.</p>
-      </div>
+      <DevInfo className="col-12">
+        <p>
+          Creado y diseñado por{" "}
+          <button
+            onClick={() =>
+              window.open(
+                "https://www.linkedin.com/in/gonzaloramos-webdev//",
+                "_blank"
+              )
+            }
+            className="m-0 p-0"
+          >
+            Gonzalo Ramos.
+          </button>
+        </p>
+      </DevInfo>
     </FooterContainer>
   );
 }
@@ -102,6 +83,26 @@ const FooterWrapper = styled.div`
   );
 `;
 
+const DevInfo = styled.div`
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 0.8px solid #c7c7c7;
+  background-color: #123;
+  p {
+    color: #fff;
+    font-size: 12px;
+    margin: 0;
+  }
+  button {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 12px;
+  }
+`;
+
 const CopyrightColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -116,6 +117,31 @@ const CopyrightColumn = styled.div`
   padding: 20px 0;
 `;
 
+const BrandLogo = styled.img`
+  width: 50px;
+  height: 50px;
+  background-color: #d4af37;
+  background-image: linear-gradient(to bottom, #8c81ec, #66cdff);
+  padding: 10px;
+  border-radius: 50%;
+  transition: transform 1s;
+  &:hover {
+    transform: rotate(360deg) scale(1.15);
+  }
+`;
+
+const BrandText = styled.h2`
+  padding: 0;
+  margin: 0;
+  text-decoration: none !important;
+  list-style: none;
+  color: #d4af37;
+  transition: color 0.3s;
+  &:hover {
+    color: #fff;
+  }
+`;
+
 const PageSections = styled.div`
   display: grid;
   align-items: center;
@@ -127,9 +153,18 @@ const PageSectionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  && {
-    padding: 0;
-    margin: 0;
-    color: #fff;
+  h5 {
+    color: #fff !important;
+    transition: all 0.5s ease;
+    &:hover {
+      color: #d4a747 !important;
+    }
+  }
+  a {
+    color: #d4a747 !important;
+    transition: all 0.5s ease;
+    &:hover {
+      color: #fff !important;
+    }
   }
 `;

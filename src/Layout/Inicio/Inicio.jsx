@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 function Inicio() {
   return (
-    <InicioContainer className="pt-3 pb-sm-0">
-      <Wrapper className="col-11 gap-4 p-1 col-lg-10 col-xl-9 col-xxl-8">
+    <InicioContainer className="col-12 m-0">
+      <Wrapper className="col-11 gap-4 col-lg-10 col-xl-9 col-xxl-8 py-4 p-md-0">
         <CasinoCard
           cardNumber={1}
           bgColor={``}
@@ -54,21 +54,25 @@ function Inicio() {
 export default Inicio;
 
 const InicioContainer = styled.main`
-  margin-top: 70px;
-  min-height: calc(100vh - 70px);
-  overflow: hidden;
   display: grid;
   justify-content: center;
   align-items: center;
-  background-image: url(./assets/images/fondogold.jpeg);
+  padding-top: 70px;
+  min-height: 100vh;
+  overflow: hidden;
+  background-image: url(./assets/images/fondoCardGold.png);
   background-position: center center;
   background-repeat: repeat;
   background-size: cover;
+  @media screen and (max-width: 736px) {
+    background-size: 100% auto;
+  }
 `;
 
 const Wrapper = styled.div`
-  margin: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 0;
+  margin: auto;
 `;
