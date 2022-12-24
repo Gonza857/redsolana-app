@@ -77,11 +77,14 @@ export const AdminContextProvider = (props) => {
     let param = data.nombre.toLowerCase();
     let busquedad = cajeros.filter((cajero) => {
       cajero.nombre = cajero.nombre.toLowerCase();
+
       if (cajero.nombre.includes(param)) {
         return cajero;
+      } else {
+        return null;
       }
-      return [];
     });
+
     setSearchResult(busquedad);
   }
 

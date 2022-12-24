@@ -94,3 +94,6 @@ avance22:
 avance23:
     23/12/22:
         - se agrego iconos a los TH de la table de admin
+detalles2:
+    24/12/22:
+        - se corrigio el sistema de busquedad porque no funcionaba bien
