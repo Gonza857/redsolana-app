@@ -43,6 +43,7 @@ Se utilizaron las siguientes librerías:
 - Toastify
 - SweetAlert2
 - uuId
+- 
 Como servicio de backend se utilizó Firebase con sus siguientes funcionalidades:
 - Firestore
 - Authentication
