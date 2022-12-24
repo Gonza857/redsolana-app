@@ -22,6 +22,7 @@ Proyecto destinado a un casino.
 - Enlace
 - Estado
 - Imagen
+
 Tiene funciones para trabajar estos mismos, editando información, cambiando imagen o la posición del cajero.
 
 ## Tecnológias utilizadas
