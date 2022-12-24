@@ -27,6 +27,7 @@ Tiene funciones para trabajar estos mismos, editando información, cambiando ima
 
 ## Tecnológias utilizadas
 Se utilizo React JS como framework de Javascript.
+
 Se utilizaron los siguientes hooks:
 - useState
 - useEffect
