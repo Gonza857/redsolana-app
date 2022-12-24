@@ -33,7 +33,7 @@ Se utilizaron los siguientes hooks:
 - useEffect
 - useContext
 - useForm (react-hook-form)
-- 
+
 Se utilizó Bootstrap 5 como framework de CSS
 Se utilizaron las siguientes librerías:
 - React Router DOM
