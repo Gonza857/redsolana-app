@@ -9,10 +9,16 @@ function CajeroCard({ cajero }) {
   const { cajeros } = useContext(adminContext);
 
   useEffect(() => {
-    if (cajero.nombre.length >= 11) {
-      let cambio = cajero.nombre.substring(10, -1);
-      let nameUpdate = cambio.concat(" ...");
+    if (cajero.nombre.length > 15) {
+      console.log(cajero.nombre);
+      console.log(cajero.nombre.length);
+      let cambio = cajero.nombre.substring(12, -1);
+      console.log(cambio);
+      let nameUpdate = cambio.concat("...");
       cajero.nombre = nameUpdate;
+    } else {
+      console.log(cajero.nombre);
+      console.log(cajero.nombre.length);
     }
   }, [cajeros, cajero]);
 

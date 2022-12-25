@@ -13,7 +13,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence,
+  browserLocalPersistence,
+  inMemoryPersistence,
+  signInWithRedirect,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 
 import {
@@ -29,6 +34,7 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import { v4 } from "uuid";
 
 import { toast } from "react-toastify";
+import { set } from "react-ga";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
@@ -44,6 +50,7 @@ const FirebaseApp = initializeApp(firebaseConfig);
 const DataBase = getFirestore(FirebaseApp);
 const storage = getStorage();
 const analytics = getAnalytics(FirebaseApp);
+const auth = getAuth(FirebaseApp);
 
 export function logearEvento() {
   logEvent(analytics, "notification_received");
@@ -142,8 +149,7 @@ export async function deleteImg(imgId) {
 
 export async function loginWithPersistance(email, password) {
   console.log(email, password);
-  const auth = getAuth();
-  setPersistence(auth, browserSessionPersistence)
+  setPersistence(auth, browserLocalPersistence)
     .then(() => {
       return signInWithEmailAndPassword(auth, email, password);
     })
@@ -164,8 +170,7 @@ export async function loginWithPersistance(email, password) {
     });
 }
 
-export async function verifyUser(email, password) {
-  const auth = getAuth();
+export async function signInFB(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -189,4 +194,23 @@ export async function verifyUser(email, password) {
       throw new Error("Intentalo de nuevo más tarde.");
     }
   }
+}
+
+export async function monitorAuthState() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (
+        user.uid === process.env.REACT_APP_USER1 ||
+        user.uid === process.env.REACT_APP_USER2
+      ) {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  });
+}
+
+export async function logoutFB() {
+  await signOut(auth);
 }

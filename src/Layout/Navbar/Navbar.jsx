@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { adminContext } from "../../storage/AdminContext";
 import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
+import { logoutFB } from "../../firebase/firebase";
 
 function Navbar() {
   const { isAdmin, setIsAdmin } = useContext(adminContext);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   function logOut() {
+    logoutFB();
+    setIsAdmin(false);
+    linkNavigateAction();
     toast.success("Cerraste sesión correctamente!", {
       position: "top-right",
       autoClose: 1500,
@@ -83,10 +87,7 @@ function Navbar() {
                   <LogoutBtn
                     className="m-0 menuItemLink"
                     onClick={() => {
-                      localStorage.removeItem("active");
-                      setIsAdmin(false);
                       logOut();
-                      linkNavigateAction();
                     }}
                   >
                     Cerrar sesión

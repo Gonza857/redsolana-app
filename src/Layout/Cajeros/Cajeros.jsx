@@ -7,11 +7,7 @@ import { BsCircleFill } from "react-icons/bs";
 
 function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);
-  const { cajeros, setNumberSection } = useContext(adminContext);
-
-  useEffect(() => {
-    setNumberSection(1);
-  }, [setNumberSection]);
+  const { cajeros } = useContext(adminContext);
 
   useEffect(() => {
     if (cajeros.length === 0) {

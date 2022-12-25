@@ -1,7 +1,13 @@
 import { createContext, useEffect, useState } from "react";
-import { deleteCajero, getAllCajeros } from "../firebase/firebase";
+import {
+  deleteCajero,
+  getAllCajeros,
+  monitorAuthState,
+  revisarEstado,
+} from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { getAuth } from "firebase/auth";
 
 export const adminContext = createContext();
 
@@ -10,10 +16,7 @@ export const AdminContextProvider = (props) => {
   const [searchedName, setSearchedName] = useState("");
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   const [cajeros, setCajeros] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(
-    false || localStorage.getItem("active")
-  );
-  const [numberSection, setNumberSection] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -154,6 +157,8 @@ export const AdminContextProvider = (props) => {
 
   useEffect(() => {
     traerCajeros();
+    let verif = monitorAuthState();
+    setIsAdmin(verif);
   }, []);
 
   const value = {
@@ -170,8 +175,6 @@ export const AdminContextProvider = (props) => {
     buscarCajero,
     searchResult,
     searchedName,
-    numberSection,
-    setNumberSection,
     moveCajerosPosition,
   };
 

@@ -101,3 +101,6 @@ detalles3:
     24/12/22: 
         - se modifico el readme
         - se agrego la verificación para tener que estar registrado para poder cambiar, porque si el que sabe cambiaba el estado de setIsAdmin, podia editar correctamente pero ahora necesita tener el auth para hacerlo sino no tiene permiso
+detalles4:
+    25/12/22: 
+        - se modifico firebase para mantener la sesión abierta y que no tenga que iniciar cada rato

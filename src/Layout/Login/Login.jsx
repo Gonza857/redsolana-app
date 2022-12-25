@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginWithPersistance, verifyUser } from "../../firebase/firebase";
+import { loginWithPersistance, signInFB } from "../../firebase/firebase";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -69,12 +69,11 @@ function Login() {
   const onSubmit = (data) => {
     setIsLoading(true);
     console.log(data.adminMail, data.adminPass);
-    loginWithPersistance(data.adminMail, data.adminPass)
+    signInFB(data.adminMail, data.adminPass)
       .then(() => {
         signInToast();
         navigate("/adminCajeros");
         setIsAdmin(true);
-        localStorage.setItem("active", true);
       })
       .catch((error) => {
         errorSignIn(error);
