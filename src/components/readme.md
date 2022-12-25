@@ -104,3 +104,6 @@ detalles3:
 detalles4:
     25/12/22: 
         - se modifico firebase para mantener la sesión abierta y que no tenga que iniciar cada rato
+detalles5:
+    25/12/22:
+        - se borraron los console.log del punto anterior

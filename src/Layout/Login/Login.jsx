@@ -68,7 +68,6 @@ function Login() {
 
   const onSubmit = (data) => {
     setIsLoading(true);
-    console.log(data.adminMail, data.adminPass);
     signInFB(data.adminMail, data.adminPass)
       .then(() => {
         signInToast();

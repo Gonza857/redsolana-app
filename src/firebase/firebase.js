@@ -148,7 +148,6 @@ export async function deleteImg(imgId) {
 }
 
 export async function loginWithPersistance(email, password) {
-  console.log(email, password);
   setPersistence(auth, browserLocalPersistence)
     .then(() => {
       return signInWithEmailAndPassword(auth, email, password);
@@ -177,7 +176,6 @@ export async function signInFB(email, password) {
       email,
       password
     );
-    console.log(userCredential);
     return userCredential;
   } catch (error) {
     if (error.code === "auth/too-many-requests") {
