@@ -22,15 +22,18 @@ Proyecto destinado a un casino.
 - Enlace
 - Estado
 - Imagen
+
 Tiene funciones para trabajar estos mismos, editando información, cambiando imagen o la posición del cajero.
 
 ## Tecnológias utilizadas
 Se utilizo React JS como framework de Javascript.
+
 Se utilizaron los siguientes hooks:
 - useState
 - useEffect
 - useContext
 - useForm (react-hook-form)
+
 Se utilizó Bootstrap 5 como framework de CSS
 Se utilizaron las siguientes librerías:
 - React Router DOM
@@ -40,6 +43,8 @@ Se utilizaron las siguientes librerías:
 - Toastify
 - SweetAlert2
 - uuId
+
+
 Como servicio de backend se utilizó Firebase con sus siguientes funcionalidades:
 - Firestore
 - Authentication
