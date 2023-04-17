@@ -197,12 +197,7 @@ export async function signInFB(email, password) {
 export async function monitorAuthState() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      if (
-        user.uid === process.env.REACT_APP_USER1 ||
-        user.uid === process.env.REACT_APP_USER2
-      ) {
-        return true;
-      }
+      return user.uid;
     } else {
       return false;
     }

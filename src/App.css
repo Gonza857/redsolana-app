@@ -1,0 +1,38 @@
+.bor1 {
+    border: 4px solid red;
+}
+.bor2 {
+    border: 4px solid blue;
+}
+.bor3 {
+    border: 4px solid green;
+}
+.bor4 {
+    border: 4px solid yellow;
+}
+
+.showMenu {
+    transform: translateX(0);
+    transition: transform .3s;
+}
+
+.closeMenu {
+    transform: translateX(-100%);
+    transition: transform .3s;
+}
+
+.opacity1 {
+    opacity: 1 !important;
+}
+
+.opacity0-5 {
+    opacity: 0.5 !important;
+}
+
+.blockEvents {
+    pointer-events: none;
+}
+
+.activeEvents {
+    pointer-events: auto;
+}

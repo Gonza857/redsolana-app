@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import styled from "styled-components";
+import { adminContext } from "../../storage/AdminContext";
+import { useEffect } from "react";
 
 function Inicio() {
+  const { isOpenMenu } = useContext(adminContext);
+  useEffect(() => {
+    console.log(isOpenMenu);
+  }, [isOpenMenu]);
+
   return (
-    <InicioContainer className="col-12 m-0">
+    <InicioContainer
+      className={`col-12 m-0 bor3 ${
+        isOpenMenu ? "blockEvents" : "activeEvents"
+      }`}
+      style={{
+        opacity: `${window.screen.width < 992 && isOpenMenu ? "0.3" : "1"}`,
+      }}
+    >
       <Wrapper className="col-11 gap-4 col-lg-10 col-xl-9 col-xxl-8 py-4 p-md-0">
         <CasinoCard
           cardNumber={1}
@@ -20,11 +34,11 @@ function Inicio() {
           cardNumber={2}
           bgColor={`#161616`}
           bgImageUrl={``}
-          bgPadding={`25px`}
-          casinoLink="https://magiplay.net"
-          casinoName="MagiPlay"
-          imgAlt="Casino MagiPlay"
-          imgRoute="magiplay-logo.svg"
+          bgPadding={`50px`}
+          casinoLink="https://ganaencasa.co/"
+          casinoName="Gana En Casa"
+          imgAlt="Casino Gana En Casa"
+          imgRoute="ganaencasa-logo.svg"
         />
         <CasinoCard
           cardNumber={3}
@@ -64,6 +78,7 @@ const InicioContainer = styled.main`
   background-position: center center;
   background-repeat: repeat;
   background-size: cover;
+  transition: all 0.3s;
   @media screen and (max-width: 736px) {
     background-size: 100% auto;
   }

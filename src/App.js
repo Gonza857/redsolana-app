@@ -8,6 +8,7 @@ import Rutas from "./routes/Rutas";
 import { useEffect } from "react";
 import ReactGA from "react-ga";
 import { logearEvento } from "./firebase/firebase";
+import WhatsappBtn from "./components/WhatsappBtn/WhatsappBtn";
 
 function App() {
   useEffect(() => {
@@ -20,6 +21,7 @@ function App() {
       <Navbar />
       <Rutas />
       <Footer />
+      <WhatsappBtn />
     </BrowserRouter>
   );
 }

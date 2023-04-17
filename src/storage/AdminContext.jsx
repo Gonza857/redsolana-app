@@ -3,11 +3,9 @@ import {
   deleteCajero,
   getAllCajeros,
   monitorAuthState,
-  revisarEstado,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { getAuth } from "firebase/auth";
 
 export const adminContext = createContext();
 
@@ -17,6 +15,7 @@ export const AdminContextProvider = (props) => {
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   const [cajeros, setCajeros] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -157,8 +156,17 @@ export const AdminContextProvider = (props) => {
 
   useEffect(() => {
     traerCajeros();
-    let verif = monitorAuthState();
-    setIsAdmin(verif);
+    setIsAdmin(() => {
+      let ver = monitorAuthState();
+      if (
+        ver === process.env.REACT_APP_USER1 ||
+        ver === process.env.REACT_APP_USER2
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }, []);
 
   const value = {
@@ -176,6 +184,8 @@ export const AdminContextProvider = (props) => {
     searchResult,
     searchedName,
     moveCajerosPosition,
+    isOpenMenu,
+    setIsOpenMenu,
   };
 
   return (

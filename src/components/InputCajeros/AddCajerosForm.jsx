@@ -139,7 +139,7 @@ function AddCajerosForm({ onClose }) {
       }
     }
   };
-  
+
   return (
     <AddForm className="gap-3" onSubmit={handleSubmit(onSubmit)}>
       {/* NOMBRE, GENERO, RED Y NUMERO */}
@@ -249,8 +249,7 @@ function AddCajerosForm({ onClose }) {
             </small>
           )}
         </InputContainer2>
-
-        <InputContainer3 className="col-12 flex-row border justify-content-start gap-5">
+        <InputContainer3 className="col-12 flex-row justify-content-start gap-5">
           <div className="d-flex flex-column col-4">
             {/* NUMERO */}
             <label htmlFor="numero">Teléfono</label>
