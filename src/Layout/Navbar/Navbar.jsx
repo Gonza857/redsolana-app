@@ -20,10 +20,10 @@ const adminLinks = [
 function Navbar() {
   const { isAdmin, setIsAdmin, isOpenMenu, setIsOpenMenu } =
     useContext(adminContext);
+
   function logOut() {
     logoutFB();
     setIsAdmin(false);
-    linkNavigateAction();
     toast.success("Cerraste sesión correctamente!", {
       position: "top-right",
       autoClose: 1500,
@@ -39,11 +39,6 @@ function Navbar() {
   window.addEventListener("resize", function () {
     if (this.window.innerWidth > 960) setIsOpenMenu(false);
   });
-
-  function linkNavigateAction() {
-    setIsOpenMenu(false);
-    window.scrollTo(0, 0);
-  }
 
   return (
     <NavbarContainer className="fixed-top">
@@ -160,16 +155,25 @@ function Navbar() {
               </>
             ))}
           </ul>
-          {isAdmin ? (
+          {isAdmin && (
             <AdminMenu>
-              {adminLinks.map((link) => (
-                <MenuItem>
-                  <Link to={link.to}>{link.slug}</Link>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <Link to="/admin" onClick={() => setIsOpenMenu(false)}>
+                  Admin
+                </Link>
+              </MenuItem>
+              <MenuItem>
+                <Link
+                  to="/"
+                  onClick={() => {
+                    logOut();
+                    setIsOpenMenu(false);
+                  }}
+                >
+                  Cerrar Sesión
+                </Link>
+              </MenuItem>
             </AdminMenu>
-          ) : (
-            "No sos nada amigo"
           )}
         </div>
       </NewNav>

@@ -143,6 +143,7 @@ function Login() {
                           type="password"
                           placeholder="Contraseña"
                           name="adminPass"
+                          autoComplete="on"
                           {...register("adminPass", {
                             required: true,
                           })}
