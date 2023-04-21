@@ -1,7 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { AiOutlineInstagram, AiOutlineFacebook } from "react-icons/ai";
+
+const navbarLinks = [
+  { to: "/", slug: "Home" },
+  { to: "/cajeros", slug: "Cajeros" },
+  { to: "/cronograma", slug: "Cronograma" },
+];
+
+const scrollToZero = () => window.scrollTo(0, 0);
 
 function Footer() {
   return (
@@ -10,33 +18,13 @@ function Footer() {
         <PageSections className="col-12 col-md-4 px-2 px-sm-0">
           <PageSectionsWrapper className="gap-2">
             <p>Secciones</p>
-            <Link
-              to="/"
-              onClick={() => {
-                window.scrollTo(0, 0);
-              }}
-            >
-              Home
-            </Link>
-            <Link
-              to="/cajeros"
-              onClick={() => {
-                window.scrollTo(0, 0);
-              }}
-            >
-              Cajeros
-            </Link>
-            <Link
-              to="/cronograma"
-              onClick={() => {
-                window.scrollTo(0, 0);
-              }}
-            >
-              Cronograma de pagos
-            </Link>
+            {navbarLinks.map(({ slug, to }) => (
+              <Link to={to} onClick={scrollToZero}>
+                {slug}
+              </Link>
+            ))}
           </PageSectionsWrapper>
         </PageSections>
-
         <SocialMedia className="col-12 col-md-4 px-2 px-sm-0">
           <SocialMediaWrapper>
             <p>¡Encuentranos en las redes!</p>
@@ -58,7 +46,6 @@ function Footer() {
             </div>
           </SocialMediaWrapper>
         </SocialMedia>
-
         <CopyrightColumn className="col-12 col-md-4 gap-3 px-2 px-sm-0">
           <Link to="/" className="p-0 m-0 d-flex align-items-center brand-text">
             <BrandLogo src="./assets/images/logo2.png" alt="brand-logo" />
@@ -94,17 +81,21 @@ export default Footer;
 const FooterContainer = styled.footer`
   border-top: 1px solid #fff;
   height: fit-content;
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(88, 88, 88, 1) 100%
+  );
 `;
 
 const FooterWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   min-height: 300px;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(88, 88, 88, 1) 100%
-  );
+  @media screen and (min-width: 968px) {
+    width: 80%;
+    margin: auto;
+  }
 `;
 
 const DevInfo = styled.div`
