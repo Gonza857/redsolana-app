@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { adminContext } from "../../storage/AdminContext";
-import { Metronome } from "@uiball/loaders";
-import CajeroCard from "../../components/CajeroCard/CajeroCard";
 import styled from "styled-components";
+import { Metronome } from "@uiball/loaders";
 import { BsCircleFill } from "react-icons/bs";
+import { adminContext } from "../../storage/AdminContext";
+import CajeroCard from "../../components/CajeroCard/CajeroCard";
 
 function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);

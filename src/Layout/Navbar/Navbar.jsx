@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { adminContext } from "../../storage/AdminContext";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import { logoutFB } from "../../firebase/firebase";
-import { useEffect } from "react";
+import { closeSession } from "./logout.js";
 
 const navbarLinks = [
   { to: "/", slug: "Home" },
@@ -12,39 +11,24 @@ const navbarLinks = [
   { to: "/cronograma", slug: "Cronograma" },
 ];
 
-const adminLinks = [
-  { to: "/admin", slug: "Admin" },
-  { to: "/", slug: "Cerrar sesión" },
-];
-
 function Navbar() {
   const { isAdmin, setIsAdmin, isOpenMenu, setIsOpenMenu } =
     useContext(adminContext);
 
-  function logOut() {
-    logoutFB();
+  const logout = () => {
+    closeSession();
     setIsAdmin(false);
-    toast.success("Cerraste sesión correctamente!", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-  }
+  };
 
   window.addEventListener("resize", function () {
-    if (this.window.innerWidth > 960) setIsOpenMenu(false);
+    if (this.window.innerWidth > 968) setIsOpenMenu(false);
   });
 
   return (
     <NavbarContainer className="fixed-top">
       <ToastContainer />
-      <Wrapper className="bor4 flex-lg-row justify-content-lg-between">
-        <LogoContainer className="bor1">
+      <Wrapper className="flex-lg-row justify-content-lg-between">
+        <LogoContainer>
           <Link to="/" className="d-flex align-items-center brand-text">
             <BrandLogo
               onClick={() => {
@@ -53,9 +37,9 @@ function Navbar() {
               src="./assets/images/logo2.png"
               alt="brand-logo"
             />
-            <BrandText className={`ms-4 ${isOpenMenu ? "bor1" : "bor2"}`}>
-              {/* Red Solana */}
-              {isOpenMenu ? <>Abierto</> : <>Cerrado</>}
+            <BrandText className="ms-4">
+              Red Solana
+              {isOpenMenu ? " O" : " C"}
             </BrandText>
           </Link>
           <HamburguerContainer
@@ -68,65 +52,8 @@ function Navbar() {
           </HamburguerContainer>
         </LogoContainer>
 
-        {/* <MenuOverlay className={`bor4 ${isOpenMenu ? "showMenuOverlay" : ""}`}>
-          <Menu>
-            <MenuItem>
-              <Link
-                to="/"
-                className="m-0 menuItemLink"
-                onClick={() => linkNavigateAction()}
-              >
-                Home
-              </Link>
-            </MenuItem>
-            <MenuItem>
-              <Link
-                to="/cajeros"
-                className="m-0 menuItemLink"
-                onClick={() => linkNavigateAction()}
-              >
-                Cajeros
-              </Link>
-            </MenuItem>
-            <MenuItem>
-              <Link
-                to="/cronograma"
-                className="m-0 menuItemLink"
-                onClick={() => linkNavigateAction()}
-              >
-                Cronograma de pagos
-              </Link>
-            </MenuItem>
-            {isAdmin ? (
-              <AdminMenu>
-                <MenuItem>
-                  <Link
-                    to="/admin"
-                    className="m-0 menuItemLink"
-                    onClick={() => linkNavigateAction()}
-                  >
-                    Admin
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <LogoutBtn
-                    className="m-0 menuItemLink"
-                    onClick={() => {
-                      logOut();
-                    }}
-                  >
-                    Cerrar sesión
-                  </LogoutBtn>
-                </MenuItem>
-              </AdminMenu>
-            ) : (
-              <></>
-            )}
-          </Menu>
-        </MenuOverlay> */}
-
-        <DesktopNav className="bor2 d-none d-md-block d-flex align-items-center">
-          <ul className="bor1 d-flex flex-wrap align-items-center gap-2 m-0 p-0 text-white">
+        <div className="d-none d-lg-flex align-items-center">
+          <ul className="d-flex flex-wrap gap-2 p-0 m-0">
             {navbarLinks.map((link) => (
               <>
                 <MenuItem>
@@ -135,16 +62,35 @@ function Navbar() {
               </>
             ))}
           </ul>
-          <AdminMenu></AdminMenu>
-        </DesktopNav>
+          {isAdmin && (
+            <AdminMenu>
+              <MenuItem>
+                <Link to="/admin" onClick={() => setIsOpenMenu(false)}>
+                  Admin
+                </Link>
+              </MenuItem>
+              <MenuItem>
+                <Link
+                  to="/"
+                  onClick={() => {
+                    logout();
+                    setIsOpenMenu(false);
+                  }}
+                >
+                  Cerrar Sesión
+                </Link>
+              </MenuItem>
+            </AdminMenu>
+          )}
+        </div>
       </Wrapper>
 
       {/* HOLA */}
-      <NewNav
-        className={`bor3 d-md-none ${isOpenMenu ? "showMenu" : "closeMenu"}`}
+      <MobileNav
+        className={`d-lg-none ${isOpenMenu ? "showMenu" : "closeMenu"}`}
       >
-        <div className="text-white">
-          <ul className="bor2 p-0 m-0 d-flex flex-column align-items-center">
+        <div>
+          <ul className="d-flex flex-column align-items-center p-0 m-0">
             {navbarLinks.map((link) => (
               <>
                 <MenuItem>
@@ -166,7 +112,7 @@ function Navbar() {
                 <Link
                   to="/"
                   onClick={() => {
-                    logOut();
+                    logout();
                     setIsOpenMenu(false);
                   }}
                 >
@@ -176,7 +122,7 @@ function Navbar() {
             </AdminMenu>
           )}
         </div>
-      </NewNav>
+      </MobileNav>
       {/* HOLA */}
     </NavbarContainer>
   );
@@ -184,16 +130,16 @@ function Navbar() {
 
 export default Navbar;
 
-const DesktopNav = styled.div``;
-
-const NewNav = styled.nav`
-  width: 60%;
+const MobileNav = styled.nav`
+  width: 80%;
   height: 100vh;
   background-color: #000;
   background-color: #000000;
   background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M81.28 88H68.413l19.298 19.298L81.28 88zm2.107 0h13.226L90 107.838 83.387 88zm15.334 0h12.866l-19.298 19.298L98.72 88zm-32.927-2.207L73.586 78h32.827l.5.5 7.294 7.293L115.414 87l-24.707 24.707-.707.707L64.586 87l1.207-1.207zm2.62.207L74 80.414 79.586 86H68.414zm16 0L90 80.414 95.586 86H84.414zm16 0L106 80.414 111.586 86h-11.172zm-8-6h11.173L98 85.586 92.414 80zM82 85.586L87.586 80H76.414L82 85.586zM17.414 0L.707 16.707 0 17.414V0h17.414zM4.28 0L0 12.838V0h4.28zm10.306 0L2.288 12.298 6.388 0h8.198zM180 17.414L162.586 0H180v17.414zM165.414 0l12.298 12.298L173.612 0h-8.198zM180 12.838L175.72 0H180v12.838zM0 163h16.413l.5.5 7.294 7.293L25.414 172l-8 8H0v-17zm0 10h6.613l-2.334 7H0v-7zm14.586 7l7-7H8.72l-2.333 7h8.2zM0 165.414L5.586 171H0v-5.586zM10.414 171L16 165.414 21.586 171H10.414zm-8-6h11.172L8 170.586 2.414 165zM180 163h-16.413l-7.794 7.793-1.207 1.207 8 8H180v-17zm-14.586 17l-7-7h12.865l2.333 7h-8.2zM180 173h-6.613l2.334 7H180v-7zm-21.586-2l5.586-5.586 5.586 5.586h-11.172zM180 165.414L174.414 171H180v-5.586zm-8 5.172l5.586-5.586h-11.172l5.586 5.586zM152.933 25.653l1.414 1.414-33.94 33.942-1.416-1.416 33.943-33.94zm1.414 127.28l-1.414 1.414-33.942-33.94 1.416-1.416 33.94 33.943zm-127.28 1.414l-1.414-1.414 33.94-33.942 1.416 1.416-33.943 33.94zm-1.414-127.28l1.414-1.414 33.942 33.94-1.416 1.416-33.94-33.943zM0 85c2.21 0 4 1.79 4 4s-1.79 4-4 4v-8zm180 0c-2.21 0-4 1.79-4 4s1.79 4 4 4v-8zM94 0c0 2.21-1.79 4-4 4s-4-1.79-4-4h8zm0 180c0-2.21-1.79-4-4-4s-4 1.79-4 4h8z' fill='%23d4a747' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+  @media screen and (min-width: 768px) {
+    width: 40%;
+  }
   div {
-    border: 3px solid pink;
     width: 100%;
   }
 `;
@@ -207,7 +153,6 @@ const NavbarContainer = styled.nav`
     rgba(88, 88, 88, 1) 100%
   );
   border-bottom: 1px solid #fff;
-  /* background: transparent; */
 `;
 
 const Wrapper = styled.div`
@@ -215,22 +160,12 @@ const Wrapper = styled.div`
   max-width: 1300px;
   height: 100%;
   display: flex;
+  align-items: center;
   flex-direction: column;
   margin: auto;
-
-  /* flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto; */
-
-  /* .showMenuOverlay {
-    inset: 70px 0 0 0;
-    opacity: 1;
-    pointer-events: unset;
+  @media screen and (min-width: 968px) {
+    width: 80%;
   }
-  @media screen and (max-width: 1440px) {
-    padding: 0 20px;
-  } */
 `;
 
 const LogoContainer = styled.div`
@@ -269,58 +204,9 @@ const BrandText = styled.h2`
   }
 `;
 
-const MenuOverlay = styled.div`
-  background-color: #000000a7;
-  position: fixed;
-  inset: 5000px;
-  opacity: 0;
-  transition: 0.3s opacity;
-  pointer-events: auto;
-  @media screen and (min-width: 960px) {
-    background-color: unset;
-    position: unset;
-    inset: unset;
-    opacity: 1;
-  }
-`;
-
-const Menu = styled.ul`
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  @media screen and (min-width: 960px) {
-    align-items: center;
-  }
-  @media screen and (max-width: 960px) {
-    background-color: #000000;
-    background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M81.28 88H68.413l19.298 19.298L81.28 88zm2.107 0h13.226L90 107.838 83.387 88zm15.334 0h12.866l-19.298 19.298L98.72 88zm-32.927-2.207L73.586 78h32.827l.5.5 7.294 7.293L115.414 87l-24.707 24.707-.707.707L64.586 87l1.207-1.207zm2.62.207L74 80.414 79.586 86H68.414zm16 0L90 80.414 95.586 86H84.414zm16 0L106 80.414 111.586 86h-11.172zm-8-6h11.173L98 85.586 92.414 80zM82 85.586L87.586 80H76.414L82 85.586zM17.414 0L.707 16.707 0 17.414V0h17.414zM4.28 0L0 12.838V0h4.28zm10.306 0L2.288 12.298 6.388 0h8.198zM180 17.414L162.586 0H180v17.414zM165.414 0l12.298 12.298L173.612 0h-8.198zM180 12.838L175.72 0H180v12.838zM0 163h16.413l.5.5 7.294 7.293L25.414 172l-8 8H0v-17zm0 10h6.613l-2.334 7H0v-7zm14.586 7l7-7H8.72l-2.333 7h8.2zM0 165.414L5.586 171H0v-5.586zM10.414 171L16 165.414 21.586 171H10.414zm-8-6h11.172L8 170.586 2.414 165zM180 163h-16.413l-7.794 7.793-1.207 1.207 8 8H180v-17zm-14.586 17l-7-7h12.865l2.333 7h-8.2zM180 173h-6.613l2.334 7H180v-7zm-21.586-2l5.586-5.586 5.586 5.586h-11.172zM180 165.414L174.414 171H180v-5.586zm-8 5.172l5.586-5.586h-11.172l5.586 5.586zM152.933 25.653l1.414 1.414-33.94 33.942-1.416-1.416 33.943-33.94zm1.414 127.28l-1.414 1.414-33.942-33.94 1.416-1.416 33.94 33.943zm-127.28 1.414l-1.414-1.414 33.94-33.942 1.416 1.416-33.943 33.94zm-1.414-127.28l1.414-1.414 33.942 33.94-1.416 1.416-33.94-33.943zM0 85c2.21 0 4 1.79 4 4s-1.79 4-4 4v-8zm180 0c-2.21 0-4 1.79-4 4s1.79 4 4 4v-8zM94 0c0 2.21-1.79 4-4 4s-4-1.79-4-4h8zm0 180c0-2.21-1.79-4-4-4s-4 1.79-4 4h8z' fill='%23d4a747' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
-    position: absolute;
-    width: 65%;
-    max-width: 400px;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 1000;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.5s ease;
-    overflow: auto;
-    border-right: 0.5px solid #fff;
-  }
-  li {
-    &:nth-child(1) {
-      margin-top: 20px;
-      @media screen and (min-width: 960px) {
-        margin: 0;
-      }
-    }
-  }
-`;
-
 const AdminMenu = styled.ul`
   padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -422,14 +308,5 @@ const MenuItem = styled.li`
     @media screen and (max-width: 960px) {
       width: 100px;
     }
-  }
-`;
-
-const LogoutBtn = styled.button`
-  margin: 0;
-  background-color: unset;
-  border: none;
-  &:hover {
-    color: #fff;
   }
 `;

@@ -1,22 +1,15 @@
 import React, { useContext } from "react";
-import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import styled from "styled-components";
+import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import { adminContext } from "../../storage/AdminContext";
-import { useEffect } from "react";
 
 function Inicio() {
   const { isOpenMenu } = useContext(adminContext);
-  useEffect(() => {
-    console.log(isOpenMenu);
-  }, [isOpenMenu]);
-
   return (
     <InicioContainer
-      className={`col-12 m-0 bor3 ${
-        isOpenMenu ? "blockEvents" : "activeEvents"
-      }`}
+      className={`col-12 m-0 ${isOpenMenu ? "blockEvents" : "activeEvents"}`}
       style={{
-        opacity: `${window.screen.width < 992 && isOpenMenu ? "0.3" : "1"}`,
+        opacity: `${isOpenMenu ? "0.3" : "1"}`,
       }}
     >
       <Wrapper className="col-11 gap-4 col-lg-10 col-xl-9 col-xxl-8 py-4 p-md-0">
