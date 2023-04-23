@@ -7,6 +7,7 @@ import { adminContext } from "../../storage/AdminContext";
 import ModalSetCajeros from "../ModalSetCajeros/ModalSetCajeros";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import { MainButton } from "../MainButton/MainButton";
 
 function AdminBar() {
   const { setIsSearchingCajero, buscarCajero } = useContext(adminContext);
@@ -20,7 +21,7 @@ function AdminBar() {
     handleShowAdd();
   }
 
-  const onSubmit = (data, e) => {
+  const onSubmit = (data) => {
     if (data.nombre === "") {
       toast.info("Debes ingresar un nombre antes de realizar la busqueda.", {
         position: "top-right",
@@ -33,25 +34,24 @@ function AdminBar() {
         theme: "colored",
       });
       setIsSearchingCajero(false);
-      e.target.reset();
       reset();
     } else {
       buscarCajero(data);
-      e.target.reset();
       reset();
     }
   };
 
   return (
-    <AdminBarContainer className="gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
+    <AdminBarContainer className="bor1 gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
-      <Button
-        onClick={() => handleAddCajero()}
+      <MainButton
         className="col-8 col-sm-5 col-md-4 col-lg-3"
+        fn={handleAddCajero}
       >
         Nuevo cajero
         <AiOutlineUserAdd />
-      </Button>
+      </MainButton>
+      <MainButton>Click</MainButton>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
           <CrossContainer

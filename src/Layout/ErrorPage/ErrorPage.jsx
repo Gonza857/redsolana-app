@@ -6,7 +6,7 @@ function ErrorPage() {
   return (
     <ErrorPageContainer>
       <Wrapper>
-        <ErrorTitle>Error 404: Pagina no encontrada</ErrorTitle>
+        <ErrorTitle>Error 404: Página no encontrada</ErrorTitle>
         <Link to="/">
           <ErrorBtn>Click aqui para ir a la pagina principal</ErrorBtn>
         </Link>

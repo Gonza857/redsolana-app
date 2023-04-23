@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { adminContext } from "../../storage/AdminContext";
 import CajeroAdmin from "../../components/CajeroAdmin/CajeroAdmin";
 import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
-import AdminBar from "../../components/AdminBar/AdminBar";
+import AdminBar from "../../components/AdminBar/AdminBar.jsx";
 import { Metronome } from "@uiball/loaders";
 import {
   AiFillInfoCircle,

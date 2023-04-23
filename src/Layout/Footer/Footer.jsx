@@ -91,7 +91,7 @@ const FooterContainer = styled.footer`
 const FooterWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  min-height: 300px;
+  min-height: 250px;
   @media screen and (min-width: 968px) {
     width: 80%;
     margin: auto;
