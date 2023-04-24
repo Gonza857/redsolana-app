@@ -9,6 +9,19 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { MainButton } from "../MainButton/MainButton";
 
+const completeNameAlert = () => {
+  toast.info("Debes ingresar un nombre antes de realizar la busqueda.", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+};
+
 function AdminBar() {
   const { setIsSearchingCajero, buscarCajero } = useContext(adminContext);
   const { register, handleSubmit, reset } = useForm();
@@ -17,22 +30,9 @@ function AdminBar() {
   const handleCloseAdd = () => setShowAdd(false);
   const handleShowAdd = () => setShowAdd(true);
 
-  function handleAddCajero() {
-    handleShowAdd();
-  }
-
   const onSubmit = (data) => {
     if (data.nombre === "") {
-      toast.info("Debes ingresar un nombre antes de realizar la busqueda.", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      completeNameAlert();
       setIsSearchingCajero(false);
       reset();
     } else {
@@ -46,7 +46,7 @@ function AdminBar() {
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
       <MainButton
         className="col-8 col-sm-5 col-md-4 col-lg-3"
-        fn={handleAddCajero}
+        fn={handleShowAdd}
       >
         Nuevo cajero
         <AiOutlineUserAdd />

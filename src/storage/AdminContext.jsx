@@ -10,11 +10,17 @@ import { toast } from "react-toastify";
 export const adminContext = createContext();
 
 export const AdminContextProvider = (props) => {
+  // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
+  // ESTADO DE NOMBRE DE BUSQUEDA
   const [searchedName, setSearchedName] = useState("");
+  // ESTADO  DE BUSQUEDA
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
+  // ESTADO DE ARRAY DE CAJEROS
   const [cajeros, setCajeros] = useState([]);
+  // ESTADO DE ADMIN
   const [isAdmin, setIsAdmin] = useState(false);
+  // ESTADO DE MENU ABIERTO
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const swalWithBootstrapButtons = Swal.mixin({
@@ -28,9 +34,7 @@ export const AdminContextProvider = (props) => {
 
   // AÑADIR CAJEROS
   function addCajero(cajeroObj) {
-    let copyCajeros = [...cajeros];
-    copyCajeros.push(cajeroObj);
-    setCajeros(copyCajeros);
+    setCajeros((cajeros) => [...cajeros, cajeroObj]);
   }
 
   // CAMBIAR POSICIÓN DE CAJEROS
