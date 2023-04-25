@@ -11,6 +11,19 @@ import {
   updateAllCajeros,
 } from "../../firebase/firebase";
 
+const successfullAdd = () => {
+  toast.success("Cajero agregado correctamente!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+};
+
 function AddCajerosForm({ onClose }) {
   const { addCajero, cajeros, setCajeros, moveCajerosPosition } =
     useContext(adminContext);
@@ -22,8 +35,22 @@ function AddCajerosForm({ onClose }) {
   } = useForm();
 
   const onSubmit = async (data) => {
+    // SI NO TIENE IMAGEN, ES NULL
+    data.imagen = data.imagen.length !== 1 && null;
+    // PARSEAMOS LA POS A NUMBER
+    data.pos = Number(data.pos);
+    // SI NO HAY, POR DEFECTO ES LA ULTIMA POSICIÓN DEL ARRAY
+    // CASA, AUTO, JARDIN
+    // 0   , 1   , 2
+    // arr.length --> 3
+    // CASA, AUTO, JARDIN, PLAZA
+    // 0   , 1   , 2     , 3
+    // arr.length --> 4 --> asignado a posición 4
+    
+  };
+
+  const orama = async (data) => {
     if (data.imagen[0] === undefined) {
-      // console.log("ENVIO SIN IMAGEN");
       // SE ENVIA SIN IMAGEN
       data.imagen = null;
       data.pos = Number(data.pos);
@@ -49,16 +76,7 @@ function AddCajerosForm({ onClose }) {
               theme: "colored",
             });
           });
-          toast.success("Cajero agregado correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          successfullAdd();
         });
         onClose();
       } else {
@@ -66,18 +84,8 @@ function AddCajerosForm({ onClose }) {
         data.pos = data.pos - 1;
         postCajeros(data).then((result) => {
           addCajero(result);
-          toast.success("Cajero agregado correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          successfullAdd();
           onClose();
-          console.table(data);
         });
       }
     } else {

@@ -34,7 +34,6 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import { v4 } from "uuid";
 
 import { toast } from "react-toastify";
-import { set } from "react-ga";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
@@ -47,10 +46,24 @@ const firebaseConfig = {
 };
 
 const FirebaseApp = initializeApp(firebaseConfig);
+// DB CAJEROS
 const DataBase = getFirestore(FirebaseApp);
 const storage = getStorage();
 const analytics = getAnalytics(FirebaseApp);
 const auth = getAuth(FirebaseApp);
+
+const errorAlert = (errorMsg) => {
+  toast.error(`Error: ${errorMsg}`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+};
 
 export function logearEvento() {
   logEvent(analytics, "notification_received");
@@ -58,8 +71,11 @@ export function logearEvento() {
 
 export async function getAllCajeros() {
   try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionCajeros = collection(DataBase, "cajeros");
+    // traemos los docs (array cajeros)
     const response = await getDocs(collectionCajeros);
+    // devolvemos objeto con la data, y asignamos el ID
     let cajeros = response.docs.map((cajero) => {
       return {
         ...cajero.data(),
@@ -67,43 +83,25 @@ export async function getAllCajeros() {
       };
     });
     let copyCajeros = [...cajeros];
-    let sortCajerosByPos = copyCajeros.sort((a, b) => {
-      return a.pos - b.pos;
-    });
+    let sortCajerosByPos = copyCajeros.sort((a, b) => a.pos - b.pos);
     return sortCajerosByPos;
   } catch (error) {
-    toast.error(`Error: ${error}`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+    errorAlert(error);
   }
 }
 
 export async function postCajeros(cajero) {
   try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionRef = collection(DataBase, "cajeros");
+    // promesa para añadir documento
     const docRef = await addDoc(collectionRef, cajero);
     return {
       ...cajero,
       id: docRef.id,
     };
   } catch (error) {
-    toast.error(`Error: ${error}`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+    errorAlert(error);
   }
 }
 
@@ -120,7 +118,6 @@ export async function updateCajeroInfo(cajeroId, newCajero) {
 }
 
 export async function updateAllCajeros(arrayCajeros) {
-  console.table(arrayCajeros);
   for (let cajero of arrayCajeros) {
     const docRef = doc(DataBase, "cajeros", cajero.id);
     updateDoc(docRef, cajero);
