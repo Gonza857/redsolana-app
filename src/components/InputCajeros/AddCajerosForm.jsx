@@ -24,6 +24,20 @@ const successfullAdd = () => {
   });
 };
 
+const errorOnAdd = (errorMsg) => {
+  toast.error(errorMsg, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: false,
+    pauseOnFocusLoss: false,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: "colored",
+  });
+};
+
 function AddCajerosForm({ onClose }) {
   const { addCajero, cajeros, setCajeros, moveCajerosPosition } =
     useContext(adminContext);
@@ -34,22 +48,22 @@ function AddCajerosForm({ onClose }) {
     handleSubmit,
   } = useForm();
 
-  const onSubmit = async (data) => {
-    // SI NO TIENE IMAGEN, ES NULL
-    data.imagen = data.imagen.length !== 1 && null;
-    // PARSEAMOS LA POS A NUMBER
-    data.pos = Number(data.pos);
-    // SI NO HAY, POR DEFECTO ES LA ULTIMA POSICIÓN DEL ARRAY
-    // CASA, AUTO, JARDIN
-    // 0   , 1   , 2
-    // arr.length --> 3
-    // CASA, AUTO, JARDIN, PLAZA
-    // 0   , 1   , 2     , 3
-    // arr.length --> 4 --> asignado a posición 4
-    
-  };
+  // const onSubmit = async (data) => {
+  //   // SI NO TIENE IMAGEN, ES NULL
+  //   data.imagen = data.imagen.length !== 1 && null;
+  //   // PARSEAMOS LA POS A NUMBER
+  //   data.pos = Number(data.pos);
+  //   // SI NO HAY, POR DEFECTO ES LA ULTIMA POSICIÓN DEL ARRAY
+  //   // CASA, AUTO, JARDIN
+  //   // 0   , 1   , 2
+  //   // arr.length --> 3
+  //   // CASA, AUTO, JARDIN, PLAZA
+  //   // 0   , 1   , 2     , 3
+  //   // arr.length --> 4 --> asignado a posición 4
 
-  const orama = async (data) => {
+  // };
+
+  const onSubmit = async (data) => {
     if (data.imagen[0] === undefined) {
       // SE ENVIA SIN IMAGEN
       data.imagen = null;
@@ -64,17 +78,7 @@ function AddCajerosForm({ onClose }) {
           );
           setCajeros(orderedCajeros);
           updateAllCajeros(orderedCajeros).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
-            });
+            errorOnAdd(error.message);
           });
           successfullAdd();
         });
@@ -104,45 +108,18 @@ function AddCajerosForm({ onClose }) {
             cajeros
           );
           setCajeros(orderedCajeros);
-          updateAllCajeros(orderedCajeros).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
+          updateAllCajeros(orderedCajeros)
+            .then(() => successfullAdd())
+            .catch((error) => {
+              errorOnAdd(error.message);
             });
-          });
-          toast.success("Cajero agregado correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
         });
         onClose();
       } else {
         addCajero(data);
         onClose();
         postCajeros(data).then(() => {
-          toast.success("Cajero agregado correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          successfullAdd();
         });
       }
     }

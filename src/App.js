@@ -1,9 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import Navbar from "./Layout/Navbar/Navbar";
+import { Navbar, Footer } from "./Layout/";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle";
-import Footer from "./Layout/Footer/Footer";
 import Rutas from "./routes/Rutas";
 import { useEffect } from "react";
 import ReactGA from "react-ga";

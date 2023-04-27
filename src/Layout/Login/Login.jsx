@@ -10,7 +10,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { Metronome } from "@uiball/loaders";
 import styled from "styled-components";
 
-function Login() {
+export function Login() {
   const navigate = useNavigate();
   const { isAdmin, setIsAdmin } = useContext(adminContext);
   const {
@@ -165,8 +165,6 @@ function Login() {
     </>
   );
 }
-
-export default Login;
 
 const LoginContainer = styled.div`
   margin-top: 70px;

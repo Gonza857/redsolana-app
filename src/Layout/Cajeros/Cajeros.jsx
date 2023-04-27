@@ -5,7 +5,7 @@ import { BsCircleFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
 import CajeroCard from "../../components/CajeroCard/CajeroCard";
 
-function Cajeros() {
+export function Cajeros() {
   const [isLoading, setIsLoading] = useState(false);
   const { cajeros } = useContext(adminContext);
 
@@ -46,8 +46,6 @@ function Cajeros() {
     </CajerosMainContainer>
   );
 }
-
-export default Cajeros;
 
 const CajerosMainContainer = styled.main`
   padding-top: 70px;

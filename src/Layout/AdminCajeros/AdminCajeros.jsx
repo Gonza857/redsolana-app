@@ -14,7 +14,7 @@ import { FaUserEdit } from "react-icons/fa";
 import styled from "styled-components";
 import { HiStatusOnline } from "react-icons/hi";
 
-function AdminCajeros() {
+export function AdminCajeros() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { cajeros, isAdmin, isSearchingCajero, searchResult, searchedName } =
@@ -135,8 +135,6 @@ function AdminCajeros() {
     </>
   );
 }
-
-export default AdminCajeros;
 
 const AdminCajerosContainer = styled.div`
   background-color: #020006;

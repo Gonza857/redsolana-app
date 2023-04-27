@@ -3,7 +3,60 @@ import styled from "styled-components";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import { adminContext } from "../../storage/AdminContext";
 
-function Inicio() {
+const cards = [
+  {
+    cardNumber: 1,
+    bgColor: "",
+    bgImageUrl: "./assets/images/megaFaraonFondo.jpg",
+    bgPadding: "",
+    casinoLink: "https://megafaraon.com",
+    casinoName: "Mega Faraon",
+    imgRoute: "megaFaraon.png",
+    imgAlt: "Casino Mega Faraon",
+  },
+  {
+    cardNumber: 2,
+    bgColor: "#083d77",
+    bgImageUrl: " ",
+    bgPadding: "25px",
+    casinoLink: "https://konabet.com",
+    casinoName: "Konabet",
+    imgAlt: "Casino Konabet",
+    imgRoute: "konabet-logo.svg",
+  },
+  {
+    cardNumber: 3,
+    bgColor: "#002752",
+    bgImageUrl: "",
+    bgPadding: "50px",
+    casinoLink: "https://bet30.co/",
+    casinoName: "Bet30",
+    imgAlt: "Casino Bet30",
+    imgRoute: "bet-30.svg",
+  },
+  {
+    cardNumber: 4,
+    bgColor: "#180039",
+    bgImageUrl: "",
+    bgPadding: "60px",
+    casinoLink: "https://ajugar.net",
+    casinoName: "ajugar.net",
+    imgAlt: "Casino ajugar.net",
+    imgRoute: "aJugar-logo.png",
+  },
+  {
+    cardNumber: 5,
+    bgColor: "#333",
+    bgImageUrl: "",
+    bgPadding: "20px",
+    imgRoute: "vikingo.png",
+    imgAlt: "Casino Vikingo",
+    casinoLink: "https://vikingo-play.net/jugadores/index.php",
+    casinoName: "Vikingo",
+  },
+];
+
+export function Inicio() {
   const { isOpenMenu } = useContext(adminContext);
   return (
     <InicioContainer
@@ -12,53 +65,14 @@ function Inicio() {
         opacity: `${isOpenMenu ? "0.3" : "1"}`,
       }}
     >
-      <Wrapper className="col-11 gap-4 col-lg-10 col-xl-9 col-xxl-8 py-4 p-md-0">
-        <CasinoCard
-          cardNumber={1}
-          bgColor={``}
-          bgImageUrl={`./assets/images/megaFaraonFondo.jpg`}
-          bgPadding={``}
-          imgRoute="megaFaraon.png"
-          imgAlt="Casino Mega Faraon"
-          casinoLink="https://megafaraon.com"
-          casinoName="Mega Faraon"
-        />
-        <CasinoCard
-          cardNumber={2}
-          bgColor={`#161616`}
-          bgImageUrl={``}
-          bgPadding={`50px`}
-          casinoLink="https://ganaencasa.co/"
-          casinoName="Gana En Casa"
-          imgAlt="Casino Gana En Casa"
-          imgRoute="ganaencasa-logo.svg"
-        />
-        <CasinoCard
-          cardNumber={3}
-          bgColor={`#083d77`}
-          bgImageUrl=" "
-          bgPadding={`25px`}
-          casinoLink="https://konabet.com"
-          casinoName="Konabet"
-          imgAlt="Casino Konabet"
-          imgRoute="konabet-logo.svg"
-        />
-        <CasinoCard
-          cardNumber={4}
-          bgColor={`#180039`}
-          bgImageUrl={``}
-          bgPadding={`60px`}
-          casinoLink="https://ajugar.net"
-          casinoName="ajugar.net"
-          imgAlt="Casino ajugar.net"
-          imgRoute="aJugar-logo.png"
-        />
+      <Wrapper className="col-11 gap-4 col-lg-10 py-4">
+        {cards.map((card) => (
+          <CasinoCard key={card.casinoLink} {...card} />
+        ))}
       </Wrapper>
     </InicioContainer>
   );
 }
-
-export default Inicio;
 
 const InicioContainer = styled.main`
   display: grid;

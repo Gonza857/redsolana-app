@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-function ErrorPage() {
+export const ErrorPage = () => {
   return (
     <ErrorPageContainer>
       <Wrapper>
@@ -13,9 +13,7 @@ function ErrorPage() {
       </Wrapper>
     </ErrorPageContainer>
   );
-}
-
-export default ErrorPage;
+};
 
 const ErrorPageContainer = styled.div`
   margin-top: 70px;

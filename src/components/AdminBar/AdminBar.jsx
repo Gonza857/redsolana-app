@@ -42,7 +42,7 @@ function AdminBar() {
   };
 
   return (
-    <AdminBarContainer className="bor1 gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
+    <AdminBarContainer className="gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
       <MainButton
         className="col-8 col-sm-5 col-md-4 col-lg-3"
@@ -51,7 +51,6 @@ function AdminBar() {
         Nuevo cajero
         <AiOutlineUserAdd />
       </MainButton>
-      <MainButton>Click</MainButton>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
           <CrossContainer

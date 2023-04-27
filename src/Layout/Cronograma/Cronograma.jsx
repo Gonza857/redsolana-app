@@ -1,15 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-function Cronograma() {
+export function Cronograma() {
   return (
     <CronogramaContainer>
       <CronogramaImage src="./assets/images/crono.jpeg" />
     </CronogramaContainer>
   );
 }
-
-export default Cronograma;
 
 const CronogramaContainer = styled.div`
   width: 100%;

@@ -58,13 +58,10 @@ const CardContainer = styled.div`
   }
   @media (min-width: 320px) {
     height: fit-content;
-    width: 320px;
+    width: 290px;
   }
   @media (min-width: 700px) {
     width: 320px;
-  }
-  @media (min-width: 1024px) {
-    width: 400px;
   }
 `;
 
@@ -90,6 +87,9 @@ const TextContainer = styled.div`
     rgba(0, 0, 0, 1) 0%,
     rgba(88, 88, 88, 1) 100%
   );
+  @media (min-width: 320px) {
+    font-size: 1rem;
+  }
   p {
     font-weight: 600;
     color: #fff;

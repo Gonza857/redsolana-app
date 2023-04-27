@@ -11,7 +11,7 @@ const navbarLinks = [
 
 const scrollToZero = () => window.scrollTo(0, 0);
 
-function Footer() {
+export function Footer() {
   return (
     <FooterContainer className="d-flex flex-column">
       <FooterWrapper className="col-12 gap-2 gap-md-0">
@@ -19,7 +19,7 @@ function Footer() {
           <PageSectionsWrapper className="gap-2">
             <p>Secciones</p>
             {navbarLinks.map(({ slug, to }) => (
-              <Link to={to} onClick={scrollToZero}>
+              <Link to={to} onClick={scrollToZero} key={to}>
                 {slug}
               </Link>
             ))}
@@ -75,8 +75,6 @@ function Footer() {
     </FooterContainer>
   );
 }
-
-export default Footer;
 
 const FooterContainer = styled.footer`
   border-top: 1px solid #fff;
