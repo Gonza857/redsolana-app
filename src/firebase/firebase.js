@@ -118,9 +118,11 @@ export async function updateCajeroInfo(cajeroId, newCajero) {
 }
 
 export async function updateAllCajeros(arrayCajeros) {
+  console.table(arrayCajeros);
   for (let cajero of arrayCajeros) {
-    const docRef = doc(DataBase, "cajeros", cajero.id);
-    updateDoc(docRef, cajero);
+    // const docRef = doc(DataBase, "cajeros", cajero.id);
+    // updateDoc(docRef, cajero);
+    await updateDoc(doc(DataBase, "cajeros", cajero.id), cajero);
   }
 }
 
@@ -131,7 +133,7 @@ export async function deleteCajero(cajero) {
   }
 }
 
-export async function prePostImg(file) {
+export async function uploadImgToDB(file) {
   const randomId = v4();
   const storageRef = ref(storage, randomId);
   await uploadBytes(storageRef, file);
@@ -140,8 +142,17 @@ export async function prePostImg(file) {
 }
 
 export async function deleteImg(imgId) {
+  let aux = false;
   const desertRef = ref(storage, imgId);
-  return await deleteObject(desertRef);
+  deleteObject(desertRef)
+    .then(() => {
+      console.log("Borrado correctamente");
+      aux = true;
+    })
+    .catch(() => {
+      console.log("No borrado");
+    });
+  return aux;
 }
 
 export async function loginWithPersistance(email, password) {

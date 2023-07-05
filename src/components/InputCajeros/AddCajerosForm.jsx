@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { adminContext } from "../../storage/AdminContext";
 import {
   postCajeros,
-  prePostImg,
+  uploadImgToDB,
   updateAllCajeros,
 } from "../../firebase/firebase";
 
@@ -93,7 +93,7 @@ function AddCajerosForm({ onClose }) {
         });
       }
     } else {
-      const result = await prePostImg(data.imagen[0]);
+      const result = await uploadImgToDB(data.imagen[0]);
       let { url, randomId } = result;
       data.imagen = {
         url,

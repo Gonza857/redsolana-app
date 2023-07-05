@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import {
   deleteImg,
-  prePostImg,
+  uploadImgToDB,
   updateAllCajeros,
   updateCajeroInfo,
+  getAllCajeros,
 } from "../../firebase/firebase";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -13,10 +14,50 @@ import Swal from "sweetalert2";
 import { useEffect } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
+import { toastError } from "../../helpers/helpers";
+
+const updateAllCheckersDB = (checkersArray) => {
+  updateAllCajeros(checkersArray).catch((error) => {
+    toastError(error.message);
+  });
+};
+
+const updateLocalChecker = (actualChecherInfo, newCheckerInfo) => {
+  actualChecherInfo.red = newCheckerInfo.red;
+  actualChecherInfo.nombre = newCheckerInfo.nombre;
+  actualChecherInfo.genero = newCheckerInfo.genero;
+  actualChecherInfo.estado = newCheckerInfo.estado;
+  actualChecherInfo.numero = newCheckerInfo.numero;
+  actualChecherInfo.enlace = newCheckerInfo.enlace;
+  actualChecherInfo.pos = --newCheckerInfo.pos;
+  console.log(actualChecherInfo);
+};
+
+const updateCheckerV1 = (thisCajero, formCajero, booleanBorroLaImagen) => {
+  if (thisCajero.imagen != null) {
+    // VINO CON IMAGEN
+    // PREGUNTAMOS SI LA BORRO
+    if (booleanBorroLaImagen) {
+      // TRUE, BORRADA
+
+      formCajero.imagen = thisCajero.imagen;
+      updateLocalChecker(thisCajero, formCajero);
+    } else {
+      // FALSE, NO BORRADA
+    }
+  } else if (thisCajero.imagen == null) {
+  } else {
+    console.log("aca no debe entrar xd");
+  }
+};
 
 function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
   const [hasImage, setHasImage] = useState(false);
-  const { cajeros, setCajeros, moveCajerosPosition } = useContext(adminContext);
+
+  const [laQuiereBorrar, setLaQuiereBorrar] = useState(false);
+
+  const { cajeros, setCajeros, moveCajerosPosition, traerCajeros } =
+    useContext(adminContext);
 
   useEffect(() => {
     if (cajeroData.imagen === null) {
@@ -24,7 +65,7 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
     } else {
       setHasImage(true);
     }
-  }, [cajeroData.imagen]);
+  }, []);
 
   const {
     register,
@@ -41,265 +82,202 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
     buttonsStyling: false,
   });
 
-  const updateInfo = async (data) => {
-    /*
-        CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN
-        CASO 2) LLEGA CON IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN
-        CASO 3) LLEGA SIN IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN
-        CASO 4) LLEGA SIN IMAGEN, AGREGAMOS, ENVIAMOS SIN IMAGEN
-    */
-
-    if (cajeroData.imagen === null) {
-      //CASO 3,4
-      if (data.imagen.length === 0) {
-        // console.log("CASO 4) LLEGA SIN IMAGEN, AGREGAMOS, ENVIAMOS SIN IMAGEN");
-        data.imagen = null;
-        data.pos = Number(data.pos);
-        if (data.pos - 1 !== cajeroData.pos) {
-          // console.log("CASO 4) Y CAMBIO DE POSICION");
-          data.id = cajeroData.id;
-          let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
-          console.table(newArray);
-          setCajeros(newArray);
-          updateAllCajeros(newArray).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
-            });
-          });
-          onClose();
-        } else {
-          // console.log("CASO 4) Y NO CAMBIO DE POSICION");
-          cajeroData.red = data.red;
-          cajeroData.nombre = data.nombre;
-          cajeroData.genero = data.genero;
-          cajeroData.estado = data.estado;
-          cajeroData.numero = data.numero;
-          cajeroData.pos = data.pos - 1;
-          cajeroData.enlace = data.enlace;
+  const thisWillBeTheBestFunction = (data) => {
+    data.pos = Number(data.pos);
+    if (data.imagen.length == 0) {
+      // LA BORRÓ
+      if (cajeroData.pos != data.pos) {
+        // LA BORRO Y LA POS ES DISTINTA
+        let fueBorrada = deleteImg(cajeroData.imagen.randomId);
+        if (fueBorrada) {
+          console.log("Borrada correctamente");
+          data.imagen = null;
+          updateLocalChecker(cajeroData, data);
           updateCajeroInfo(cajeroData.id, data)
             .then(() => {
               onClose();
             })
             .catch((error) => {
-              toast.error(error.message, {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: true,
-                closeOnClick: false,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-              });
+              toastError(error.message);
             });
+        } else {
+          console.log("No la pude borrar");
         }
       } else {
-        // console.log("CASO 3) LLEGA SIN IMAGEN, ACTUALIZAMOS, ENVIAMOS IMAGEN");
-        data.pos = Number(data.pos);
-        const result = await prePostImg(data.imagen[0]);
-        let { url, randomId } = result;
-        data.imagen = {
-          url,
-          randomId,
-        };
-        if (data.pos - 1 !== cajeroData.pos) {
-          // console.log("CASO 3) Y CAMBIO DE POSICION");
-          data.id = cajeroData.id;
-          let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
-          console.table(newArray);
-          setCajeros(newArray);
-          updateAllCajeros(newArray).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
+        // LA BORRO Y LA POS ES IGUAL
+        let fueBorrada = deleteImg(cajeroData.imagen.randomId);
+        if (fueBorrada) {
+          console.log("Borrada correctamente");
+          data.imagen = null;
+          updateLocalChecker(cajeroData, data);
+          updateCajeroInfo(cajeroData.id, data)
+            .then(() => {
+              onClose();
+            })
+            .catch((error) => {
+              toastError(error.message);
             });
-          });
-          onClose();
         } else {
-          // console.log("CASO 3) Y NO CAMBIO DE POSICION");
-          cajeroData.nombre = data.nombre;
-          cajeroData.estado = data.estado;
-          cajeroData.pos = data.pos;
-          cajeroData.red = data.red;
-          cajeroData.enlace = data.enlace;
-          cajeroData.genero = data.genero;
-          cajeroData.numero = data.numero;
-          cajeroData.imagen = {
-            url,
-            randomId,
-          };
-          cajeros.forEach((caj, i) => {
-            caj.pos = i;
-          });
-          data.pos = cajeroData.pos;
-          updateCajeroInfo(cajeroData.id, data);
-          onClose();
+          console.log("No la pude borrar");
         }
       }
-      // FIN CASO 3,4
     } else {
-      // CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN
-      // CASO 2) LLEGA CON IMAGEN, ENVIAMOS IMAGEN
-      // CASO 2.A) LLEGA CON IMAGEN, ACTUALIZAMOS, MANDAMOS UNA DIFERENTE
-      // CASO 2.B) LLEGA CON IMAGEN, ENVIAMOS LA MISMA
+      // NO LA BORRO
+      if (cajeroData.pos != data.pos) {
+        // NO LA BORRO Y LA POS ES DISTINTA
+        updateLocalChecker(cajeroData, data);
+        let newArray = moveCajerosPosition(data.pos - 1, data, [...cajeros]);
+        updateAllCheckersDB(newArray);
+        traerCajeros();
+      } else {
+        // NO LA BORRO Y LA POS ES IGUAL
+        updateLocalChecker(cajeroData, data);
+        updateCajeroInfo(cajeroData.id, data)
+          .then(() => {
+            onClose();
+          })
+          .catch((error) => {
+            toastError(error.message);
+          });
+      }
+    }
+  };
 
-      data.pos = Number(data.pos);
+  const updateInfo = async (data) => {
+    // console.log("INFORMACION DEL FORMULARIO");
+    // console.table(data);
 
-      if (hasImage === false && data.imagen.length !== 0) {
-        // console.log(
-        //   "CASO 2.A) LLEGA CON IMAGEN, ACTUALIZAMOS, MANDAMOS UNA DIFERENTE"
-        // );
-        await deleteImg(cajeroData.imagen.randomId);
-        const result = await prePostImg(data.imagen[0]);
-        let { url, randomId } = result;
-        data.imagen = {
-          url,
-          randomId,
-        };
+    // console.log("INFORMACION ACTUAL");
+    // console.table(cajeroData);
 
-        if (data.pos - 1 !== cajeroData.pos) {
-          data.id = cajeroData.id;
-          // console.log("CASO 2.A) Y CAMBIO DE POSICION");
-          let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
-          console.table(newArray);
-          setCajeros(newArray);
-          updateAllCajeros(newArray).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
+    let esPosicionCambiada = false;
+
+    data.pos = Number(data.pos);
+    data.pos--;
+    cajeroData.pos = Number(cajeroData.pos);
+
+    let posicionAntigua = cajeroData.pos;
+
+    if (cajeroData.pos != data.pos) esPosicionCambiada = true;
+
+    data.id = cajeroData.id;
+
+    // if (esPosicionCambiada) {
+    //   // CAMBIO LA POSICION
+    //   console.log("Cambio la posicion");
+    // } else {
+    //   // NO CAMBIO LA POSICION
+    //   console.log("No cambio la posicion");
+    // }
+
+    const actualizo = () => {
+      if (cajeroData.imagen == null) {
+        // LLEGA SIN IMAGEN
+        if (data.imagen.length > 0) {
+          // AGREGO NUEVA
+          // LLEGON SIN --> SE VA CON
+          uploadImgToDB(data.imagen[0])
+            .then((resultado) => {
+              console.log("Subida correctamente a Storage.");
+              let { url, randomId } = resultado;
+              data.imagen = {
+                url,
+                randomId,
+              };
+            })
+            .catch(() => {
+              console.log("Sucedio un error");
             });
+          // YA CARGAMOS A LA DATA.IMAGEN LOS DATOS DE LA IMAGEN NUEVA
+          // ACTUALIZAZR CAJERO TODO:
+          updateCajeroInfo(cajeroData.id, data).then(() => {
+            console.log("DB -  cajero, actualizado correctamente.");
           });
-          onClose();
+          updateLocalChecker(cajeroData, data);
         } else {
-          // console.log("CASO 2.A) Y NO CAMBIO DE POSICION");
-          cajeroData.red = data.red;
-          cajeroData.nombre = data.nombre;
-          cajeroData.genero = data.genero;
-          cajeroData.estado = data.estado;
-          cajeroData.numero = data.numero;
-          cajeroData.pos = data.pos - 1;
-          cajeroData.enlace = data.enlace;
-          cajeroData.imagen = data.imagen;
-          cajeros.forEach((caj, i) => {
-            caj.pos = i;
+          // NO AGREGO NUEVA
+          // LLEGON SIN --> SE VA SIN
+          // ACTUALIZAR CAJERO TODO:
+          updateCajeroInfo(cajeroData.id, data).then(() => {
+            console.log("DB -  cajero, actualizado correctamente.");
           });
-          data.pos = cajeroData.pos;
-          updateCajeroInfo(cajeroData.id, data);
-          onClose();
+          updateLocalChecker(cajeroData, data);
         }
-      } else if (hasImage === false) {
-        // console.log(
-        //   "CASO 1) LLEGA CON IMAGEN, ELIMINAMOS, ENVIAMOS SIN IMAGEN"
-        // );
-        await deleteImg(cajeroData.imagen.randomId);
-        cajeroData.imagen = null;
-        data.pos = Number(data.pos);
-        data.imagen = null;
-
-        if (data.pos - 1 !== cajeroData.pos) {
-          data.id = cajeroData.id;
-          // console.log("CASO 1) Y CAMBIO DE POSICION");
-          let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
-          setCajeros(newArray);
-          updateAllCajeros(newArray).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
+      } else if (cajeroData.imagen != null) {
+        console.log("LLEGO CON IMAGEN");
+        if (laQuiereBorrar) {
+          if (data.imagen.length > 0) {
+            // LA BORRO PERO AGREGO OTRA
+            deleteImg(cajeroData.imagen.randomId).then(() => {
+              console.log("Borrada correctamente");
             });
-          });
-          onClose();
+            uploadImgToDB(data.imagen[0])
+              .then((resultado) => {
+                console.log("Subida correctamente a Storage.");
+                let { url, randomId } = resultado;
+                data.imagen = {
+                  url,
+                  randomId,
+                };
+              })
+              .catch(() => {
+                console.log("Sucedio un error");
+              });
+            console.log("Llego con la misma, se fue con otra");
+
+            // ACTUALIZAR CAJERO TODO:
+          } else {
+            // LA BORRO PERO NO AGREGO OTRA
+            deleteImg(cajeroData.imagen.randomId).then(() => {
+              console.log("Borrada correctamente");
+            });
+            data.imagen = null;
+            console.log("Llego con la misma, se fue sin ella");
+
+            // ACTUALIZAR CAJERO TODO:
+
+            updateCajeroInfo(cajeroData.id, data).then(() => {
+              console.log("DB -  cajero, actualizado correctamente.");
+            });
+            updateLocalChecker(cajeroData, data);
+          }
         } else {
-          // console.log("CASO 1) Y NO CAMBIO DE POSICION");
-          cajeroData.red = data.red;
-          cajeroData.nombre = data.nombre;
-          cajeroData.genero = data.genero;
-          cajeroData.estado = data.estado;
-          cajeroData.numero = data.numero;
-          cajeroData.pos = data.pos;
-          cajeroData.enlace = data.enlace;
-          cajeros.forEach((caj, i) => {
-            caj.pos = i;
+          // NO LA QUIERE BORRAR
+          console.log("Llego con la misma, se va con la misma.");
+          // ACTUALIZAR CAJERO TODO:
+          updateCajeroInfo(cajeroData.id, data).then(() => {
+            console.log("DB -  cajero, actualizado correctamente.");
           });
-          data.pos = cajeroData.pos;
-          updateCajeroInfo(cajeroData.id, data);
-          onClose();
+          updateLocalChecker(cajeroData, data);
         }
       } else {
-        // console.log("CASO 2.B) LLEGA CON IMAGEN, ENVIAMOS LA MISMA");
-        data.imagen = cajeroData.imagen;
-
-        if (data.pos - 1 !== cajeroData.pos) {
-          // console.log("CASO 2.B) Y CAMBIO DE POSICION");
-          data.id = cajeroData.id;
-          let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos - 1, data, copyCajeros);
-          console.table(newArray);
-          setCajeros(newArray);
-          updateAllCajeros(newArray).catch((error) => {
-            toast.error(error.message, {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "colored",
-            });
-          });
-          onClose();
-        } else {
-          // console.log("CASO 2.B) Y NO CAMBIO DE POSICION");
-          cajeroData.red = data.red;
-          cajeroData.nombre = data.nombre;
-          cajeroData.genero = data.genero;
-          cajeroData.estado = data.estado;
-          cajeroData.numero = data.numero;
-          cajeroData.pos = data.pos;
-          cajeroData.enlace = data.enlace;
-          cajeros.forEach((caj, i) => {
-            caj.pos = i;
-          });
-          data.pos = cajeroData.pos;
-          updateCajeroInfo(cajeroData.id, data);
-          onClose();
-        }
+        console.log("Algo salio mal");
       }
+    };
+
+    if (esPosicionCambiada) {
+      console.log(data);
+      let copyCajeros = [...cajeros];
+      let newArray = moveCajerosPosition(data.pos, data, copyCajeros);
+      setCajeros(newArray);
+      updateAllCajeros(newArray)
+        .then(() => {
+          console.log("DB - array cajeros, actualizado correctamente");
+        })
+        .catch((error) => {
+          throw new Error(error);
+          // toastError(error.message);
+        });
+      onClose();
+      traerCajeros();
+    } else {
+      // NO CAMBIO POSICION
+      actualizo();
+      updateCajeroInfo(cajeroData.id, data).then(() => {
+        console.log("DB -  cajero, actualizado correctamente.");
+      });
+      updateLocalChecker(cajeroData, data);
+      onClose();
     }
   };
 
@@ -343,8 +321,10 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
   };
 
   const deleteHandler = () => {
+    setLaQuiereBorrar(true);
     if (cajeroData.imagen !== null) {
       setHasImage(false);
+      cajeroData.imagen = null;
       Swal.fire(
         "Se quitó la imagen.",
         "Si guarda los cambios se aplicarán y no se puede deshacer. Si desea cancelar el cambio, cancele los cambios.",

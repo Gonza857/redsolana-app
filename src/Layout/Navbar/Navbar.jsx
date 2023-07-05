@@ -9,6 +9,7 @@ const navbarLinks = [
   { to: "/", slug: "Home" },
   { to: "/cajeros", slug: "Cajeros" },
   { to: "/cronograma", slug: "Cronograma" },
+  { to: "/sorteo", slug: "Sorteos" },
 ];
 
 export function Navbar() {
@@ -25,99 +26,123 @@ export function Navbar() {
   });
 
   return (
-    <NavbarContainer className="fixed-top">
-      <ToastContainer />
-      <Wrapper className="flex-lg-row justify-content-lg-between">
-        <LogoContainer className="col-12 col-md-11 col-lg-auto">
-          <Link to="/" className="d-flex align-items-center brand-text">
-            <BrandLogo
-              onClick={() => {
-                setIsOpenMenu(true);
-              }}
-              src="./assets/images/logo2.png"
-              alt="brand-logo"
-            />
-            <BrandText className="ms-2 ms-xl-4">Red Solana </BrandText>
-          </Link>
-          <HamburguerContainer
-            className={`icon nav-icon-5 ${isOpenMenu && "open"}`}
-            onClick={() => setIsOpenMenu(!isOpenMenu)}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </HamburguerContainer>
-        </LogoContainer>
+    <>
+      <NavbarContainer className="fixed-top">
+        <ToastContainer />
+        <Wrapper className="flex-lg-row justify-content-lg-between">
+          <LogoContainer className="col-12 col-md-11 col-lg-auto">
+            <Link to="/" className="d-flex align-items-center brand-text">
+              <BrandLogo
+                onClick={() => {
+                  setIsOpenMenu(true);
+                }}
+                src="./assets/images/logo2.png"
+                alt="brand-logo"
+              />
+              <BrandText className="ms-2 ms-xl-4">Red Solana </BrandText>
+            </Link>
+            <HamburguerContainer
+              className={`icon nav-icon-5 ${isOpenMenu && "open"}`}
+              onClick={() => setIsOpenMenu(!isOpenMenu)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </HamburguerContainer>
+          </LogoContainer>
 
-        {/* MENU DESKTOP */}
-        <div className="d-none d-lg-flex align-items-center">
-          <ul className="d-flex flex-wrap gap-0 gap-lg-2 p-0 m-0">
-            {navbarLinks.map((link) => (
-              <MenuItem key={link.to}>
-                <Link to={link.to}>{link.slug}</Link>
-              </MenuItem>
-            ))}
-          </ul>
-          {isAdmin && (
-            <AdminMenu>
-              <MenuItem>
-                <Link to="/admin" onClick={() => setIsOpenMenu(false)}>
-                  Admin
-                </Link>
-              </MenuItem>
-              <MenuItem>
-                <Link
-                  to="/"
-                  onClick={() => {
-                    logout();
-                    setIsOpenMenu(false);
-                  }}
-                >
-                  Cerrar Sesión
-                </Link>
-              </MenuItem>
-            </AdminMenu>
-          )}
-        </div>
-      </Wrapper>
+          {/* MENU DESKTOP */}
+          <div className="d-none d-lg-flex align-items-center">
+            <ul className="d-flex flex-wrap gap-0 gap-lg-2 p-0 m-0">
+              {navbarLinks.map((link) => (
+                <MenuItem key={link.to}>
+                  <Link to={link.to}>{link.slug}</Link>
+                </MenuItem>
+              ))}
+            </ul>
+            {isAdmin && (
+              <AdminMenu>
+                <MenuItem>
+                  <Link
+                    to="/admin/cajeros"
+                    onClick={() => setIsOpenMenu(false)}
+                  >
+                    Cajeros
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    to="/admin/sorteos"
+                    onClick={() => setIsOpenMenu(false)}
+                  >
+                    Sorteos
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    to="/"
+                    onClick={() => {
+                      logout();
+                      setIsOpenMenu(false);
+                    }}
+                  >
+                    Cerrar Sesión
+                  </Link>
+                </MenuItem>
+              </AdminMenu>
+            )}
+          </div>
+        </Wrapper>
 
-      {/* MENU MOBILE */}
-      <MobileNav
-        className={`d-lg-none ${isOpenMenu ? "showMenu" : "closeMenu"}`}
-      >
-        <div>
-          <ul className="d-flex flex-column align-items-center p-0 m-0">
-            {navbarLinks.map((link) => (
-              <MenuItem key={link.to}>
-                <Link onClick={() => setIsOpenMenu(false)} to={link.to}>
-                  {link.slug}
-                </Link>
-              </MenuItem>
-            ))}
-          </ul>
-          {isAdmin && (
-            <AdminMenu className="col-8 m-auto">
-              <MenuItem>
-                <Link to="/admin" onClick={() => setIsOpenMenu(false)}>
-                  Admin
-                </Link>
-              </MenuItem>
-              <MenuItem>
-                <Link
-                  to="/"
-                  onClick={() => {
-                    logout();
-                    setIsOpenMenu(false);
-                  }}
-                >
-                  Cerrar Sesión
-                </Link>
-              </MenuItem>
-            </AdminMenu>
-          )}
-        </div>
-      </MobileNav>
-    </NavbarContainer>
+        {/* MENU MOBILE */}
+        <MobileNav
+          className={`d-lg-none ${isOpenMenu ? "showMenu" : "closeMenu"}`}
+        >
+          <div>
+            <ul className="d-flex flex-column align-items-center p-0 m-0">
+              {navbarLinks.map((link) => (
+                <MenuItem key={link.to}>
+                  <Link onClick={() => setIsOpenMenu(false)} to={link.to}>
+                    {link.slug}
+                  </Link>
+                </MenuItem>
+              ))}
+            </ul>
+            {isAdmin && (
+              <AdminMenu className="col-8 m-auto">
+                <MenuItem>
+                  <Link
+                    to="/admin/cajeros"
+                    onClick={() => setIsOpenMenu(false)}
+                  >
+                    Cajeros
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    to="/admin/sorteos"
+                    onClick={() => setIsOpenMenu(false)}
+                  >
+                    Sorteos
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    to="/"
+                    onClick={() => {
+                      logout();
+                      setIsOpenMenu(false);
+                    }}
+                  >
+                    Cerrar Sesión
+                  </Link>
+                </MenuItem>
+              </AdminMenu>
+            )}
+          </div>
+        </MobileNav>
+      </NavbarContainer>
+    </>
   );
 }
 

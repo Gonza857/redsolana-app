@@ -4,7 +4,7 @@ import styled from "styled-components";
 export function Cronograma() {
   return (
     <CronogramaContainer>
-      <CronogramaImage src="./assets/images/crono.jpeg" />
+      <CronogramaImage src="./assets/images/cronogramaNewJunio.jpg" />
     </CronogramaContainer>
   );
 }

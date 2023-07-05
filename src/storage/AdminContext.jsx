@@ -5,9 +5,39 @@ import {
   monitorAuthState,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
-import { toast } from "react-toastify";
+import {toastError, toastSuccess, toastInfo} from '../helpers/helpers'
 
 export const adminContext = createContext();
+
+/**
+ * Busca cajero con la misma ID
+ * @param checkersArray - (array)
+ * @param formData - Información tomada del formulario de busquedad
+ * @returns Index del buscado
+ */
+function chekerFilter(data, cajeros) {
+  let param = data.nombre.toLowerCase();
+  let busquedad = cajeros.filter((cajero) => {
+    cajero.nombre = cajero.nombre.toLowerCase();
+    if (cajero.nombre.includes(param)) {
+      return cajero;
+    } else {
+      return null;
+    }
+  });
+  return busquedad;
+}
+
+/**
+ * Busca cajero con la misma ID
+ * @param Cajero - (object)
+ * @returns Index del buscado
+ */
+const findCheckerID = (checker, checkersArray) => {
+  return checkersArray.findIndex(
+    (thisChecker) => thisChecker.id === checker.id
+  );
+};
 
 export const AdminContextProvider = (props) => {
   // ESTADO DE RESULTADO DE BUSQUEDA
@@ -44,9 +74,8 @@ export const AdminContextProvider = (props) => {
     1) SI EL ELEMENTO NO EXISTE, OSEA ESTAMOS AGREGANDO EN UNA POSICION DESEADA
     2) SI EL ELEMENTO EXISTE, OSEA ESTAMOS CAMBIANDO LA POSICION DEL ELEMENTO
     */
-    let cajeroIndex = arrayCajeros.findIndex(
-      (cajFind) => cajFind.id === cajero.id
-    );
+    let cajeroIndex = findCheckerID(cajero, arrayCajeros);
+    console.log(cajeroIndex);
     if (cajeroIndex === -1) {
       // CASO 1
       // console.log("AGREGADO Y CAMBIADO DE POSICIÓN");
@@ -80,18 +109,8 @@ export const AdminContextProvider = (props) => {
   function buscarCajero(data) {
     setIsSearchingCajero(true);
     setSearchedName(data.nombre);
-    let param = data.nombre.toLowerCase();
-    let busquedad = cajeros.filter((cajero) => {
-      cajero.nombre = cajero.nombre.toLowerCase();
-
-      if (cajero.nombre.includes(param)) {
-        return cajero;
-      } else {
-        return null;
-      }
-    });
-
-    setSearchResult(busquedad);
+    let checkerFilterArray = chekerFilter(data, cajeros);
+    setSearchResult(checkerFilterArray);
   }
 
   // SET CAJEROS
@@ -100,16 +119,7 @@ export const AdminContextProvider = (props) => {
       const result = await getAllCajeros();
       setCajeros(result);
     } catch (error) {
-      toast.error(`Error: ${error.code}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      toastError(error);
     }
   }
 
@@ -133,27 +143,9 @@ export const AdminContextProvider = (props) => {
           copyCajeros.splice(searchPosition, 1);
           setCajeros(copyCajeros);
           deleteCajero(cajeroEliminado);
-          toast.success("Cajero eliminado correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          toastSuccess("Cajero eliminado correctamente");
         } else if (result.isDenied) {
-          toast.info("Cajero no eliminado.", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          toastInfo("Cajero no elimnado");
         }
       });
   }

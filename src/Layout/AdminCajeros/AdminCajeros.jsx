@@ -14,19 +14,20 @@ import { FaUserEdit } from "react-icons/fa";
 import styled from "styled-components";
 import { HiStatusOnline } from "react-icons/hi";
 
-export function AdminCajeros() {
-  const [isLoading, setIsLoading] = useState(false);
+const areCheckersEmpty = (checkersArray) => {
+  let aux = true;
+  if (checkersArray.length > 0) aux = false;
+  return aux;
+};
 
+export function AdminCajeros() {
   const { cajeros, isAdmin, isSearchingCajero, searchResult, searchedName } =
     useContext(adminContext);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (cajeros.length === 0) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
+    setIsLoading(areCheckersEmpty(cajeros));
   }, [cajeros]);
 
   return (

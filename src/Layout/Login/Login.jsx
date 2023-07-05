@@ -71,7 +71,7 @@ export function Login() {
     signInFB(data.adminMail, data.adminPass)
       .then(() => {
         signInToast();
-        navigate("/adminCajeros");
+        navigate("/admin/cajeros");
         setIsAdmin(true);
       })
       .catch((error) => {
