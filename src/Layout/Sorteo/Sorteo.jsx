@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import styled from "styled-components";
-
-const numeros = new Array(170).fill(false);
+import { adminContext } from "../../storage/AdminContext";
 
 export const Sorteo = () => {
-  const [sorteoArray, setSorteoArray] = useState(numeros);
+  const { sorteoArray } = useContext(adminContext);
   return (
     <>
       <SorteoContainer className="d-flex flex-column align-items-center">
@@ -38,12 +37,6 @@ export const Sorteo = () => {
         <h3 className="text-white">Cupos disponibles</h3>
         <StyledTableNumbers className="col-8 d-flex flex-wrap text-white justify-content-center pt-2">
           {sorteoArray.map((value, i) => {
-            let aux = i % 3 == 0;
-            if (aux) {
-              value = true;
-            } else {
-              value = false;
-            }
             return (
               <div className={`numberBox ${value ? "marcado" : "noMarcado"}`}>
                 {++i}
@@ -70,7 +63,6 @@ const SorteoContainer = styled.div`
   background-image: url(./assets/images/fondoCardGold.png);
   background-position: center center;
   background-repeat: repeat;
-  background-size: cover;
 `;
 
 const StyledImg = styled.img`

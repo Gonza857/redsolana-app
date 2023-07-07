@@ -1,26 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   deleteImg,
   uploadImgToDB,
   updateAllCajeros,
   updateCajeroInfo,
-  getAllCajeros,
 } from "../../firebase/firebase";
+import { animateScroll } from "react-scroll";
 import { Button } from "react-bootstrap";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
-import { toastError } from "../../helpers/helpers";
-
-const updateAllCheckersDB = (checkersArray) => {
-  updateAllCajeros(checkersArray).catch((error) => {
-    toastError(error.message);
-  });
-};
+import { toastError, toastInfo, toastSuccess } from "../../helpers/helpers";
 
 const updateLocalChecker = (actualChecherInfo, newCheckerInfo) => {
   actualChecherInfo.red = newCheckerInfo.red;
@@ -29,43 +21,102 @@ const updateLocalChecker = (actualChecherInfo, newCheckerInfo) => {
   actualChecherInfo.estado = newCheckerInfo.estado;
   actualChecherInfo.numero = newCheckerInfo.numero;
   actualChecherInfo.enlace = newCheckerInfo.enlace;
-  actualChecherInfo.pos = --newCheckerInfo.pos;
-  console.log(actualChecherInfo);
+  actualChecherInfo.pos = newCheckerInfo.pos;
 };
 
-const updateCheckerV1 = (thisCajero, formCajero, booleanBorroLaImagen) => {
-  if (thisCajero.imagen != null) {
-    // VINO CON IMAGEN
-    // PREGUNTAMOS SI LA BORRO
-    if (booleanBorroLaImagen) {
-      // TRUE, BORRADA
-
-      formCajero.imagen = thisCajero.imagen;
-      updateLocalChecker(thisCajero, formCajero);
+const updateFormData = async (
+  actualCheckerData,
+  formCheckerData,
+  laQuiereBorrar
+) => {
+  if (actualCheckerData.imagen == null) {
+    // LLEGA SIN IMAGEN
+    if (formCheckerData.imagen?.length > 0) {
+      // AGREGO NUEVA
+      // LLEGON SIN --> SE VA CON
+      await uploadImgToDB(formCheckerData.imagen[0])
+        .then((resultado) => {
+          let { url, randomId } = resultado;
+          formCheckerData.imagen = {
+            url,
+            randomId,
+          };
+          actualCheckerData.imagen = formCheckerData.imagen;
+        })
+        .catch((error) => {
+          toastError(error.message);
+        });
     } else {
-      // FALSE, NO BORRADA
+      // NO AGREGO NUEVA
+      // LLEGON SIN --> SE VA SIN
+      formCheckerData.imagen = null;
     }
-  } else if (thisCajero.imagen == null) {
+  } else if (actualCheckerData.imagen != null) {
+    if (laQuiereBorrar) {
+      if (formCheckerData.imagen.length > 0) {
+        // LA BORRO PERO AGREGO OTRA
+        console.log("Llego con la misma, se fue con otra");
+        await deleteImg(actualCheckerData.imagen.randomId).catch((error) => {
+          toastError(error.message);
+        });
+        await uploadImgToDB(formCheckerData.imagen[0])
+          .then((resultado) => {
+            let { url, randomId } = resultado;
+            formCheckerData.imagen = {
+              url,
+              randomId,
+            };
+          })
+          .catch((error) => {
+            toastError(error.message);
+          });
+      } else {
+        // LA BORRO PERO NO AGREGO OTRA
+        console.log("La borro pero no agregó");
+        await deleteImg(actualCheckerData.imagen.randomId)
+          .then(() => {
+            formCheckerData.imagen = null;
+            console.log("Se borro la imagen");
+          })
+          .catch((error) => {
+            toastError(error.message);
+          });
+      }
+    } else {
+      // NO LA QUIERE BORRAR
+      formCheckerData.imagen = actualCheckerData.imagen;
+    }
   } else {
-    console.log("aca no debe entrar xd");
+    // NO DEBERIA ENTRAR ACA
+    toastError("Ocurrió un error. Reintente nuevamente.");
   }
 };
 
 function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
-  const [hasImage, setHasImage] = useState(false);
-
   const [laQuiereBorrar, setLaQuiereBorrar] = useState(false);
 
-  const { cajeros, setCajeros, moveCajerosPosition, traerCajeros } =
-    useContext(adminContext);
+  const scrollToTop = () => {
+    const scrollDuration = 200; // Duración de la animación en milisegundos
+    const scrollOffset = -100; // Desplazamiento adicional opcional
+
+    animateScroll.scrollToTop({
+      duration: scrollDuration,
+      offset: scrollOffset,
+    });
+  };
 
   useEffect(() => {
-    if (cajeroData.imagen === null) {
-      setHasImage(false);
-    } else {
-      setHasImage(true);
-    }
+    console.table(cajeroData.imagen);
+    if (cajeroData.imagen == null) setLaQuiereBorrar(true);
   }, []);
+
+  const {
+    cajeros,
+    setCajeros,
+    moveCajerosPosition,
+    traerCajeros,
+    setIsLoading,
+  } = useContext(adminContext);
 
   const {
     register,
@@ -82,203 +133,51 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
     buttonsStyling: false,
   });
 
-  const thisWillBeTheBestFunction = (data) => {
-    data.pos = Number(data.pos);
-    if (data.imagen.length == 0) {
-      // LA BORRÓ
-      if (cajeroData.pos != data.pos) {
-        // LA BORRO Y LA POS ES DISTINTA
-        let fueBorrada = deleteImg(cajeroData.imagen.randomId);
-        if (fueBorrada) {
-          console.log("Borrada correctamente");
-          data.imagen = null;
-          updateLocalChecker(cajeroData, data);
-          updateCajeroInfo(cajeroData.id, data)
-            .then(() => {
-              onClose();
-            })
-            .catch((error) => {
-              toastError(error.message);
-            });
-        } else {
-          console.log("No la pude borrar");
-        }
-      } else {
-        // LA BORRO Y LA POS ES IGUAL
-        let fueBorrada = deleteImg(cajeroData.imagen.randomId);
-        if (fueBorrada) {
-          console.log("Borrada correctamente");
-          data.imagen = null;
-          updateLocalChecker(cajeroData, data);
-          updateCajeroInfo(cajeroData.id, data)
-            .then(() => {
-              onClose();
-            })
-            .catch((error) => {
-              toastError(error.message);
-            });
-        } else {
-          console.log("No la pude borrar");
-        }
-      }
-    } else {
-      // NO LA BORRO
-      if (cajeroData.pos != data.pos) {
-        // NO LA BORRO Y LA POS ES DISTINTA
-        updateLocalChecker(cajeroData, data);
-        let newArray = moveCajerosPosition(data.pos - 1, data, [...cajeros]);
-        updateAllCheckersDB(newArray);
-        traerCajeros();
-      } else {
-        // NO LA BORRO Y LA POS ES IGUAL
-        updateLocalChecker(cajeroData, data);
-        updateCajeroInfo(cajeroData.id, data)
-          .then(() => {
-            onClose();
-          })
-          .catch((error) => {
-            toastError(error.message);
-          });
-      }
-    }
-  };
-
-  const updateInfo = async (data) => {
-    // console.log("INFORMACION DEL FORMULARIO");
-    // console.table(data);
-
-    // console.log("INFORMACION ACTUAL");
-    // console.table(cajeroData);
-
+  const updateInfo = (data) => {
     let esPosicionCambiada = false;
-
     data.pos = Number(data.pos);
     data.pos--;
     cajeroData.pos = Number(cajeroData.pos);
-
-    let posicionAntigua = cajeroData.pos;
-
-    if (cajeroData.pos != data.pos) esPosicionCambiada = true;
-
     data.id = cajeroData.id;
-
-    // if (esPosicionCambiada) {
-    //   // CAMBIO LA POSICION
-    //   console.log("Cambio la posicion");
-    // } else {
-    //   // NO CAMBIO LA POSICION
-    //   console.log("No cambio la posicion");
-    // }
-
-    const actualizo = () => {
-      if (cajeroData.imagen == null) {
-        // LLEGA SIN IMAGEN
-        if (data.imagen.length > 0) {
-          // AGREGO NUEVA
-          // LLEGON SIN --> SE VA CON
-          uploadImgToDB(data.imagen[0])
-            .then((resultado) => {
-              console.log("Subida correctamente a Storage.");
-              let { url, randomId } = resultado;
-              data.imagen = {
-                url,
-                randomId,
-              };
+    if (cajeroData.pos != data.pos) esPosicionCambiada = true;
+    updateFormData(cajeroData, data, laQuiereBorrar)
+      .then(() => {
+        if (esPosicionCambiada) {
+          let copyCajeros = [...cajeros];
+          let newArray = moveCajerosPosition(data.pos, data, copyCajeros);
+          setCajeros(newArray);
+          setIsLoading(true);
+          scrollToTop();
+          updateAllCajeros(newArray)
+            .then(() => {
+              traerCajeros()
+                .then(() => {
+                  onClose();
+                  setIsLoading(false);
+                  toastSuccess("Cajero actualizado correctamente.");
+                })
+                .catch((error) => {
+                  toastError(error.message);
+                });
             })
-            .catch(() => {
-              console.log("Sucedio un error");
+            .catch((error) => {
+              toastError(error.message);
             });
-          // YA CARGAMOS A LA DATA.IMAGEN LOS DATOS DE LA IMAGEN NUEVA
-          // ACTUALIZAZR CAJERO TODO:
-          updateCajeroInfo(cajeroData.id, data).then(() => {
-            console.log("DB -  cajero, actualizado correctamente.");
-          });
-          updateLocalChecker(cajeroData, data);
         } else {
-          // NO AGREGO NUEVA
-          // LLEGON SIN --> SE VA SIN
-          // ACTUALIZAR CAJERO TODO:
-          updateCajeroInfo(cajeroData.id, data).then(() => {
-            console.log("DB -  cajero, actualizado correctamente.");
-          });
+          // NO CAMBIO POSICION
+          setIsLoading(true);
           updateLocalChecker(cajeroData, data);
-        }
-      } else if (cajeroData.imagen != null) {
-        console.log("LLEGO CON IMAGEN");
-        if (laQuiereBorrar) {
-          if (data.imagen.length > 0) {
-            // LA BORRO PERO AGREGO OTRA
-            deleteImg(cajeroData.imagen.randomId).then(() => {
-              console.log("Borrada correctamente");
-            });
-            uploadImgToDB(data.imagen[0])
-              .then((resultado) => {
-                console.log("Subida correctamente a Storage.");
-                let { url, randomId } = resultado;
-                data.imagen = {
-                  url,
-                  randomId,
-                };
-              })
-              .catch(() => {
-                console.log("Sucedio un error");
-              });
-            console.log("Llego con la misma, se fue con otra");
-
-            // ACTUALIZAR CAJERO TODO:
-          } else {
-            // LA BORRO PERO NO AGREGO OTRA
-            deleteImg(cajeroData.imagen.randomId).then(() => {
-              console.log("Borrada correctamente");
-            });
-            data.imagen = null;
-            console.log("Llego con la misma, se fue sin ella");
-
-            // ACTUALIZAR CAJERO TODO:
-
-            updateCajeroInfo(cajeroData.id, data).then(() => {
-              console.log("DB -  cajero, actualizado correctamente.");
-            });
-            updateLocalChecker(cajeroData, data);
-          }
-        } else {
-          // NO LA QUIERE BORRAR
-          console.log("Llego con la misma, se va con la misma.");
-          // ACTUALIZAR CAJERO TODO:
+          scrollToTop();
           updateCajeroInfo(cajeroData.id, data).then(() => {
-            console.log("DB -  cajero, actualizado correctamente.");
+            onClose();
+            setIsLoading(false);
+            toastSuccess("Cajero actualizado correctamente.");
           });
-          updateLocalChecker(cajeroData, data);
         }
-      } else {
-        console.log("Algo salio mal");
-      }
-    };
-
-    if (esPosicionCambiada) {
-      console.log(data);
-      let copyCajeros = [...cajeros];
-      let newArray = moveCajerosPosition(data.pos, data, copyCajeros);
-      setCajeros(newArray);
-      updateAllCajeros(newArray)
-        .then(() => {
-          console.log("DB - array cajeros, actualizado correctamente");
-        })
-        .catch((error) => {
-          throw new Error(error);
-          // toastError(error.message);
-        });
-      onClose();
-      traerCajeros();
-    } else {
-      // NO CAMBIO POSICION
-      actualizo();
-      updateCajeroInfo(cajeroData.id, data).then(() => {
-        console.log("DB -  cajero, actualizado correctamente.");
+      })
+      .catch((error) => {
+        toastError(error.message);
       });
-      updateLocalChecker(cajeroData, data);
-      onClose();
-    }
   };
 
   const onSubmit = (data) => {
@@ -294,43 +193,29 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
       .then((result) => {
         if (result.isConfirmed) {
           updateInfo(data);
-          toast.success("Información editada correctamente!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          toastSuccess("Información editada correctamente!");
         } else if (result.isDenied) {
           onClose();
-          toast.info("No se guardaron los cambios.", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          toastInfo("No se guardaron los cambios.");
         }
       });
   };
 
   const deleteHandler = () => {
     setLaQuiereBorrar(true);
-    if (cajeroData.imagen !== null) {
-      setHasImage(false);
-      cajeroData.imagen = null;
-      Swal.fire(
-        "Se quitó la imagen.",
-        "Si guarda los cambios se aplicarán y no se puede deshacer. Si desea cancelar el cambio, cancele los cambios.",
-        "success"
-      );
-    }
+    deleteImg(cajeroData.imagen.randomId)
+      .then(() => {
+        cajeroData.imagen = null;
+        console.log("Se borro la imagen");
+        Swal.fire(
+          "Se quitó la imagen.",
+          "Si guarda los cambios se aplicarán y no se puede deshacer. Si desea cancelar el cambio, cancele los cambios.",
+          "success"
+        );
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
   };
 
   return (
@@ -508,7 +393,7 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
           />
         </InputContainer3>
 
-        {hasImage ? (
+        {!laQuiereBorrar ? (
           <>
             <div className="d-flex flex-column justify-content-evenly flex-wrap col-12 p-0 imagenContainer gap-2 mt-1">
               <TextContainer className="d-flex justify-content-between align-items-center">
@@ -546,16 +431,7 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
           variant="danger"
           onClick={() => {
             onClose();
-            toast.info("No se guardaron los cambios.", {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
+            toastInfo("No se guardaron los cambios.");
           }}
         >
           Cancelar

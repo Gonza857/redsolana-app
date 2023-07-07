@@ -34,6 +34,7 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import { v4 } from "uuid";
 
 import { toast } from "react-toastify";
+import { toastError } from "../helpers/helpers";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
@@ -114,11 +115,15 @@ export function setUser(email, password) {
 
 // ACTUALIZAR CAJERO }
 export async function updateCajeroInfo(cajeroId, newCajero) {
-  await updateDoc(doc(DataBase, "cajeros", cajeroId), newCajero);
+  const docRef = doc(DataBase, "cajeros", cajeroId);
+  try {
+    await updateDoc(docRef, newCajero);
+  } catch (error) {
+    toastError(error);
+  }
 }
 
 export async function updateAllCajeros(arrayCajeros) {
-  console.table(arrayCajeros);
   for (let cajero of arrayCajeros) {
     // const docRef = doc(DataBase, "cajeros", cajero.id);
     // updateDoc(docRef, cajero);
@@ -214,4 +219,54 @@ export async function monitorAuthState() {
 
 export async function logoutFB() {
   await signOut(auth);
+}
+
+//////////////////////////////////////////////////////////////
+
+// PARTICIPANTES
+
+// TRAER PARTICIPANTES
+export async function getAllParticipants() {
+  try {
+    console.log("getAllParticipants()");
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
+    const coleccionParticipantes = collection(DataBase, "participantes");
+    // traemos los docs (array cajeros)
+    const response = await getDocs(coleccionParticipantes);
+    // devolvemos objeto con la data, y asignamos el ID
+    let participantes = response.docs.map((participante) => {
+      return {
+        ...participante.data(),
+        id: participante.id,
+      };
+    });
+    let copiaParticipantes = [...participantes];
+    let ordenarParticipantes = copiaParticipantes.sort(
+      (a, b) => a.numero - b.numero
+    );
+    console.log("Ordenado");
+    console.table(ordenarParticipantes);
+    return ordenarParticipantes;
+  } catch (error) {
+    errorAlert(error);
+  }
+}
+
+export async function postParticipant(participant) {
+  try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
+    const collectionRef = collection(DataBase, "participantes");
+    // promesa para añadir documento
+    const docRef = await addDoc(collectionRef, participant);
+    return {
+      ...participant,
+      id: docRef.id,
+    };
+  } catch (error) {
+    errorAlert(error);
+  }
+}
+
+export async function deleteParticipantDB(participant) {
+  await deleteDoc(doc(DataBase, "participantes", participant.id));
 }

@@ -1,11 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 import {
   deleteCajero,
+  deleteParticipantDB,
   getAllCajeros,
+  getAllParticipants,
   monitorAuthState,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
-import {toastError, toastSuccess, toastInfo} from '../helpers/helpers'
+import { toastError, toastSuccess, toastInfo } from "../helpers/helpers";
 
 export const adminContext = createContext();
 
@@ -15,11 +17,10 @@ export const adminContext = createContext();
  * @param formData - Información tomada del formulario de busquedad
  * @returns Index del buscado
  */
-function chekerFilter(data, cajeros) {
-  let param = data.nombre.toLowerCase();
+function cashierFilter(cashier, cajeros) {
+  let param = cashier.toLowerCase();
   let busquedad = cajeros.filter((cajero) => {
-    cajero.nombre = cajero.nombre.toLowerCase();
-    if (cajero.nombre.includes(param)) {
+    if (cajero.nombre.toLowerCase().includes(param)) {
       return cajero;
     } else {
       return null;
@@ -39,6 +40,8 @@ const findCheckerID = (checker, checkersArray) => {
   );
 };
 
+const numeros = new Array(1000).fill(false);
+
 export const AdminContextProvider = (props) => {
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
@@ -52,6 +55,17 @@ export const AdminContextProvider = (props) => {
   const [isAdmin, setIsAdmin] = useState(false);
   // ESTADO DE MENU ABIERTO
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  // ESTADO CARGA DE CAJEROS
+  const [isLoading, setIsLoading] = useState(true);
+
+  // ESTADO SORTEO
+  const [sorteoActivo, setSorteoActivo] = useState(false);
+  // ESTADO SORTEO
+  const [participants, setParticipants] = useState([]);
+  // ARRAY DE NUMEROS SORTEO
+  const [sorteoArray, setSorteoArray] = useState(numeros);
+  // ULTIMO NUMERO COMPRADO
+  const [lastNumber, setLastNumber] = useState(0);
 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -106,10 +120,10 @@ export const AdminContextProvider = (props) => {
   }
 
   // BUSCAR CAJERO
-  function buscarCajero(data) {
+  function buscarCajero(cachierName) {
     setIsSearchingCajero(true);
-    setSearchedName(data.nombre);
-    let checkerFilterArray = chekerFilter(data, cajeros);
+    setSearchedName(cachierName);
+    let checkerFilterArray = cashierFilter(cachierName, cajeros);
     setSearchResult(checkerFilterArray);
   }
 
@@ -118,10 +132,16 @@ export const AdminContextProvider = (props) => {
     try {
       const result = await getAllCajeros();
       setCajeros(result);
+      setIsLoading(false);
     } catch (error) {
       toastError(error);
     }
   }
+
+  // CONSOLE.TABLE CAJEROS
+  const verCajerosTabla = () => {
+    console.table(cajeros);
+  };
 
   // FUNCION ELIMINAR CAJEROS
   function handleDelete(cajeroEliminado) {
@@ -151,19 +171,93 @@ export const AdminContextProvider = (props) => {
   }
 
   useEffect(() => {
-    traerCajeros();
+    traerCajeros().then(() => {
+      setIsLoading(false);
+    });
+    getParticipants();
     setIsAdmin(() => {
       let ver = monitorAuthState();
-      if (
-        ver === process.env.REACT_APP_USER1 ||
-        ver === process.env.REACT_APP_USER2
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      // if (
+      //   ver === process.env.REACT_APP_USER1 ||
+      //   ver === process.env.REACT_APP_USER2
+      // ) {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+      return true;
     });
   }, []);
+
+  // FUNCIONES PARA SORTEO
+
+  // SET PARTICIPANTES
+  async function getParticipants() {
+    try {
+      const result = await getAllParticipants();
+      setParticipants(result);
+      markDataBaseParticipants(result);
+      viewNumberTable();
+      setIsLoading(false);
+    } catch (error) {
+      toastError(error);
+    }
+  }
+
+  const viewNumberTable = () => {
+    console.table(sorteoArray);
+  };
+
+  const viewParticipantsTable = () => {
+    console.table(participants);
+  };
+
+  const markDataBaseParticipants = (arrayParticipants) => {
+    for (let participant of arrayParticipants) {
+      getNumberAndMarkOnTable(participant);
+    }
+  };
+
+  function addParticipant(participantObj) {
+    getNumberAndMarkOnTable(participantObj);
+    setParticipants((participant) => [...participant, participantObj]);
+  }
+
+  const getNumberAndMarkOnTable = (participant) => {
+    console.log("getNumberAndMarkOnTable()");
+    let { numero } = participant;
+    console.log("Marcará esta posicion: " + numero);
+    sorteoArray[numero - 1] = true;
+  };
+
+  const isNumberAvaible = (number) => {
+    let indice = 0;
+    let puedeOcupar = false;
+    if (number > sorteoArray.length || number < 0) {
+      return -1;
+    } else {
+      while (indice < sorteoArray.length) {
+        if (sorteoArray[number - 1] == false) {
+          puedeOcupar = true;
+          break;
+        }
+        indice++;
+      }
+    }
+
+    return puedeOcupar;
+  };
+
+  const deleteParticipant = (participant) => {
+    deleteParticipantDB(participant)
+      .then(() => {
+        toastSuccess("Participante eliminado correctamente.");
+        getParticipants();
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   const value = {
     cajeros,
@@ -182,6 +276,20 @@ export const AdminContextProvider = (props) => {
     moveCajerosPosition,
     isOpenMenu,
     setIsOpenMenu,
+    verCajerosTabla,
+    setIsLoading,
+    isLoading,
+    sorteoActivo,
+    setSorteoActivo,
+    getParticipants,
+    participants,
+    addParticipant,
+    sorteoArray,
+    lastNumber,
+    viewNumberTable,
+    viewParticipantsTable,
+    isNumberAvaible,
+    deleteParticipant,
   };
 
   return (

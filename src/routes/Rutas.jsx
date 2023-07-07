@@ -10,6 +10,7 @@ import {
 } from "../Layout/";
 import { Sorteo } from "../Layout/Sorteo/Sorteo";
 import { AdminSorteos } from "../Layout/AdminSorteos/AdminSorteos";
+import { AdminTablaSorteos } from "../Layout/AdminTablaSorteos/AdminTablaSorteos";
 
 function Rutas() {
   return (
@@ -33,6 +34,11 @@ function Rutas() {
       <Route
         path="/admin/sorteos"
         element={<AdminSorteos />}
+        errorElement={<ErrorPage />}
+      ></Route>
+      <Route
+        path="/admin/sorteos/tabla-numeros"
+        element={<AdminTablaSorteos />}
         errorElement={<ErrorPage />}
       ></Route>
       <Route

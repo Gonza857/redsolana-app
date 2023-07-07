@@ -23,7 +23,8 @@ const completeNameAlert = () => {
 };
 
 function AdminBar() {
-  const { setIsSearchingCajero, buscarCajero } = useContext(adminContext);
+  const { setIsSearchingCajero, buscarCajero, traerCajeros, verCajerosTabla } =
+    useContext(adminContext);
   const { register, handleSubmit, reset } = useForm();
   const [showAdd, setShowAdd] = useState(false);
 
@@ -31,14 +32,13 @@ function AdminBar() {
   const handleShowAdd = () => setShowAdd(true);
 
   const onSubmit = (data) => {
-    if (data.nombre === "") {
-      completeNameAlert();
-      setIsSearchingCajero(false);
-      reset();
-    } else {
-      buscarCajero(data);
-      reset();
-    }
+    if (data.nombre === "") completeNameAlert();
+  };
+
+  const handleOnChange = (e) => {
+    e.preventDefault();
+    buscarCajero(e.target.value);
+    if (e.target.value == 0) setIsSearchingCajero(false);
   };
 
   return (
@@ -50,6 +50,18 @@ function AdminBar() {
       >
         Nuevo cajero
         <AiOutlineUserAdd />
+      </MainButton>
+      <MainButton
+        className="col-8 col-sm-5 col-md-4 col-lg-3"
+        fn={() => traerCajeros()}
+      >
+        Fetch cajeros
+      </MainButton>
+      <MainButton
+        className="col-8 col-sm-5 col-md-4 col-lg-3"
+        fn={() => verCajerosTabla()}
+      >
+        Console.table(cajeros)
       </MainButton>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
@@ -67,6 +79,7 @@ function AdminBar() {
             placeholder="Buscar cajero"
             name="searchInput"
             {...register("nombre")}
+            onChange={handleOnChange}
           />
           <Button type="submit" className="searchBtn">
             <AiOutlineSearch />

@@ -14,21 +14,16 @@ import { FaUserEdit } from "react-icons/fa";
 import styled from "styled-components";
 import { HiStatusOnline } from "react-icons/hi";
 
-const areCheckersEmpty = (checkersArray) => {
-  let aux = true;
-  if (checkersArray.length > 0) aux = false;
-  return aux;
-};
-
 export function AdminCajeros() {
-  const { cajeros, isAdmin, isSearchingCajero, searchResult, searchedName } =
-    useContext(adminContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    cajeros,
+    isAdmin,
+    isSearchingCajero,
+    searchResult,
+    searchedName,
+    isLoading,
+  } = useContext(adminContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setIsLoading(areCheckersEmpty(cajeros));
-  }, [cajeros]);
 
   return (
     <>
