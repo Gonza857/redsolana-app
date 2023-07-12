@@ -7,6 +7,7 @@ import {
   deleteDoc,
   updateDoc,
   addDoc,
+  getDoc,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -65,10 +66,6 @@ const errorAlert = (errorMsg) => {
     theme: "colored",
   });
 };
-
-export function logearEvento() {
-  logEvent(analytics, "notification_received");
-}
 
 export async function getAllCajeros() {
   try {
@@ -270,3 +267,19 @@ export async function postParticipant(participant) {
 export async function deleteParticipantDB(participant) {
   await deleteDoc(doc(DataBase, "participantes", participant.id));
 }
+
+// OBTENER EL ULTIMO PARTICIPANTE
+export const getSingleParticipant = async (id) => {
+  try {
+    const docRef = doc(DataBase, "participantes", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return {
+        ...docSnap.data(),
+        id: docSnap.id,
+      };
+    }
+  } catch (error) {
+    toastError(error.message);
+  }
+};

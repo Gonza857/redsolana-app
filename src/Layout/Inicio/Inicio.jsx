@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import { adminContext } from "../../storage/AdminContext";
 
-const cards = [
+export const cards = [
   {
     cardNumber: 1,
     bgColor: "",

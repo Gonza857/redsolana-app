@@ -11,6 +11,9 @@ import {
 import { Sorteo } from "../Layout/Sorteo/Sorteo";
 import { AdminSorteos } from "../Layout/AdminSorteos/AdminSorteos";
 import { AdminTablaSorteos } from "../Layout/AdminTablaSorteos/AdminTablaSorteos";
+import { AddParticipantView } from "../Layout/AddParticipantView/AddParticipantView";
+import { CasinosView } from "../Layout/CasinosView/CasinosView";
+import { AddCasinoView } from "../Layout/AddCasinoView/AddCasinoView";
 
 function Rutas() {
   return (
@@ -37,8 +40,23 @@ function Rutas() {
         errorElement={<ErrorPage />}
       ></Route>
       <Route
+        path="/admin/ver-casinos"
+        element={<CasinosView />}
+        errorElement={<ErrorPage />}
+      ></Route>
+      <Route
         path="/admin/sorteos/tabla-numeros"
         element={<AdminTablaSorteos />}
+        errorElement={<ErrorPage />}
+      ></Route>
+      <Route
+        path="/admin/sorteos/agregar"
+        element={<AddParticipantView />}
+        errorElement={<ErrorPage />}
+      ></Route>
+      <Route
+        path="/admin/casinos/agregar"
+        element={<AddCasinoView />}
         errorElement={<ErrorPage />}
       ></Route>
       <Route

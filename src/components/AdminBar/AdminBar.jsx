@@ -51,18 +51,6 @@ function AdminBar() {
         Nuevo cajero
         <AiOutlineUserAdd />
       </MainButton>
-      <MainButton
-        className="col-8 col-sm-5 col-md-4 col-lg-3"
-        fn={() => traerCajeros()}
-      >
-        Fetch cajeros
-      </MainButton>
-      <MainButton
-        className="col-8 col-sm-5 col-md-4 col-lg-3"
-        fn={() => verCajerosTabla()}
-      >
-        Console.table(cajeros)
-      </MainButton>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
           <CrossContainer

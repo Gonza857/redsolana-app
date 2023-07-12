@@ -4,7 +4,9 @@ import {
   deleteParticipantDB,
   getAllCajeros,
   getAllParticipants,
+  getSingleParticipant,
   monitorAuthState,
+  postParticipant,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toastError, toastSuccess, toastInfo } from "../helpers/helpers";
@@ -66,6 +68,10 @@ export const AdminContextProvider = (props) => {
   const [sorteoArray, setSorteoArray] = useState(numeros);
   // ULTIMO NUMERO COMPRADO
   const [lastNumber, setLastNumber] = useState(0);
+  // SE AGREGO ALGUNO?
+  const [wasAdded, setWasAdded] = useState(false);
+  // ULTIMO PARTICIPANTE AGREGADO
+  const [lastParticipant, setLastParticipant] = useState(null);
 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -89,7 +95,6 @@ export const AdminContextProvider = (props) => {
     2) SI EL ELEMENTO EXISTE, OSEA ESTAMOS CAMBIANDO LA POSICION DEL ELEMENTO
     */
     let cajeroIndex = findCheckerID(cajero, arrayCajeros);
-    console.log(cajeroIndex);
     if (cajeroIndex === -1) {
       // CASO 1
       // console.log("AGREGADO Y CAMBIADO DE POSICIÓN");
@@ -205,11 +210,11 @@ export const AdminContextProvider = (props) => {
   }
 
   const viewNumberTable = () => {
-    console.table(sorteoArray);
+    // console.table(sorteoArray);
   };
 
   const viewParticipantsTable = () => {
-    console.table(participants);
+    // console.table(participants);
   };
 
   const markDataBaseParticipants = (arrayParticipants) => {
@@ -218,15 +223,24 @@ export const AdminContextProvider = (props) => {
     }
   };
 
-  function addParticipant(participantObj) {
+  function addLocalParticipant(participantObj) {
+    setWasAdded(true);
+    setLastParticipant(participantObj);
     getNumberAndMarkOnTable(participantObj);
     setParticipants((participant) => [...participant, participantObj]);
   }
 
+  const addParticipant = async (participantObj) => {
+    try {
+      const agregado = await postParticipant(participantObj);
+      addLocalParticipant(agregado);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getNumberAndMarkOnTable = (participant) => {
-    console.log("getNumberAndMarkOnTable()");
     let { numero } = participant;
-    console.log("Marcará esta posicion: " + numero);
     sorteoArray[numero - 1] = true;
   };
 
@@ -259,6 +273,11 @@ export const AdminContextProvider = (props) => {
       });
   };
 
+  // MANEJO DE CASINOS
+  const viewNewCasino = (data) => {
+    console.log(data)
+  }
+
   const value = {
     cajeros,
     setCajeros,
@@ -290,6 +309,11 @@ export const AdminContextProvider = (props) => {
     viewParticipantsTable,
     isNumberAvaible,
     deleteParticipant,
+    setLastParticipant,
+    lastParticipant,
+    wasAdded,
+    setWasAdded,
+    viewNewCasino
   };
 
   return (

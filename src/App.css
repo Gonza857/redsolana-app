@@ -56,3 +56,18 @@
     color: #ffffff;
   
   }
+
+li {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    /* border: 3px solid purple; */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.p15 {
+    padding: 15px !important;
+}

@@ -4,14 +4,32 @@ import { AiFillInfoCircle, AiOutlineUserDelete } from "react-icons/ai";
 import { FaEye, FaPen, FaTrash, FaUserEdit } from "react-icons/fa";
 import { adminContext } from "../../storage/AdminContext";
 import { useContext } from "react";
+import Swal from "sweetalert2";
 
 export const SorteoTable = () => {
   const { participants, deleteParticipant } = useContext(adminContext);
 
   const accionButton = () => {};
 
+  const confirmDelete = (participant) => {
+    Swal.fire({
+      title: "¿Seguro que desea eliminar este participante?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteParticipant(participant);
+      }
+    });
+  };
+
   const deleteThisParticipant = (participant) => {
-    deleteParticipant(participant);
+    confirmDelete(participant);
   };
 
   return (
@@ -34,9 +52,9 @@ export const SorteoTable = () => {
           <th className="text-center">
             <AiOutlineUserDelete style={{ color: "fff", fontSize: "20px" }} />
           </th>
-          <th className="text-center">
+          {/* <th className="text-center">
             <FaUserEdit style={{ color: "fff", fontSize: "20px" }} />
-          </th>
+          </th> */}
           <th className="text-center">
             <AiFillInfoCircle style={{ color: "fff", fontSize: "20px" }} />
           </th>
@@ -45,21 +63,21 @@ export const SorteoTable = () => {
       <tbody>
         {participants.map((participant, indice) => {
           return (
-            <tr>
+            <tr key={indice}>
               <td className="text-center" key={indice}>
-                {participant.numero}
+                {participant?.numero}
               </td>
               <td className="text-center" key={++indice}>
-                {participant.usuario}
+                {participant?.usuario}
               </td>
               <td className="text-center" key={++indice}>
-                {participant.plataforma}
+                {participant?.plataforma}
               </td>
               <td className="text-center" key={++indice}>
-                {participant.nombre_apellido}
+                {participant?.nombre_apellido}
               </td>
               <td className="text-center" key={++indice}>
-                {participant.dni_ultimos}
+                {participant?.dni_ultimos}
               </td>
               <td className="p-0 text-center">
                 <FaTrash
@@ -67,12 +85,12 @@ export const SorteoTable = () => {
                   onClick={() => deleteThisParticipant(participant)}
                 />
               </td>
-              <td className="p-0 text-center">
+              {/* <td className="p-0 text-center">
                 <FaPen
                   style={{ fontSize: "1rem" }}
                   onClick={() => accionButton()}
                 />
-              </td>
+              </td> */}
               <td className="p-0 text-center">
                 <FaEye
                   style={{ fontSize: "1rem" }}

@@ -1,39 +1,14 @@
 import React from "react";
 import { useContext } from "react";
-import { useState } from "react";
-import { Table } from "react-bootstrap";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { AiFillInfoCircle, AiOutlineUserDelete } from "react-icons/ai";
-import { FaEye, FaPen, FaTrash, FaUserEdit } from "react-icons/fa";
-import { AddParticipantForm } from "../../components/AddParticipantForm/AddParticipantForm";
 import { SorteoTable } from "../../components/SorteoTable/SorteoTable";
-import { NumerosTable } from "../../components/NumerosTable/NumerosTable";
 import { Link } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
-const numeros = new Array(170).fill(false);
-
 export const AdminSorteos = () => {
-  const [sorteoArray, setSorteoArray] = useState(numeros);
-  const {
-    sorteoActivo,
-    setSorteoActivo,
-    participants,
-    addParticipant,
-    getParticipants,
-    viewNumberTable,
-    viewParticipantsTable,
-  } = useContext(adminContext);
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
+  const { sorteoActivo, setSorteoActivo } = useContext(adminContext);
 
   const confirmDelete = () => {
     Swal.fire({
@@ -78,12 +53,8 @@ export const AdminSorteos = () => {
     });
   };
 
-  useEffect(() => {
-    console.table(participants);
-  }, [participants]);
-
   return (
-    <StyledSorteosContainer className="d-flex flex-column align-items-center bor2 p-1">
+    <StyledSorteosContainer className="col-10 d-flex flex-column align-items-center bor2 p-1">
       <AdminBarContainer className="col-10 gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row bor1">
         {sorteoActivo ? (
           <>
@@ -97,23 +68,14 @@ export const AdminSorteos = () => {
             <button className="btn btn-success" onClick={createSorteo}>
               Crear sorteo
             </button>
-            <button className="btn btn-danger" onClick={getParticipants}>
-              Fetch Participants
-            </button>
-            <button className="btn btn-secondary" onClick={viewNumberTable}>
-              Ver numeros
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={viewParticipantsTable}
-            >
-              Ver participantes
-            </button>
             <Link to={"/admin/sorteos/tabla-numeros"} className="text-white">
               <button className="btn btn-success">Ver tabla de números </button>
             </Link>
+            <Link to={"/admin/sorteos/agregar"} className="text-white">
+              <button className="btn btn-success">Agregar participante </button>
+            </Link>
             <ReactHTMLTableToExcel
-              className="btn btn-success"
+              className="btn btn-primary"
               table="tablaParaExcel"
               filename="participantes"
               sheet="pagina 1"
@@ -122,11 +84,8 @@ export const AdminSorteos = () => {
           </>
         )}
       </AdminBarContainer>
-      <div className="col-11 d-flex flex-column flex-lg-row justify-content-around bor1">
-        <div className="bor3 col-12 col-lg-4 m-auto">
-          <AddParticipantForm />
-        </div>
-        <div className="col-12 col-lg-8 bor3 m-auto">
+      <div className="col-12 col-xl-10 d-flex flex-column flex-xl-row justify-content-around">
+        <div className="col-12 col-xl-8 m-auto">
           <h5 className="text-white text-center pt-4 pb-2">
             Estas visualizando los participantes
           </h5>
