@@ -2,31 +2,12 @@ import React from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 
-export const PreviewCard = ({ casinoPreview, paddingOption }) => {
-  useEffect(() => {
-    console.log(paddingOption);
-  }, [paddingOption]);
+export const PreviewCard = ({ casinoPreview, previewImageUrl }) => {
   return (
     <CardContainer>
       <ImgContainer>
         <a href={casinoPreview?.link} target="_blank" rel="noreferrer">
-          {casinoPreview?.bgColor !== null ? (
-            <BgFlatColor style={{ backgroundColor: casinoPreview?.bgColor }} />
-          ) : (
-            <BgImg
-              style={{
-                filter: casinoPreview?.bgOpacity ? "brightness(50%)" : "",
-              }}
-              src={casinoPreview?.bgImgDirection}
-              alt={casinoPreview?.casinoName}
-            />
-          )}
-
-          <LogoImg
-            style={{ padding: casinoPreview?.padding ? "15px" : "0" }}
-            src={casinoPreview?.imgDirection}
-            alt={casinoPreview?.casinoName}
-          />
+          <BgImg src={previewImageUrl} alt={casinoPreview?.casinoName} />
         </a>
       </ImgContainer>
       <TextContainer>
@@ -74,14 +55,8 @@ const ImgContainer = styled.div`
 `;
 
 const BgImg = styled.img`
-  position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 0;
   object-fit: cover;
 `;
 

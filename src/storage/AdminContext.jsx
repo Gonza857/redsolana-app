@@ -3,13 +3,21 @@ import {
   deleteCajero,
   deleteParticipantDB,
   getAllCajeros,
+  getAllCasinos,
   getAllParticipants,
-  getSingleParticipant,
-  monitorAuthState,
   postParticipant,
+  deleteCasino,
+  getSorteo,
+  updateDraw,
+  updateBooleanArray,
+  uploadCheckerImageDB,
+  signInFirebase,
+  firebaseAuth,
+  logoutFirebase,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toastError, toastSuccess, toastInfo } from "../helpers/helpers";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const adminContext = createContext();
 
@@ -42,9 +50,11 @@ const findCheckerID = (checker, checkersArray) => {
   );
 };
 
-const numeros = new Array(1000).fill(false);
-
 export const AdminContextProvider = (props) => {
+  /* / / / / / USUARIO / / / / / */
+  const [admin, setAdmin] = useState(null);
+  const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
+
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
   // ESTADO DE NOMBRE DE BUSQUEDA
@@ -60,27 +70,104 @@ export const AdminContextProvider = (props) => {
   // ESTADO CARGA DE CAJEROS
   const [isLoading, setIsLoading] = useState(true);
 
-  // ESTADO SORTEO
+  /* / / / / / CAJEROS / / / / / */
+
+  // SET CAJEROS
+  async function traerCajeros() {
+    try {
+      const result = await getAllCajeros();
+      setCajeros(result);
+      setIsLoading(false);
+    } catch (error) {
+      toastError(error);
+    }
+  }
+
+  // SUBIR IMAGEN DE CAJERO A DB
+  const uploadCheckerImage = (file) => {
+    return uploadCheckerImageDB(file);
+  };
+
+  /* / / / / / FIN CAJEROS / / / / / */
+
+  /* / / / / / SORTEO / / / / / */
+
+  /* INFORMACION GENERAL DEL SORTEO */
+
+  // ESTADO SORTEO BOOLEAN
   const [sorteoActivo, setSorteoActivo] = useState(false);
-  // ESTADO SORTEO
-  const [participants, setParticipants] = useState([]);
   // ARRAY DE NUMEROS SORTEO
-  const [sorteoArray, setSorteoArray] = useState(numeros);
+  const [sorteoArray, setSorteoArray] = useState([]);
+  // OBJETO SORTEO
+  const [sorteoInfo, setSorteoInfo] = useState(null);
+  // LOADER SORTEO
+  const [isDrawLoading, setIsDrawLoading] = useState(true);
+
+  /* PARTICIPANTES DEL SORTEO */
+
+  // PARTICIPANTES DEL SORTEO
+  const [participants, setParticipants] = useState([]);
   // ULTIMO NUMERO COMPRADO
   const [lastNumber, setLastNumber] = useState(0);
   // SE AGREGO ALGUNO?
   const [wasAdded, setWasAdded] = useState(false);
   // ULTIMO PARTICIPANTE AGREGADO
   const [lastParticipant, setLastParticipant] = useState(null);
+  // ULTIMO PARTICIPANTE AGREGADO
+  const [participantsQuantity, setParticipantsQuantity] = useState(0);
 
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-primary mx-2",
-      cancelButton: "btn btn-danger",
-      denyButton: "btn btn-danger",
-    },
-    buttonsStyling: false,
-  });
+  /* PREVIEW */
+  const [previewDraw, setPreviewDraw] = useState(null);
+  const [previewDescription, setPreviewDescription] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
+  const [previewSlots, setPreviewSlots] = useState(null);
+
+  const participantsCounter = (copyParticipants) => {
+    let counter = 0;
+    let indice = 0;
+    while (indice < copyParticipants.length) {
+      if (copyParticipants[indice] !== null) counter++;
+      indice++;
+    }
+    return counter;
+  };
+
+  /* / / / / / FIN SORTEO / / / / / */
+
+  /* / / / / / CASINOS / / / / / */
+
+  // ARRAY DE CASINOS
+  const [casinos, setCasinos] = useState([]);
+  // ESTADO DE LOADING
+  const [isGettingCasinos, setIsGettingCasinos] = useState(true);
+  const [casinoToEdit, setCasinoToEdit] = useState({});
+
+  /* FUNCIONES */
+
+  // GET CASINOS
+  async function getCasinos() {
+    try {
+      const result = await getAllCasinos();
+      setCasinos(result);
+      setIsGettingCasinos(false);
+    } catch (error) {
+      toastError(error);
+    }
+  }
+
+  // ELIMINAR CASINO
+  const handleDeleteCasino = (casino) => {
+    deleteCasino(casino).then(() => {
+      toastSuccess("Eliminado correctamente");
+      getCasinos();
+    });
+  };
+
+  useEffect(() => {
+    getCasinos();
+  }, []);
+
+  /* / / / / / FIN SORTEO / / / / / */
 
   // AÑADIR CAJEROS
   function addCajero(cajeroObj) {
@@ -132,17 +219,6 @@ export const AdminContextProvider = (props) => {
     setSearchResult(checkerFilterArray);
   }
 
-  // SET CAJEROS
-  async function traerCajeros() {
-    try {
-      const result = await getAllCajeros();
-      setCajeros(result);
-      setIsLoading(false);
-    } catch (error) {
-      toastError(error);
-    }
-  }
-
   // CONSOLE.TABLE CAJEROS
   const verCajerosTabla = () => {
     console.table(cajeros);
@@ -150,49 +226,29 @@ export const AdminContextProvider = (props) => {
 
   // FUNCION ELIMINAR CAJEROS
   function handleDelete(cajeroEliminado) {
-    swalWithBootstrapButtons
-      .fire({
-        title: "¿Estas seguro que quieres eliminar este cajero?",
-        text: "Los cambios no se pueden deshacer.",
-        showDenyButton: true,
-        denyButtonText: `Cancelar`,
-        confirmButtonText: "Eliminar",
-        reverseButtons: true,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          let searchPosition = cajeros.findIndex(
-            (cajeroFind) => cajeroFind.id === cajeroEliminado.id
-          );
-          let copyCajeros = [...cajeros];
-          copyCajeros.splice(searchPosition, 1);
-          setCajeros(copyCajeros);
-          deleteCajero(cajeroEliminado);
-          toastSuccess("Cajero eliminado correctamente");
-        } else if (result.isDenied) {
-          toastInfo("Cajero no elimnado");
-        }
-      });
+    Swal.fire({
+      title: "¿Estas seguro que quieres eliminar este cajero?",
+      text: "Los cambios no se pueden deshacer.",
+      showDenyButton: true,
+      denyButtonText: `Cancelar`,
+      confirmButtonText: "Eliminar",
+      reverseButtons: true,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        let searchPosition = cajeros.findIndex(
+          (cajeroFind) => cajeroFind.id === cajeroEliminado.id
+        );
+        let copyCajeros = [...cajeros];
+        copyCajeros.splice(searchPosition, 1);
+        setCajeros(copyCajeros);
+        deleteCajero(cajeroEliminado);
+        toastSuccess("Cajero eliminado correctamente");
+      } else if (result.isDenied) {
+        Swal.fire("Cajero no elimnado", "", "info");
+      }
+    });
   }
-
-  useEffect(() => {
-    traerCajeros().then(() => {
-      setIsLoading(false);
-    });
-    getParticipants();
-    setIsAdmin(() => {
-      let ver = monitorAuthState();
-      // if (
-      //   ver === process.env.REACT_APP_USER1 ||
-      //   ver === process.env.REACT_APP_USER2
-      // ) {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
-      return true;
-    });
-  }, []);
 
   // FUNCIONES PARA SORTEO
 
@@ -202,20 +258,12 @@ export const AdminContextProvider = (props) => {
       const result = await getAllParticipants();
       setParticipants(result);
       markDataBaseParticipants(result);
-      viewNumberTable();
       setIsLoading(false);
+      console.table(result);
     } catch (error) {
       toastError(error);
     }
   }
-
-  const viewNumberTable = () => {
-    // console.table(sorteoArray);
-  };
-
-  const viewParticipantsTable = () => {
-    // console.table(participants);
-  };
 
   const markDataBaseParticipants = (arrayParticipants) => {
     for (let participant of arrayParticipants) {
@@ -230,13 +278,67 @@ export const AdminContextProvider = (props) => {
     setParticipants((participant) => [...participant, participantObj]);
   }
 
-  const addParticipant = async (participantObj) => {
-    try {
-      const agregado = await postParticipant(participantObj);
-      addLocalParticipant(agregado);
-    } catch (error) {
-      console.log(error);
+  const markBusySlots = (participant) => {
+    let { numero } = participant;
+    const copyOfBooleanArray = [...sorteoArray];
+    let indice = 0;
+    let ocupado = false;
+    while (indice < copyOfBooleanArray.length && !ocupado) {
+      if (!copyOfBooleanArray[numero]) {
+        copyOfBooleanArray[numero] = true;
+        ocupado = true;
+      }
+      indice++;
     }
+    return copyOfBooleanArray;
+  };
+
+  const unCheckBusySlots = (participant) => {
+    let { numero } = participant;
+    const copyOfBooleanArray = [...sorteoArray];
+    let indice = 0;
+    let unCheck = false;
+    while (indice < copyOfBooleanArray.length && !unCheck) {
+      if (copyOfBooleanArray[numero]) {
+        copyOfBooleanArray[numero] = false;
+        unCheck = true;
+      }
+      indice++;
+    }
+    return copyOfBooleanArray;
+  };
+
+  const addParticipant = (participant) => {
+    postParticipant(participant)
+      .then(() => {
+        toastSuccess("Participante añadido correctamente.");
+        getParticipants();
+        let newBooleanArray = markBusySlots(participant);
+        updateBooleanArray(newBooleanArray).then(() => {
+          setSorteoArray(newBooleanArray);
+        });
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
+  };
+
+  /** Función para eliminar participantes de Firebase
+   * @param participant Object
+   */
+  const deleteParticipant = (participant) => {
+    deleteParticipantDB(participant)
+      .then(() => {
+        toastSuccess("Participante eliminado correctamente.");
+        getParticipants();
+        let newBooleanArray = unCheckBusySlots(participant);
+        updateBooleanArray(newBooleanArray).then(() => {
+          setSorteoArray(newBooleanArray);
+        });
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
   };
 
   const getNumberAndMarkOnTable = (participant) => {
@@ -244,39 +346,158 @@ export const AdminContextProvider = (props) => {
     sorteoArray[numero - 1] = true;
   };
 
+  /** Función para controlar si se escribe un número fuera de los admitidos
+   * en la tabla de numeros del sorteo
+   * @param number
+   * @returns boolean si es posible ocupar ese espacio
+   */
   const isNumberAvaible = (number) => {
     let indice = 0;
     let puedeOcupar = false;
-    if (number > sorteoArray.length || number < 0) {
+    if (number > sorteoArray.length - 1 || number < 0) {
       return -1;
     } else {
       while (indice < sorteoArray.length) {
-        if (sorteoArray[number - 1] == false) {
+        if (!sorteoArray[number]) {
           puedeOcupar = true;
           break;
         }
         indice++;
       }
     }
-
     return puedeOcupar;
   };
 
-  const deleteParticipant = (participant) => {
-    deleteParticipantDB(participant)
-      .then(() => {
-        toastSuccess("Participante eliminado correctamente.");
-        getParticipants();
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+  // Yanina, Mega, Yanina riberos, 373
+
+  const markOnBooleanArray = (participant) => {
+    let { numero } = participant;
+    let copyOfBooleanArray = [...sorteoArray];
+    copyOfBooleanArray[numero] = true;
+    setSorteoArray(copyOfBooleanArray);
+    updateBooleanArray(copyOfBooleanArray);
   };
 
   // MANEJO DE CASINOS
-  const viewNewCasino = (data) => {
-    console.log(data)
-  }
+
+  const setSorteo = () => {
+    getSorteo().then((sorteo) => {
+      // SETEAR OBJETO SORTEO
+      setSorteoInfo(sorteo[0]);
+      // SETEAR ESTADO
+      setSorteoActivo(sorteo[0].isActive);
+      // SETEAR ARRAY DE BOOLEAN
+      setSorteoArray(sorteo[0].slots);
+      setIsDrawLoading(false);
+    });
+  };
+
+  const getSorteoAgain = () => {
+    getSorteo()
+      .then((sorteo) => {
+        // SETEAR ESTADO
+        setSorteoActivo(sorteo[0].isActive);
+        // SETEAR ARRAY DE BOOLEAN
+        setSorteoArray(sorteo[0].slots);
+        // SETEAR OBJETO SORTEO
+        setSorteoInfo(sorteo[0]);
+        setIsDrawLoading(false);
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
+  };
+
+  const deleteDraw = () => {
+    Swal.fire({
+      title: "¿Seguro que deseas eliminar el sorteo actual?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        resetDraw();
+      }
+    });
+  };
+
+  const resetDraw = () => {
+    const emptyDraw = {
+      isActive: false,
+      slots: null,
+      image: null,
+      description: null,
+    };
+
+    for (let i = 0; i < participants.length; i++) {
+      deleteParticipantDB(participants[i]).catch((error) => {
+        toastError(error.message);
+      });
+    }
+    updateDraw(emptyDraw).then(() => {
+      Swal.fire(
+        "¡Eliminado!",
+        "El sorteo se eliminó correctamente.",
+        "success"
+      );
+    });
+  };
+
+  // MANEJO DE LOGIN
+  const adminSignIn = (email, pass) => {
+    setIsVerifingAdmin(true);
+    signInFirebase(email, pass)
+      .then((firebaseUser) => {
+        toastSuccess("Sesión iniciada correctamente.");
+        setAdmin(firebaseUser);
+        setIsAdmin(true);
+        setIsVerifingAdmin(false);
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
+  };
+
+  const keepSession = () => {
+    onAuthStateChanged(firebaseAuth(), (user) => {
+      if (user) {
+        setIsVerifingAdmin(false);
+        setAdmin(user);
+        setIsAdmin(user.emailVerified);
+      }
+    });
+  };
+
+  const logout = () => {
+    logoutFirebase().then(() => {
+      setAdmin(null);
+      setIsAdmin(false);
+      toastSuccess("Cerraste sesión correctamente");
+    });
+  };
+
+  // VISUALIZADORES
+
+  useEffect(() => {
+    // CALCULA Y SETEA LOS CUPOS OCUPADOS
+    if (participants.length > 0)
+      setParticipantsQuantity(participantsCounter(participants));
+  }, [participants]);
+
+  useEffect(() => {
+    // TRAE OBJETO SORTEO
+    setSorteo();
+    // TRAE CAJEROS
+    traerCajeros();
+    // TRAER PARTICIPANTES
+    getParticipants();
+    // VER SESION
+    keepSession();
+  }, []);
 
   const value = {
     cajeros,
@@ -300,20 +521,45 @@ export const AdminContextProvider = (props) => {
     isLoading,
     sorteoActivo,
     setSorteoActivo,
-    getParticipants,
     participants,
     addParticipant,
     sorteoArray,
     lastNumber,
-    viewNumberTable,
-    viewParticipantsTable,
     isNumberAvaible,
     deleteParticipant,
     setLastParticipant,
     lastParticipant,
     wasAdded,
     setWasAdded,
-    viewNewCasino
+    casinos,
+    isGettingCasinos, // ESTADO LOADER
+    handleDeleteCasino,
+    getCasinos,
+    setPreviewDraw, //sorteo
+    setSorteo, // GET AND SET SORTEO DB
+    previewDraw,
+    setPreviewSlots,
+    previewSlots,
+    setPreviewImage,
+    previewImage,
+    setPreviewDescription,
+    previewDescription,
+    sorteoInfo,
+    getSorteoAgain,
+    deleteDraw, // NO SE XD TODO:
+    resetDraw, // RESET SORTEO (VUELVE VALORES A NULOS/VACIOS)
+    isDrawLoading, // ESTADO DE CARGA DE SORTEO
+    setIsDrawLoading, // SET ESTADO DE CARGA DE SORTEO
+    markOnBooleanArray, // AGREGAR PARTICIPANTES
+    participantsQuantity, // CANTIDAD DE PARTICIPANTES INSCRIPTOS
+    // CAJEROS
+    uploadCheckerImage, // SUBIR IMAGEN CAJEROS
+    adminSignIn, // FUNCION PARA INICIAR SESION
+    logout, // CERRAR SESION
+    isVerifingAdmin, // ESTADO DE VERIFIACIÓN ADMIN
+    //  CASINOS
+    setCasinoToEdit, // SETTER CASINO PARA EDITAR
+    casinoToEdit, // INFO CASINO PARA EDITAR
   };
 
   return (

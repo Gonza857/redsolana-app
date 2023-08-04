@@ -58,6 +58,9 @@ export const AdminBar = () => {
           </li>
         </ul>
       </div>
+      <Link to="/nuevo">
+        <StyledOption>Nuevo</StyledOption>
+      </Link>
     </StyledAdminBar>
   );
 };
@@ -65,6 +68,7 @@ export const AdminBar = () => {
 const StyledAdminBar = styled.section`
   min-height: calc(100vh - 70px);
   margin-top: 70px;
+  background-color: #3e3e3e;
 `;
 
 const StyledOption = styled.p`

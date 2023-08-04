@@ -55,7 +55,6 @@ const updateFormData = async (
     if (laQuiereBorrar) {
       if (formCheckerData.imagen.length > 0) {
         // LA BORRO PERO AGREGO OTRA
-        console.log("Llego con la misma, se fue con otra");
         await deleteImg(actualCheckerData.imagen.randomId).catch((error) => {
           toastError(error.message);
         });
@@ -72,11 +71,9 @@ const updateFormData = async (
           });
       } else {
         // LA BORRO PERO NO AGREGO OTRA
-        console.log("La borro pero no agregó");
         await deleteImg(actualCheckerData.imagen.randomId)
           .then(() => {
             formCheckerData.imagen = null;
-            console.log("Se borro la imagen");
           })
           .catch((error) => {
             toastError(error.message);
@@ -206,7 +203,6 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
     deleteImg(cajeroData.imagen.randomId)
       .then(() => {
         cajeroData.imagen = null;
-        console.log("Se borro la imagen");
         Swal.fire(
           "Se quitó la imagen.",
           "Si guarda los cambios se aplicarán y no se puede deshacer. Si desea cancelar el cambio, cancele los cambios.",

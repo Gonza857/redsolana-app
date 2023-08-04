@@ -15,6 +15,11 @@ body {
 
 }
 
+pre {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 1rem !important;
+}
+
 /* ::-webkit-scrollbar{
   display: none;
 } */

@@ -7,13 +7,14 @@ const navbarLinks = [
   { to: "/", slug: "Home" },
   { to: "/cajeros", slug: "Cajeros" },
   { to: "/cronograma", slug: "Cronograma" },
+  { to: "/login", slug: "Administración" },
 ];
 
 const scrollToZero = () => window.scrollTo(0, 0);
 
 export function Footer() {
   return (
-    <FooterContainer className="d-flex flex-column">
+    <FooterContainer className="col-12 d-flex flex-column">
       <FooterWrapper className="col-12 gap-2 gap-md-0">
         <PageSections className="col-12 col-md-4 px-2 px-sm-0">
           <PageSectionsWrapper className="gap-2">
@@ -77,6 +78,8 @@ export function Footer() {
 }
 
 const FooterContainer = styled.footer`
+  position: absolute;
+  right: 0;
   border-top: 1px solid #fff;
   height: fit-content;
   background: radial-gradient(

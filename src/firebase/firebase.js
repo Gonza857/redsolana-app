@@ -28,6 +28,7 @@ import {
   uploadBytes,
   getDownloadURL,
   deleteObject,
+  uploadString,
 } from "firebase/storage";
 
 import { getAnalytics, logEvent } from "firebase/analytics";
@@ -35,7 +36,7 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 import { v4 } from "uuid";
 
 import { toast } from "react-toastify";
-import { toastError } from "../helpers/helpers";
+import { toastError, toastSuccess } from "../helpers/helpers";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_APYKEY_FIREBASE,
@@ -53,6 +54,8 @@ const DataBase = getFirestore(FirebaseApp);
 const storage = getStorage();
 const analytics = getAnalytics(FirebaseApp);
 const auth = getAuth(FirebaseApp);
+
+export const firebaseAuth = () => auth;
 
 const errorAlert = (errorMsg) => {
   toast.error(`Error: ${errorMsg}`, {
@@ -84,7 +87,7 @@ export async function getAllCajeros() {
     let sortCajerosByPos = copyCajeros.sort((a, b) => a.pos - b.pos);
     return sortCajerosByPos;
   } catch (error) {
-    errorAlert(error);
+    toastError(error.message);
   }
 }
 
@@ -143,17 +146,25 @@ export async function uploadImgToDB(file) {
   return { url, randomId };
 }
 
+export async function uploadCheckerImageDB(file) {
+  const randomId = v4();
+  const storageRef = ref(storage, randomId);
+  try {
+    await uploadString(storageRef, file, "data_url");
+    const url = await getDownloadURL(storageRef);
+    toastSuccess("Imagen subida correctamente");
+    return { url, randomId };
+  } catch (error) {
+    toastError(error.message);
+  }
+}
+
 export async function deleteImg(imgId) {
   let aux = false;
   const desertRef = ref(storage, imgId);
-  deleteObject(desertRef)
-    .then(() => {
-      console.log("Borrado correctamente");
-      aux = true;
-    })
-    .catch(() => {
-      console.log("No borrado");
-    });
+  deleteObject(desertRef).then(() => {
+    aux = true;
+  });
   return aux;
 }
 
@@ -179,7 +190,7 @@ export async function loginWithPersistance(email, password) {
     });
 }
 
-export async function signInFB(email, password) {
+export const signInFirebase = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -202,20 +213,14 @@ export async function signInFB(email, password) {
       throw new Error("Intentalo de nuevo más tarde.");
     }
   }
-}
+};
 
-export async function monitorAuthState() {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      return user.uid;
-    } else {
-      return false;
-    }
-  });
-}
-
-export async function logoutFB() {
-  await signOut(auth);
+export async function logoutFirebase() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    toastError(error.messsage);
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -225,12 +230,8 @@ export async function logoutFB() {
 // TRAER PARTICIPANTES
 export async function getAllParticipants() {
   try {
-    console.log("getAllParticipants()");
-    // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const coleccionParticipantes = collection(DataBase, "participantes");
-    // traemos los docs (array cajeros)
     const response = await getDocs(coleccionParticipantes);
-    // devolvemos objeto con la data, y asignamos el ID
     let participantes = response.docs.map((participante) => {
       return {
         ...participante.data(),
@@ -241,19 +242,15 @@ export async function getAllParticipants() {
     let ordenarParticipantes = copiaParticipantes.sort(
       (a, b) => a.numero - b.numero
     );
-    console.log("Ordenado");
-    console.table(ordenarParticipantes);
     return ordenarParticipantes;
   } catch (error) {
-    errorAlert(error);
+    toastError(error);
   }
 }
 
 export async function postParticipant(participant) {
   try {
-    // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionRef = collection(DataBase, "participantes");
-    // promesa para añadir documento
     const docRef = await addDoc(collectionRef, participant);
     return {
       ...participant,
@@ -283,3 +280,119 @@ export const getSingleParticipant = async (id) => {
     toastError(error.message);
   }
 };
+
+////////////////////////////////////////////////
+
+// subir imagenes de casinos
+
+// const casinosRef = ref(storage, "casinos");
+
+export async function postCasinoImage(file) {
+  try {
+    const randomId = v4();
+    const storageRef = ref(storage, `casinos/${randomId}`);
+    const result = await uploadString(storageRef, file, "data_url");
+    const url = await getDownloadURL(storageRef);
+    return { url, randomId };
+  } catch (error) {}
+}
+
+export async function getAllCasinos() {
+  try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
+    const collectionCasinos = collection(DataBase, "casinos");
+    // traemos los docs (array cajeros)
+    const response = await getDocs(collectionCasinos);
+    // devolvemos objeto con la data, y asignamos el ID
+    let casinos = response.docs.map((casino) => {
+      return {
+        ...casino.data(),
+        id: casino.id,
+      };
+    });
+    return casinos;
+  } catch (error) {
+    errorAlert(error);
+  }
+}
+
+export async function deleteCasino(casino) {
+  try {
+    await deleteDoc(doc(DataBase, "casinos", casino.id));
+  } catch (error) {
+    toastError(error.message);
+  }
+}
+
+export async function postCasino(casino) {
+  try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
+    const collectionRef = collection(DataBase, "casinos");
+    // promesa para añadir documento
+    const docRef = await addDoc(collectionRef, casino);
+    return {
+      ...casino,
+      id: docRef.id,
+    };
+  } catch (error) {
+    errorAlert(error);
+  }
+}
+
+// / / / / / MANEJO DE SORTEO / / / / /
+
+export async function getSorteo() {
+  try {
+    // coleccion --> referencia a la funcion base, referencia al nombre de la base
+    const colecctionDraw = collection(DataBase, "sorteo");
+    // traemos los docs (array cajeros)
+    const response = await getDocs(colecctionDraw);
+    // devolvemos objeto con la data, y asignamos el ID
+    let sorteo = response.docs.map((sorteo) => {
+      return {
+        ...sorteo.data(),
+        id: sorteo.id,
+      };
+    });
+    return sorteo;
+  } catch (error) {
+    errorAlert(error);
+  }
+}
+
+export async function updateDraw(sorteoData) {
+  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  try {
+    await updateDoc(docRef, sorteoData);
+  } catch (error) {
+    toastError(error);
+  }
+}
+
+export async function updateBooleanArray(newBooleanArray) {
+  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  try {
+    await updateDoc(docRef, { slots: newBooleanArray });
+  } catch (error) {
+    toastError(error);
+  }
+}
+
+export async function updateParticipantsArray(newParticipantsArray) {
+  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  try {
+    await updateDoc(docRef, { participants: newParticipantsArray });
+  } catch (error) {
+    toastError(error);
+  }
+}
+
+export async function postSorteoImage(file) {
+  try {
+    const randomId = v4();
+    const storageRef = ref(storage, `sorteo/${randomId}`);
+    await uploadString(storageRef, file, "data_url");
+    const url = await getDownloadURL(storageRef);
+    return { url, randomId };
+  } catch (error) {}
+}

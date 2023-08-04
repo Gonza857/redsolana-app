@@ -4,6 +4,7 @@ import { AddParticipantForm } from "../../components/AddParticipantForm/AddParti
 import { useContext } from "react";
 import { adminContext } from "../../storage/AdminContext";
 import { useState } from "react";
+import { MainButton } from "../../components/MainButton/MainButton";
 
 export const AddParticipantView = ({}) => {
   const [wantToUseTheLast, setWantToUseTheLast] = useState(false);
@@ -14,19 +15,19 @@ export const AddParticipantView = ({}) => {
   };
 
   return (
-    <StyledView className="d-flex flex-column align-items-center bor1 text-white">
-      <h1>Agregar participante</h1>
-      <div className="col-8 col-lg-10 d-flex justify-content-evenly bor3">
-        <div className="col-7 col-xl-5 bor2">
+    <StyledView className="col-12 d-flex flex-column align-items-center text-white pb-3 pt-xl-1">
+      <h3 className="py-3">Agregar participante</h3>
+      <div className="col-11 col-lg-10 d-flex flex-column flex-lg-row justify-content-evenly align-items-sm-center gap-2 gap-md-4">
+        <div className="col-12 col-sm-8 col-md-6 col-lg-8 col-xl-5">
           <AddParticipantForm
             lastParticipant={lastParticipant}
             wantToUseTheLast={wantToUseTheLast}
-            setWantToUseTheLast={setWantToUseTheLast}
+            wantToUseLastParticipant={wantToUseLastParticipant}
           />
         </div>
         {wasAdded && (
           <>
-            <div className="col-4 col-xl-3 bor1 d-flex flex-column justify-content-around">
+            <StyledLastAdded className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 d-flex flex-column justify-content-around gap-2">
               <h5 className="text-white text-center m-0">
                 Participante anterior
               </h5>
@@ -44,13 +45,7 @@ export const AddParticipantView = ({}) => {
                 Nombre y apellido:
                 <strong> {lastParticipant?.nombre_apellido}</strong>
               </p>
-              <button
-                className="btn btn-success"
-                onClick={wantToUseLastParticipant}
-              >
-                Usar participante anterior
-              </button>
-            </div>
+            </StyledLastAdded>
           </>
         )}
       </div>
@@ -58,10 +53,15 @@ export const AddParticipantView = ({}) => {
   );
 };
 
-const StyledView = styled.main`
-  min-height: 100vh;
-  margin-top: 70px;
-  overflow: hidden;
-  background-color: #020006;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.26'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+const StyledView = styled.main``;
+
+const StyledLastAdded = styled.div`
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(88, 88, 88, 1) 100%
+  );
+  border-radius: 0.6rem;
+  padding: 20px;
+  border: 1px solid gold;
 `;

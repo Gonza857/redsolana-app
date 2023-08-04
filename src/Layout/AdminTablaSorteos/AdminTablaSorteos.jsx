@@ -1,9 +1,9 @@
 import React from "react";
-import { NumerosTable } from "../../components/NumerosTable/NumerosTable";
+import { NumerosTable } from "../../components/DrawNumbersTable/DrawNumbersTable";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-export const AdminTablaSorteos = () => {
+export const AdminDraw = () => {
   return (
     <ContainerNumberTable>
       <div className="bor1 col-12">
@@ -11,7 +11,7 @@ export const AdminTablaSorteos = () => {
           <Link to={"/admin/sorteos"}>Volver</Link>
         </button>
       </div>
-      <NumerosTable />
+      <DrawNumberTable />
     </ContainerNumberTable>
   );
 };

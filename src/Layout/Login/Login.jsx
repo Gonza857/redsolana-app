@@ -9,10 +9,12 @@ import { Animated } from "react-animated-css";
 import { AiOutlineUser } from "react-icons/ai";
 import { Metronome } from "@uiball/loaders";
 import styled from "styled-components";
+import { MainButton } from "../../components/MainButton/MainButton";
 
 export function Login() {
   const navigate = useNavigate();
-  const { isAdmin, setIsAdmin } = useContext(adminContext);
+  const { isAdmin, setIsAdmin, adminSignIn, isVerifingAdmin } =
+    useContext(adminContext);
   const {
     register,
     formState: { errors },
@@ -22,8 +24,8 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (isAdmin) navigate("/adminCajeros");
-  }, [isAdmin, navigate]);
+    if (isAdmin) navigate("/admin");
+  }, [isAdmin]);
 
   const signInToast = () =>
     toast.success("Iniciaste sesión correctamente", {
@@ -67,19 +69,7 @@ export function Login() {
   };
 
   const onSubmit = (data) => {
-    setIsLoading(true);
-    signInFB(data.adminMail, data.adminPass)
-      .then(() => {
-        signInToast();
-        navigate("/admin/cajeros");
-        setIsAdmin(true);
-      })
-      .catch((error) => {
-        errorSignIn(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    adminSignIn(data.adminMail, data.adminPass);
   };
 
   if (
@@ -91,14 +81,14 @@ export function Login() {
 
   return (
     <>
-      <LoginContainer>
+      <LoginContainer className="col-12">
         <Animated
           animationIn="bounceInLeft"
           animationOut="fadeOut"
           isVisible={true}
         >
           <LoginFormContainer className="col-11 col-sm-8 px-sm-5 col-sm-6 col-md-5 px-md-4 px-lg-3 col-xl-3">
-            {isLoading ? (
+            {isVerifingAdmin ? (
               <>
                 <div className="m-auto">
                   <Metronome size={40} speed={1.6} color="#fff" />
@@ -153,7 +143,11 @@ export function Login() {
                         )}
                       </InputContainer>
                     </InputsContainer>
-                    <SubmitInput type="submit" value="Iniciar sesión" />
+                    <div className="m-auto">
+                      <MainButton primary={true} type="submit">
+                        Iniciar sesión
+                      </MainButton>
+                    </div>
                   </LoginForm>
                 </Animated>
               </>
@@ -167,8 +161,7 @@ export function Login() {
 }
 
 const LoginContainer = styled.div`
-  margin-top: 70px;
-  height: calc(100vh - 70px);
+  min-height: calc(100vh - 70px);
   display: grid;
   align-items: center;
   background-color: #020006;

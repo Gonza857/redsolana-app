@@ -8,6 +8,7 @@ import ModalSetCajeros from "../ModalSetCajeros/ModalSetCajeros";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { MainButton } from "../MainButton/MainButton";
+import { Link } from "react-router-dom";
 
 const completeNameAlert = () => {
   toast.info("Debes ingresar un nombre antes de realizar la busqueda.", {
@@ -44,13 +45,15 @@ function AdminBar() {
   return (
     <AdminBarContainer className="gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
       <ModalSetCajeros show={showAdd} onClose={handleCloseAdd} />
-      <MainButton
-        className="col-8 col-sm-5 col-md-4 col-lg-3"
-        fn={handleShowAdd}
-      >
-        Nuevo cajero
-        <AiOutlineUserAdd />
-      </MainButton>
+      <Link to={"/admin/cajeros/agregar"}>
+        <MainButton
+          className="col-8 col-sm-5 col-md-4 col-lg-3"
+          fn={handleShowAdd}
+        >
+          Nuevo cajero
+          <AiOutlineUserAdd />
+        </MainButton>
+      </Link>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
           <CrossContainer
@@ -85,7 +88,6 @@ const AdminBarContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  margin-top: 70px;
   button {
     &:nth-child(3) {
       border-radius: 0 !important;

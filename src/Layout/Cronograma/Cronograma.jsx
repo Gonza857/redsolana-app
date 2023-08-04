@@ -11,7 +11,6 @@ export function Cronograma() {
 
 const CronogramaContainer = styled.div`
   width: 100%;
-  margin-top: 70px;
   height: calc(100vh - 70px);
   background-image: url(./assets/images/fondoCardGold.png);
   background-position: center center;

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
-import { SorteoTable } from "../../components/SorteoTable/SorteoTable";
+import { DrawParticipantsTable } from "../../components/DrawParticipantsTable/DrawParticipantsTable";
 import { Link } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
@@ -75,7 +75,7 @@ export const AdminSorteos = () => {
               <button className="btn btn-success">Agregar participante </button>
             </Link>
             <ReactHTMLTableToExcel
-              className="btn btn-primary"
+              className="mainButton primary"
               table="tablaParaExcel"
               filename="participantes"
               sheet="pagina 1"
@@ -89,7 +89,7 @@ export const AdminSorteos = () => {
           <h5 className="text-white text-center pt-4 pb-2">
             Estas visualizando los participantes
           </h5>
-          <SorteoTable />
+          <DrawParticipantsTable />
         </div>
       </div>
     </StyledSorteosContainer>

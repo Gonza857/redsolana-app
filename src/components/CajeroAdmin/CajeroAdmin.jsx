@@ -29,9 +29,6 @@ function CajeroAdmin({ cajero }) {
       let nameUpdate = cambio.concat("...");
       cajero.nombre = nameUpdate;
     }
-    // console.log(cajero.nombre);
-    // console.log("Llega con pos: " + cajero.pos);
-    // console.log("Muestro: " + (cajero.pos + 1));
   }, [cajeros, cajero]);
 
   return (

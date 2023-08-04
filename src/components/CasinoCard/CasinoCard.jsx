@@ -1,49 +1,62 @@
 import React from "react";
+import { useContext } from "react";
 import { Animated } from "react-animated-css";
 import styled from "styled-components";
+import { adminContext } from "../../storage/AdminContext";
+import { Ring } from "@uiball/loaders";
+import { useEffect } from "react";
 
-function CasinoCard({
-  casinoLink,
-  imgRoute,
-  imgAlt,
-  casinoName,
-  bgColor = undefined,
-  bgImageUrl = undefined,
-  bgPadding = undefined,
-}) {
-  const style = {
-    backgroundColor: `${bgColor ? `${bgColor}` : "unset"}`,
-    backgroundImage: `${bgImageUrl ? `url(${bgImageUrl})` : "unset"}`,
-    padding: `${bgPadding ? `${bgPadding}` : "unset"}`,
-  };
+const cinco = new Array(5).fill(null);
+
+function CasinoCard({ casinoImage, casinoName, link, loadFake }) {
+  const { isGettingCasinos } = useContext(adminContext);
 
   return (
-    <Animated
-      animationIn="fadeInLeft"
-      animationOut="fedeOutRight"
-      isVisible={true}
-    >
+    <Animated animationIn="fadeIn" animationOut="fedeOut" isVisible={true}>
       <CardContainer>
-        <ImgContainer style={style}>
-          <a href={casinoLink} target="_blank" rel="noreferrer">
-            <RedImg src={`./assets/images/${imgRoute}`} alt={imgAlt} />
-          </a>
-        </ImgContainer>
-        <TextContainer>
-          <p>
-            Haz click{" "}
-            <a href={casinoLink} target="_blank" rel="noreferrer">
-              aqui
-            </a>{" "}
-            para ir a {casinoName}
-          </p>
-        </TextContainer>
+        {loadFake ? (
+          <CasinoCardLoading>
+            <Ring size={40} lineWeight={5} speed={2} color="#d4af37" />
+          </CasinoCardLoading>
+        ) : (
+          <>
+            <ImgContainer>
+              <a href={link} target="_blank" rel="noreferrer">
+                <img src={casinoImage.url} alt={casinoName} />
+              </a>
+            </ImgContainer>
+            <TextContainer>
+              <p>
+                Haz click{" "}
+                <a href={link} target="_blank" rel="noreferrer">
+                  aqui
+                </a>{" "}
+                para ir a {casinoName}
+              </p>
+            </TextContainer>
+          </>
+        )}
       </CardContainer>
     </Animated>
   );
 }
 
 export default CasinoCard;
+
+const CasinoCardLoading = styled.div`
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
+  transition: all 0.5s;
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(88, 88, 88, 1) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const CardContainer = styled.div`
   text-align: center;
@@ -66,17 +79,18 @@ const CardContainer = styled.div`
 `;
 
 const ImgContainer = styled.div`
-  background-position: center center;
-  background-size: cover;
   height: 200px;
+  a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 `;
-
-const RedImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
 const TextContainer = styled.div`
   display: flex;
   justify-content: center;

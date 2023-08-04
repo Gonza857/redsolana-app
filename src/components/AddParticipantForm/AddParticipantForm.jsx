@@ -5,21 +5,25 @@ import { adminContext } from "../../storage/AdminContext";
 import { postParticipant } from "../../firebase/firebase";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import styled from "styled-components";
+import { MainButton } from "../MainButton/MainButton";
+import { useNavigate } from "react-router-dom";
 
 export const AddParticipantForm = ({
   lastParticipant,
   wantToUseTheLast,
-  setWantToUseTheLast,
+  wantToUseLastParticipant,
 }) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
+  const navigate = useNavigate();
+  const { register, handleSubmit, reset } = useForm();
 
-  const { addParticipant, isNumberAvaible, setWasAdded, setLastParticipant } =
-    useContext(adminContext);
+  const {
+    addParticipant,
+    isNumberAvaible,
+    setWasAdded,
+    setLastParticipant,
+    sorteoArray,
+    wasAdded,
+  } = useContext(adminContext);
 
   const onSubmit = (data) => {
     data.numero = Number(data.numero);
@@ -27,34 +31,34 @@ export const AddParticipantForm = ({
     if (isNumberAvaible(data.numero) == true) {
       setWasAdded(true);
       setLastParticipant(data);
-      addParticipant(data)
-        .then(() => {
-          toastSuccess("Participante agregado correctamente");
-          reset();
-        })
-        .catch((error) => {
-          toastError(error.message);
-        });
+      addParticipant(data);
+      window.scrollTo(0, 0);
+      reset();
+      navigate("/admin/sorteo/participantes");
     } else if (isNumberAvaible(data.numero) == -1) {
-      toastError("Número inexistente, introduce un número entre 1 y 1000.");
+      toastError(
+        `Número inexistente, introduce un número entre 0 y ${
+          sorteoArray.length - 1
+        }.`
+      );
     } else {
-      toastError("Número ocupado, elige otro.");
+      toastError("Número ocupado.");
     }
   };
 
   const limpiarFormulario = () => {
-    setWantToUseTheLast(false);
+    wantToUseLastParticipant();
     reset();
   };
 
   return (
-    <form
-      className="d-flex flex-column align-content-center gap-2 p-2"
+    <StyledForm
+      className="d-flex flex-column align-content-center gap-2 p-2 p-sm-3 p-xl-4"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="col-12 d-flex gap-2 justify-content-between align-items-center">
+      <InputContainer className="col-12 d-flex gap-2 justify-content-between align-items-lg-center">
         <label htmlFor="numero" className="text-white col-6">
-          Numero
+          Número
         </label>
         <StyledNumberInput
           type="number"
@@ -64,8 +68,8 @@ export const AddParticipantForm = ({
             required: true,
           })}
         />
-      </div>
-      <div className="col-12 d-flex gap-2 justify-content-between align-items-center">
+      </InputContainer>
+      <InputContainer className="col-12 d-flex gap-2 justify-content-between align-items-lg-center">
         <label htmlFor="dni_ultimos" className="text-white col-6">
           Ultimos 3 digitos DNI
         </label>
@@ -77,8 +81,8 @@ export const AddParticipantForm = ({
             required: true,
           })}
         />
-      </div>
-      <div className="col-12 d-flex gap-2 justify-content-between align-items-center">
+      </InputContainer>
+      <InputContainer className="col-12 d-flex gap-2 justify-content-between align-items-lg-center">
         <label htmlFor="usuario" className="text-white col-6">
           Usuario
         </label>
@@ -90,8 +94,8 @@ export const AddParticipantForm = ({
             required: true,
           })}
         />
-      </div>
-      <div className="col-12 d-flex gap-2  justify-content-between align-items-center ">
+      </InputContainer>
+      <InputContainer className="col-12 d-flex gap-2 justify-content-between align-items-lg-center">
         <label htmlFor="plataforma" className="text-white col-6">
           Plataforma
         </label>
@@ -103,8 +107,8 @@ export const AddParticipantForm = ({
             required: true,
           })}
         />
-      </div>
-      <div className="col-12 d-flex gap-2 justify-content-between align-items-center">
+      </InputContainer>
+      <InputContainer className="col-12 d-flex gap-2 justify-content-between align-items-lg-center">
         <label htmlFor="nombre_apellido" className="text-white col-6">
           Nombre y apellido
         </label>
@@ -118,22 +122,106 @@ export const AddParticipantForm = ({
             required: true,
           })}
         />
-      </div>
-      <div className="d-flex gap-2">
-        <button className="btn btn-success col-3 m-auto my-2" type="submit">
+      </InputContainer>
+      <div className="d-flex flex-column flex-sm-row flex-wrap justify-content-center align-items-center gap-2 pt-3">
+        <MainButton primary={true} className="col-3 m-auto my-2" type="submit">
           Enviar
-        </button>
-        <p
-          className="btn btn-warning col-3 m-auto my-2"
-          onClick={limpiarFormulario}
-        >
+        </MainButton>
+        <MainButton className="col-3 m-auto my-2" onClick={limpiarFormulario}>
           Limpiar
-        </p>
+        </MainButton>
+        {wasAdded && (
+          <>
+            <MainButton
+              primary={true}
+              type="button"
+              fn={wantToUseLastParticipant}
+            >
+              Usar participante anterior
+            </MainButton>
+          </>
+        )}
       </div>
-    </form>
+    </StyledForm>
   );
 };
 
+const StyledForm = styled.form`
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(88, 88, 88, 1) 100%
+  );
+  border-radius: 0.6rem;
+  padding: 20px;
+  border: 1px solid gold;
+`;
+
 const StyledNumberInput = styled.input`
   border: 3px solid violet;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  @media screen and (max-width: 992px) {
+    flex-direction: column;
+  }
+  label {
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px #3498db;
+    }
+    &::placeholder {
+      color: #999;
+    }
+    &::-webkit-input-placeholder {
+      color: #999;
+    }
+    &::-moz-placeholder {
+      color: #999;
+    }
+    &:-ms-input-placeholder {
+      color: #999;
+    }
+    &:-moz-placeholder {
+      color: #999;
+    }
+  }
+`;
+
+const StyledInput = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px #3498db;
+  }
+  &::placeholder {
+    color: #999;
+  }
+  &::-webkit-input-placeholder {
+    color: #999;
+  }
+  &::-moz-placeholder {
+    color: #999;
+  }
+  &:-ms-input-placeholder {
+    color: #999;
+  }
+  &:-moz-placeholder {
+    color: #999;
+  }
 `;
