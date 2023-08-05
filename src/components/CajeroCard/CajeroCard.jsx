@@ -16,6 +16,7 @@ function CajeroCard({ cajero }) {
     }
   }, [cajeros, cajero]);
 
+
   return (
     <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true}>
       <CajeroCardContainer>
@@ -44,6 +45,7 @@ function CajeroCard({ cajero }) {
             )
           ) : (
             <img
+              loading="lazy"
               src={cajero.imagen.url}
               alt="Imagen de cajero/a personalizada"
             />

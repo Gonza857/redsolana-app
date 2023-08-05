@@ -50,7 +50,7 @@ const firebaseConfig = {
 
 const FirebaseApp = initializeApp(firebaseConfig);
 // DB CAJEROS
-const DataBase = getFirestore(FirebaseApp);
+const DATABASE = getFirestore(FirebaseApp);
 const storage = getStorage();
 const analytics = getAnalytics(FirebaseApp);
 const auth = getAuth(FirebaseApp);
@@ -73,7 +73,7 @@ const errorAlert = (errorMsg) => {
 export async function getAllCajeros() {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
-    const collectionCajeros = collection(DataBase, "cajeros");
+    const collectionCajeros = collection(DATABASE, "cajeros");
     // traemos los docs (array cajeros)
     const response = await getDocs(collectionCajeros);
     // devolvemos objeto con la data, y asignamos el ID
@@ -94,7 +94,7 @@ export async function getAllCajeros() {
 export async function postCajeros(cajero) {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
-    const collectionRef = collection(DataBase, "cajeros");
+    const collectionRef = collection(DATABASE, "cajeros");
     // promesa para añadir documento
     const docRef = await addDoc(collectionRef, cajero);
     return {
@@ -115,7 +115,7 @@ export function setUser(email, password) {
 
 // ACTUALIZAR CAJERO }
 export async function updateCajeroInfo(cajeroId, newCajero) {
-  const docRef = doc(DataBase, "cajeros", cajeroId);
+  const docRef = doc(DATABASE, "cajeros", cajeroId);
   try {
     await updateDoc(docRef, newCajero);
   } catch (error) {
@@ -125,14 +125,14 @@ export async function updateCajeroInfo(cajeroId, newCajero) {
 
 export async function updateAllCajeros(arrayCajeros) {
   for (let cajero of arrayCajeros) {
-    // const docRef = doc(DataBase, "cajeros", cajero.id);
+    // const docRef = doc(DATABASE, "cajeros", cajero.id);
     // updateDoc(docRef, cajero);
-    await updateDoc(doc(DataBase, "cajeros", cajero.id), cajero);
+    await updateDoc(doc(DATABASE, "cajeros", cajero.id), cajero);
   }
 }
 
 export async function deleteCajero(cajero) {
-  await deleteDoc(doc(DataBase, "cajeros", cajero.id));
+  await deleteDoc(doc(DATABASE, "cajeros", cajero.id));
   if (cajero.imagen !== null) {
     deleteImg(cajero.imagen.randomId);
   }
@@ -230,7 +230,7 @@ export async function logoutFirebase() {
 // TRAER PARTICIPANTES
 export async function getAllParticipants() {
   try {
-    const coleccionParticipantes = collection(DataBase, "participantes");
+    const coleccionParticipantes = collection(DATABASE, "participantes");
     const response = await getDocs(coleccionParticipantes);
     let participantes = response.docs.map((participante) => {
       return {
@@ -250,7 +250,7 @@ export async function getAllParticipants() {
 
 export async function postParticipant(participant) {
   try {
-    const collectionRef = collection(DataBase, "participantes");
+    const collectionRef = collection(DATABASE, "participantes");
     const docRef = await addDoc(collectionRef, participant);
     return {
       ...participant,
@@ -262,13 +262,13 @@ export async function postParticipant(participant) {
 }
 
 export async function deleteParticipantDB(participant) {
-  await deleteDoc(doc(DataBase, "participantes", participant.id));
+  await deleteDoc(doc(DATABASE, "participantes", participant.id));
 }
 
 // OBTENER EL ULTIMO PARTICIPANTE
 export const getSingleParticipant = async (id) => {
   try {
-    const docRef = doc(DataBase, "participantes", id);
+    const docRef = doc(DATABASE, "participantes", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return {
@@ -283,24 +283,35 @@ export const getSingleParticipant = async (id) => {
 
 ////////////////////////////////////////////////
 
-// subir imagenes de casinos
-
-// const casinosRef = ref(storage, "casinos");
+// MANEJO DE CASINOS
 
 export async function postCasinoImage(file) {
   try {
-    const randomId = v4();
-    const storageRef = ref(storage, `casinos/${randomId}`);
-    const result = await uploadString(storageRef, file, "data_url");
+    const id = v4();
+    const storageRef = ref(storage, `casinos/${id}`);
+    await uploadString(storageRef, file, "data_url");
     const url = await getDownloadURL(storageRef);
-    return { url, randomId };
-  } catch (error) {}
+    console.log("FIREBASE: Imagen subida correctamente.");
+    return { url, id };
+  } catch (error) {
+    throw new Error("Ooops! Algo salio mal.");
+  }
+}
+
+export async function deleteCasinoImage(image_id) {
+  try {
+    const desertRef = ref(storage, `casinos/${image_id}`);
+    await deleteObject(desertRef);
+    console.log("borrada correctamente");
+  } catch (error) {
+    throw new Error("Ooops! Algo salio mal.");
+  }
 }
 
 export async function getAllCasinos() {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
-    const collectionCasinos = collection(DataBase, "casinos");
+    const collectionCasinos = collection(DATABASE, "casinos");
     // traemos los docs (array cajeros)
     const response = await getDocs(collectionCasinos);
     // devolvemos objeto con la data, y asignamos el ID
@@ -318,16 +329,27 @@ export async function getAllCasinos() {
 
 export async function deleteCasino(casino) {
   try {
-    await deleteDoc(doc(DataBase, "casinos", casino.id));
+    await deleteDoc(doc(DATABASE, "casinos", casino.id));
   } catch (error) {
     toastError(error.message);
   }
 }
 
+export const updateCasino = async (casino) => {
+  try {
+    console.log(casino);
+    const casinoRef = doc(DATABASE, "casinos", casino.id);
+    await updateDoc(casinoRef, casino);
+    console.log("FIREBASE: Actualizado correctamente.");
+  } catch (error) {
+    throw new Error("Ooops! Algo salio mal.");
+  }
+};
+
 export async function postCasino(casino) {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
-    const collectionRef = collection(DataBase, "casinos");
+    const collectionRef = collection(DATABASE, "casinos");
     // promesa para añadir documento
     const docRef = await addDoc(collectionRef, casino);
     return {
@@ -344,7 +366,7 @@ export async function postCasino(casino) {
 export async function getSorteo() {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
-    const colecctionDraw = collection(DataBase, "sorteo");
+    const colecctionDraw = collection(DATABASE, "sorteo");
     // traemos los docs (array cajeros)
     const response = await getDocs(colecctionDraw);
     // devolvemos objeto con la data, y asignamos el ID
@@ -361,7 +383,7 @@ export async function getSorteo() {
 }
 
 export async function updateDraw(sorteoData) {
-  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  const docRef = doc(DATABASE, "sorteo", "sorteo1");
   try {
     await updateDoc(docRef, sorteoData);
   } catch (error) {
@@ -370,7 +392,7 @@ export async function updateDraw(sorteoData) {
 }
 
 export async function updateBooleanArray(newBooleanArray) {
-  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  const docRef = doc(DATABASE, "sorteo", "sorteo1");
   try {
     await updateDoc(docRef, { slots: newBooleanArray });
   } catch (error) {
@@ -379,7 +401,7 @@ export async function updateBooleanArray(newBooleanArray) {
 }
 
 export async function updateParticipantsArray(newParticipantsArray) {
-  const docRef = doc(DataBase, "sorteo", "sorteo1");
+  const docRef = doc(DATABASE, "sorteo", "sorteo1");
   try {
     await updateDoc(docRef, { participants: newParticipantsArray });
   } catch (error) {

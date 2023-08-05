@@ -163,10 +163,6 @@ export const AdminContextProvider = (props) => {
     });
   };
 
-  useEffect(() => {
-    getCasinos();
-  }, []);
-
   /* / / / / / FIN SORTEO / / / / / */
 
   // AÑADIR CAJEROS
@@ -497,6 +493,8 @@ export const AdminContextProvider = (props) => {
     getParticipants();
     // VER SESION
     keepSession();
+    // TRAER CASINOS
+    getCasinos().then(() => console.table(casinos));
   }, []);
 
   const value = {

@@ -70,7 +70,7 @@ function Rutas() {
       ></Route>
       {/* EDITAR */}
       <Route
-        path="/admin/casinos/editar"
+        path="/admin/casinos/editar/:id"
         element={<EditCasinoView />}
         errorElement={<ErrorPage />}
       ></Route>

@@ -3,10 +3,16 @@ import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
 import { MainButton } from "../MainButton/MainButton";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { AiFillEdit } from "react-icons/ai";
+import { FaTrashAlt } from "react-icons/fa";
 
 export const AdminCasinoCard = ({ card }) => {
   const { handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    console.log(card);
+  }, []);
   return (
     <StyledCard className="d-flex flex-column align-items-center p-2">
       <ImageContainer className="p-2">
@@ -20,16 +26,16 @@ export const AdminCasinoCard = ({ card }) => {
           primary={true}
           fn={() => {
             setCasinoToEdit(card);
-            navigate("/admin/casinos/editar");
+            navigate(`/admin/casinos/editar/${card?.id}`);
           }}
         >
-          Editar
+          <AiFillEdit />
         </MainButton>
         <MainButton
           className="btn btn-danger"
           fn={() => handleDeleteCasino(card)}
         >
-          Eliminar
+          <FaTrashAlt />
         </MainButton>
       </CardControl>
     </StyledCard>
