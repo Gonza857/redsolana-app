@@ -25,10 +25,12 @@ export const AddCasinoView = () => {
   const { viewNewCasino } = useContext(adminContext);
   const navigate = useNavigate();
 
-  const { register, handleSubmit, resetField } = useForm();
+  const { register, handleSubmit, resetField, reset } = useForm();
 
-  const onSubmit = (data) => {
-    setCasinoPreview(data);
+  const onSubmit = () => {
+    reset();
+    setPreviewImageUrl(null);
+    setCasinoName(null);
   };
 
   const uploadCasino = () => {
@@ -59,72 +61,78 @@ export const AddCasinoView = () => {
   useEffect(() => {
     getAllCasinos().then((result) => {
       setCasinos(result);
-      console.table(result);
     });
   }, []);
 
   return (
     <div className="col-12 d-flex flex-column align-items-center py-4 py-xl-2">
       <h3 className="mx-auto text-white py-xl-2">Añadir casino</h3>
-      <div className="col-11 col-xl-12 d-flex d-flex flex-wrap justify-content-center gap-4 gap-xl-0">
+      <div className="col-11 col-xl-12 d-flex d-flex flex-wrap justify-content-center">
         <div
-          className={`col-12 col-xl-6 text-white d-flex justify-content-center flex-wrap ${
-            casinoPreview !== null ? "" : "m-auto"
+          className={`col-12 col-xl-5 text-white d-flex justify-content-center flex-wrap ${
+            previewImageUrl == null && "m-auto"
           }`}
         >
           <StyledForm
-            className="col-12 col-xl-8 d-flex flex-column gap-3 p-2 p-xl-3"
+            className="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-8 d-flex flex-column gap-3 p-3 p-xl-3"
             onSubmit={handleSubmit(onSubmit)}
           >
             <InputContainer>
               <label htmlFor="casinoImage">Imagen casino</label>
               <StyledInput
+                required
                 type="file"
                 name="casinoImage"
                 onChange={handleFileUpload}
               />
             </InputContainer>
-            <InputContainer>
+            <InputContainer className="">
               <label htmlFor="link">Link del sitio</label>
               <div className="d-flex align-items-center justify-content-between">
-                <StyledInput
-                  className="col-10"
+                <LinkInput
+                  required
                   type="text"
                   name="link"
                   {...register("link", {
                     required: true,
                   })}
                 />
-                <button
-                  className="btn btn-primary col-2 col-xl-1 h-100"
+                <ClearLinkBtn
+                  className=""
                   type="button"
                   onClick={() => resetField("link")}
                 >
                   <AiFillDelete />
-                </button>
+                </ClearLinkBtn>
               </div>
             </InputContainer>
             <InputContainer>
               <label htmlFor="casinoName">Nombre del casino</label>
               <StyledInput
+                required
                 type="text"
                 name="casinoName"
                 {...register("casinoName", {
                   required: true,
+                  onChange: (e) => {
+                    setCasinoName(e.target.value);
+                  },
                 })}
               />
             </InputContainer>
             <div className="m-auto">
-              <MainButton type="submit">Previsualizar</MainButton>
+              <MainButton type="submit">Reset</MainButton>
             </div>
           </StyledForm>
         </div>
         {previewImageUrl !== null ? (
-          <div className="col-11 col-xl-6 d-flex flex-column justify-content-center align-items-center gap-3">
+          <div className="col-11 col-xl-5 d-flex flex-column justify-content-center align-items-center gap-3">
+            <p className="p_subtitle">Vista previa</p>
             <PreviewCard
               casinoPreview={casinoPreview}
               previewImageUrl={previewImageUrl}
               uploadCasino={uploadCasino}
+              casinoName={casinoName}
             />
             <MainButton primary={true} fn={uploadCasino}>
               Añadir
@@ -138,14 +146,72 @@ export const AddCasinoView = () => {
   );
 };
 
+const LinkInput = styled.input`
+  width: 85%;
+  height: 100%;
+  border-bottom-left-radius: 0.4em;
+  border-top-left-radius: 0.4em;
+  border: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  @media screen and (min-width: 768px) {
+    width: 90%;
+  }
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px #3498db;
+  }
+  &::placeholder {
+    color: #999;
+  }
+  &::-webkit-input-placeholder {
+    color: #999;
+  }
+  &::-moz-placeholder {
+    color: #999;
+  }
+  &:-ms-input-placeholder {
+    color: #999;
+  }
+  &:-moz-placeholder {
+    color: #999;
+  }
+`;
+
+const ClearLinkBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 0;
+  border-bottom-right-radius: 0.4em;
+  border-top-right-radius: 0.4em;
+  font-size: 1.5rem !important;
+  transition: all 0.3s;
+  background-color: #7037d4;
+  color: #fff;
+  height: 100%;
+  width: 15%;
+  &:active {
+    transform: scale(0.95);
+  }
+  a {
+    color: inherit;
+  }
+  @media screen and (min-width: 768px) {
+    width: 10%;
+  }
+`;
+
 const StyledForm = styled.form`
   background: radial-gradient(
     circle,
     rgba(0, 0, 0, 1) 0%,
     rgba(88, 88, 88, 1) 100%
   );
-  border-radius: 1rem;
-  padding: 20px;
+  border-radius: 0.5rem;
   border: 1px solid gold;
 `;
 

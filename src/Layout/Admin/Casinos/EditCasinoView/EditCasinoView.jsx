@@ -15,6 +15,7 @@ import {
 } from "../../../../firebase/firebase";
 import { Ring } from "@uiball/loaders";
 import { AiFillEdit } from "react-icons/ai";
+import { BsTrash } from "react-icons/bs";
 
 export const EditCasinoView = () => {
   const { casinoToEdit, casinos } = useContext(adminContext);
@@ -126,7 +127,7 @@ export const EditCasinoView = () => {
     return <h3 className="text-white">Nada Pana</h3>;
   } else {
     return (
-      <StyledWrapper className="p-2 py-lg-0">
+      <StyledWrapper className="p-2 py-lg-0 bor2">
         <StyledForm
           onSubmit={handleSubmit(onSubmit)}
           className={`p-2 p-lg-4 gap-2 ${
@@ -134,7 +135,7 @@ export const EditCasinoView = () => {
               ? "col-lg-8 col-xl-6" // PRINCIPAL - TIENE IMG
               : previewImageUrl !== null
               ? "col-lg-8 col-xl-6" // VIENDO PREVIEW
-              : "col-lg-4" // VIENDO NADA
+              : "col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 bor1" // VIENDO NADA
           }`}
         >
           <h3 className="pReset text-center">
@@ -183,7 +184,9 @@ export const EditCasinoView = () => {
                   <StyledImage>
                     <img src={actualImage} />
                   </StyledImage>
-                  <MainButton fn={deleteActualImage}>Eliminar</MainButton>
+                  <MainButton fn={deleteActualImage}>
+                    <BsTrash />
+                  </MainButton>
                 </div>
               ) : (
                 <>
@@ -192,14 +195,16 @@ export const EditCasinoView = () => {
                       <StyledImage>
                         <img src={previewImageUrl} />
                       </StyledImage>
-                      <MainButton fn={deletePreviewImage}>Eliminar</MainButton>
+                      <MainButton fn={deletePreviewImage}>
+                        <BsTrash />
+                      </MainButton>
                     </div>
                   )}
                 </>
               )}
             </div>
           </div>
-          <div className="col-12 d-flex justify-content-center">
+          <div className="col-12 d-flex justify-content-center gap-2">
             {isUpdating ? (
               <>
                 <MainButton primary={true} type={"submit"}>
@@ -208,6 +213,9 @@ export const EditCasinoView = () => {
               </>
             ) : (
               <>
+                <MainButton fn={() => navigate(-1)} type={"button"}>
+                  Cancelar
+                </MainButton>
                 <MainButton primary={true} type={"submit"}>
                   Guardar
                 </MainButton>

@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 
-export const PreviewCard = ({ casinoPreview, previewImageUrl }) => {
+export const PreviewCard = ({ casinoPreview, previewImageUrl, casinoName }) => {
   return (
     <CardContainer>
       <ImgContainer>
@@ -16,7 +16,7 @@ export const PreviewCard = ({ casinoPreview, previewImageUrl }) => {
           <a href={casinoPreview?.link} target="_blank" rel="noreferrer">
             aqui{" "}
           </a>
-          para ir a "{casinoPreview?.casinoName}"
+          para ir a {casinoName}
         </p>
       </TextContainer>
     </CardContainer>

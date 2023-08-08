@@ -1,14 +1,11 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 import {
-  AiFillFileExcel,
   AiFillInfoCircle,
-  AiOutlineAppstoreAdd,
   AiOutlineTable,
   AiOutlineUserAdd,
   AiOutlineUserDelete,
 } from "react-icons/ai";
-import { FaEye, FaPen, FaTrash, FaUserEdit } from "react-icons/fa";
 import { adminContext } from "../../storage/AdminContext";
 import { useContext } from "react";
 import Swal from "sweetalert2";
@@ -16,14 +13,15 @@ import { MainButton } from "../MainButton/MainButton";
 import { Link } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { useState } from "react";
-import { ModalParticipant } from "../ModalParticipant/ModalParticipant";
 import { ParticipantTr } from "../ParticipantTr/ParticipantTr";
+import { ModalParticipant } from "../ModalParticipant/ModalParticipant";
 
 const iconStyle = { fontSize: "1.5rem" };
 
 export const DrawParticipantsTable = () => {
   const { participants, deleteParticipant, participantsQuantity } =
     useContext(adminContext);
+  const [participant, setParticipant] = useState(null);
 
   const accionButton = () => {
     setShow(true);
@@ -54,16 +52,25 @@ export const DrawParticipantsTable = () => {
     confirmDelete(participant);
   };
 
-  const openModal = () => {
+  const openModal = (participant) => {
     setShow(true);
+    console.log(participant);
+    setParticipant(participant);
   };
 
+  const obtainParticipant = () => {};
+
   return (
-    <div className="col-12 d-flex flex-column align-items-center py-3 gap-3">
+    <div className="col-12 d-flex flex-column align-items-center py-3 gap-3 bor3">
+      <ModalParticipant
+        handleClose={handleClose}
+        show={show}
+        participant={participant}
+      />
       {participants.length == 0 ? (
         <>
           <h3 className="text-white">No hay participantes registrados.</h3>
-          <Link to="/admin/sorteos/agregar">
+          <Link to="/admin/sorteo/agregar">
             <MainButton>Agregar</MainButton>
           </Link>
         </>
@@ -71,7 +78,7 @@ export const DrawParticipantsTable = () => {
         <>
           <div className="d-flex gap-2 flex-wrap align-items-center justify-content-center">
             <Link
-              to="/admin/sorteos/agregar"
+              to="/admin/sorteo/agregar"
               className="animate__animated animate__fadeIn"
             >
               <MainButton>
@@ -99,7 +106,7 @@ export const DrawParticipantsTable = () => {
           <h3 className="text-white">
             Participantes: <strong>{participantsQuantity}</strong>
           </h3>
-          <div className="col-11 col-lg-9 col-xl-8">
+          <div className="col-11 col-lg-9 col-xl-6">
             <Table
               striped
               bordered
@@ -111,8 +118,7 @@ export const DrawParticipantsTable = () => {
             >
               <thead>
                 <tr>
-                  <th className="text-center d-none d-sm-table-cell">Número</th>
-                  <th className="text-center d-sm-none">N°</th>
+                  <th className="text-center">N°</th>
                   <th className="text-center">Usuario</th>
                   <th className="text-center d-none d-sm-table-cell">
                     Plataforma
@@ -123,12 +129,12 @@ export const DrawParticipantsTable = () => {
                   <th className="text-center d-none d-sm-table-cell">
                     Ultimos 3 DNI
                   </th>
-                  <th className="text-center">
+                  <th className="text-center px-lg-3">
                     <AiOutlineUserDelete
                       style={{ color: "fff", fontSize: "20px" }}
                     />
                   </th>
-                  <th className="text-center">
+                  <th className="text-center px-lg-3">
                     <AiFillInfoCircle
                       style={{ color: "fff", fontSize: "20px" }}
                     />

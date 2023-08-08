@@ -16,7 +16,11 @@ export const AdminCasinoCard = ({ card }) => {
   return (
     <StyledCard className="d-flex flex-column align-items-center p-2">
       <ImageContainer className="p-2">
-        <img src={card?.casinoImage.url} alt={card?.casinoName} />
+        <img
+          src={card?.casinoImage.url}
+          alt={card?.casinoName}
+          loading="lazy"
+        />
       </ImageContainer>
       <CardInfo className="d-flex justify-content-center align-items-center">
         <p className="m-0 py-1">{card?.casinoName}</p>

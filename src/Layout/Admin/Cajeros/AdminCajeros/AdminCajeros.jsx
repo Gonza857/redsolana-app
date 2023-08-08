@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { adminContext } from "../../storage/AdminContext";
-import CajeroAdmin from "../../components/CajeroAdmin/CajeroAdmin";
+import { adminContext } from "../../../../storage/AdminContext";
+import CajeroAdmin from "../../../../components/CajeroAdmin/CajeroAdmin";
 import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
-import AdminBar from "../../components/AdminBar/AdminBar.jsx";
+import { AdminBar } from "../../../../components/AdminBar/AdminBar.jsx";
 import { Metronome } from "@uiball/loaders";
 import {
   AiFillInfoCircle,
@@ -67,23 +67,23 @@ export function AdminCajeros() {
               <thead className="animate__animated animate__fadeIn">
                 <tr className="align-middle">
                   <th className="d-none d-md-table-cell">Pos</th>
-                  <th className="d-md-none">
+                  <th className="d-md-none" style={{ width: "5%" }}>
                     <AiOutlineOrderedList
                       style={{ color: "fff", fontSize: "20px" }}
                     />
                   </th>
                   <th className="p-0">Red</th>
-                  <th className="p-0">Nombre</th>
+                  <StyledTh className="p-0">Nombre</StyledTh>
                   <th className="d-none d-md-table-cell p-0">Numero</th>
-                  <th className="d-none d-md-table-cell p-0">Genero</th>
+                  {/* <th className="d-none d-lg-table-cell p-0">Genero</th> */}
                   <th className="d-none d-md-table-cell">Estado</th>
-                  <th className="d-md-none">
+                  {/* <th className="d-md-none">
                     <HiStatusOnline
                       style={{ color: "fff", fontSize: "20px" }}
                     />
-                  </th>
+                  </th> */}
 
-                  <th className="d-none d-md-table-cell">Info</th>
+                  <th className="d-none d-md-table-cell">Ver</th>
                   <th className="d-md-none">
                     <AiFillInfoCircle
                       style={{ color: "fff", fontSize: "20px" }}
@@ -131,6 +131,10 @@ export function AdminCajeros() {
     </>
   );
 }
+
+const StyledTh = styled.th`
+  width: 20%;
+`;
 
 const AdminCajerosContainer = styled.div`
   @media (min-width: 320px) {

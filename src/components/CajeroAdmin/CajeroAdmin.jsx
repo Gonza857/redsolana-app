@@ -7,6 +7,8 @@ import "animate.css";
 import ModalViewInfo from "../ModalViewInfo/ModalViewInfo";
 import "./cajeroAdmin.css";
 import { BsCircleFill } from "react-icons/bs";
+import { MainButton } from "../MainButton/MainButton";
+import styled from "styled-components";
 
 function CajeroAdmin({ cajero }) {
   const { handleDelete, cajeros } = useContext(adminContext);
@@ -31,17 +33,21 @@ function CajeroAdmin({ cajero }) {
     }
   }, [cajeros, cajero]);
 
+  const iconStyle = {
+    fontSize: "",
+  };
+
   return (
     <>
       <tr className="animate__animated animate__fadeIn">
-        <td>{cajero.pos + 1}</td>
-        <td>{cajero.red}</td>
-        <td>{cajero.nombre}</td>
+        <StyledTd>{cajero.pos + 1}</StyledTd>
+        <StyledTd>{cajero.red}</StyledTd>
+        <StyledTd>{cajero.nombre}</StyledTd>
         <td className="d-none d-md-table-cell">{cajero.numero}</td>
-        <td className="d-none d-md-table-cell">
+        {/* <td className="d-none d-lg-table-cell">
           {cajero.genero === "M" ? "M" : "F"}
-        </td>
-        <td>
+        </td> */}
+        <td className="d-none d-md-table-cell">
           {cajero.estado === "desconectado" ? (
             <BsCircleFill style={{ color: "red" }} />
           ) : (
@@ -49,35 +55,37 @@ function CajeroAdmin({ cajero }) {
           )}
         </td>
         <td className="">
-          <Button
-            className="cajeroBtn"
-            onClick={() => {
+          <MainButton
+            circle={true}
+            primary={true}
+            fn={() => {
               handleShowInfo(cajero);
             }}
           >
-            <FaEye />
-          </Button>
+            <FaEye style={iconStyle} />
+          </MainButton>
         </td>
 
-        <td>
-          <Button
-            className="cajeroBtn"
-            onClick={() => {
+        <td className="">
+          <MainButton
+            circle={true}
+            fn={() => {
               handleShowEdit(cajero);
             }}
           >
-            <FaPen />
-          </Button>
+            <FaPen style={iconStyle} />
+          </MainButton>
         </td>
         <td>
-          <Button
-            className="cajeroBtn"
+          <MainButton
+            circle={true}
+            red={true}
             onClick={() => {
               handleDelete(cajero);
             }}
           >
-            <FaTrash />
-          </Button>
+            <FaTrash style={iconStyle} />
+          </MainButton>
         </td>
       </tr>
       <ModalEditCajeros
@@ -97,3 +105,13 @@ function CajeroAdmin({ cajero }) {
 }
 
 export default CajeroAdmin;
+
+const StyledTd = styled.td`
+  font-size: 0.7rem;
+  @media screen and (min-width: 500px) {
+    font-size: 0.85rem;
+  }
+  @media screen and (min-width: 600px) {
+    font-size: 1rem;
+  }
+`;

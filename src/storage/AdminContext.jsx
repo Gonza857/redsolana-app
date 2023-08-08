@@ -58,7 +58,7 @@ export const AdminContextProvider = (props) => {
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
   // ESTADO DE NOMBRE DE BUSQUEDA
-  const [searchedName, setSearchedName] = useState("");
+  const [searchedName, setSearchedName] = useState(null);
   // ESTADO  DE BUSQUEDA
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   // ESTADO DE ARRAY DE CAJEROS
@@ -214,6 +214,13 @@ export const AdminContextProvider = (props) => {
     let checkerFilterArray = cashierFilter(cachierName, cajeros);
     setSearchResult(checkerFilterArray);
   }
+
+  // RESET DATOS DEL CAJERO BUSCADO
+  const resetCheckerData = () => {
+    setIsSearchingCajero(false);
+    setSearchedName(null);
+    setSearchResult(null);
+  };
 
   // CONSOLE.TABLE CAJEROS
   const verCajerosTabla = () => {
@@ -506,6 +513,7 @@ export const AdminContextProvider = (props) => {
     updateCajeros,
     isAdmin,
     setIsAdmin,
+    resetCheckerData, // RESETEAR BUSQUEDA
     setIsSearchingCajero,
     isSearchingCajero,
     buscarCajero,

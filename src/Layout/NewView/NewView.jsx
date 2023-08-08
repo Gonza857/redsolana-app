@@ -6,6 +6,7 @@ import { adminContext } from "../../storage/AdminContext";
 import { IoRadioButtonOn } from "react-icons/io5";
 import { MainButton } from "../../components/MainButton/MainButton";
 import {
+  AiFillEdit,
   AiOutlineAppstoreAdd,
   AiOutlineEye,
   AiOutlineOrderedList,
@@ -133,6 +134,32 @@ export const NewView = () => {
               </div>
             </>
           )}
+        </StyledAdminOption>
+      </Animated>
+      <Animated
+        animationIn="fadeIn"
+        animationOut="fedeOut"
+        isVisible={true}
+        animationInDelay={50}
+        className="col-10 col-sm-6 col-md-9 col-lg-10 col-xl-7"
+      >
+        <StyledAdminOption className="d-flex flex-column flex-md-row gap-3 p-3  align-items-center">
+          <h3>Cronograma</h3>
+          <h3>En desarrollo</h3>
+          <div className="gap-2">
+            <Link to="/cronograma">
+              <MainButton>
+                <p className="m-0 d-none d-lg-block">Ver</p>
+                <AiOutlineEye style={iconStyle} />
+              </MainButton>
+            </Link>
+            <Link to="/admin/editar/cronograma">
+              <MainButton>
+                <p className="m-0 d-none d-lg-block">Editar</p>
+                <AiFillEdit style={iconStyle} />
+              </MainButton>
+            </Link>
+          </div>
         </StyledAdminOption>
       </Animated>
     </StyledView>

@@ -4,6 +4,7 @@ import { FaEye, FaTrash } from "react-icons/fa";
 import { useContext } from "react";
 import { adminContext } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
+import { MainButton } from "../MainButton/MainButton";
 
 export const ParticipantTr = ({
   participant,
@@ -42,19 +43,23 @@ export const ParticipantTr = ({
         {participant?.dni_ultimos}
       </td>
       <td className="p-0 text-center">
-        <FaTrash
-          style={{ fontSize: "1rem" }}
-          onClick={() => confirmDelete(participant)}
-        />
+        <MainButton circle={true}>
+          <FaEye
+            style={{ fontSize: "1rem" }}
+            onClick={() => {
+              openModal(participant);
+            }}
+          />
+        </MainButton>
       </td>
       <td className="p-0 text-center">
-        <FaEye style={{ fontSize: "1rem" }} onClick={openModal} />
+        <MainButton circle={true} red={true}>
+          <FaTrash
+            style={{ fontSize: "1rem" }}
+            onClick={() => confirmDelete(participant)}
+          />
+        </MainButton>
       </td>
-      <ModalParticipant
-        handleClose={handleClose}
-        show={show}
-        participant={participant}
-      />
     </tr>
   );
 };

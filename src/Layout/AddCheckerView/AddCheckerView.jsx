@@ -234,6 +234,8 @@ export const AddCheckerView = () => {
   );
 };
 
+
+
 const StyledView = styled.div`
   /* border: 5px solid blueviolet; */
   width: 100%;

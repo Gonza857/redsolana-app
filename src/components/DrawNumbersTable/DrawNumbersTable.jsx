@@ -19,7 +19,7 @@ export const DrawNumbersTable = ({ slots, preview = false }) => {
     );
   } else {
     return (
-      <StyledSlots className="col-10 mx-auto my-2 gap-2">
+      <StyledSlots className="col-12 col-md-10 col-lg-8 mx-auto my-2 gap-2">
         <h3>Estas visualizando los cupos disponibles</h3>
         <StyledSlotsWrapper>
           {sorteoArray.map((value, i) => {

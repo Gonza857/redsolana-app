@@ -1,15 +1,28 @@
 import React from "react";
 import styled from "styled-components";
 
-export const MainButton = ({ children, fn, primary, type }) => {
+export const MainButton = ({ children, fn, primary, type, circle, red }) => {
   const style = {
-    backgroundColor: primary ? "#d4af37" : "#7037d4",
+    backgroundColor: primary ? "#d4af37" : red ? "#ab0000" : "#7037d4",
     color: primary ? "#000" : "#fff",
   };
   return (
-    <StyledBtn onClick={fn} style={style} type={type}>
-      {children}
-    </StyledBtn>
+    <>
+      {circle ? (
+        <CircleBtn
+          onClick={fn}
+          style={style}
+          type={type}
+          className="p-1 p-sm-2"
+        >
+          {children}
+        </CircleBtn>
+      ) : (
+        <StyledBtn onClick={fn} style={style} type={type}>
+          {children}
+        </StyledBtn>
+      )}
+    </>
   );
 };
 
@@ -28,5 +41,22 @@ const StyledBtn = styled.button`
   }
   a {
     color: inherit;
+  }
+`;
+
+const CircleBtn = styled(StyledBtn)`
+  border-radius: 50%;
+  padding: 0;
+  margin: auto;
+  font-size: 0.7rem;
+  @media screen and (min-width: 500px) {
+    svg {
+      font-size: 0.85rem;
+    }
+  }
+  @media screen and (min-width: 768px) {
+    svg {
+      font-size: 1rem;
+    }
   }
 `;
