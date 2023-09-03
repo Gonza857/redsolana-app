@@ -15,10 +15,6 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
-  inMemoryPersistence,
-  signInWithRedirect,
-  GoogleAuthProvider,
-  onAuthStateChanged,
   signOut,
 } from "firebase/auth";
 
@@ -31,10 +27,7 @@ import {
   uploadString,
 } from "firebase/storage";
 
-import { getAnalytics, logEvent } from "firebase/analytics";
-
 import { v4 } from "uuid";
-
 import { toast } from "react-toastify";
 import { toastError, toastSuccess } from "../helpers/helpers";
 
@@ -52,7 +45,6 @@ const FirebaseApp = initializeApp(firebaseConfig);
 // DB CAJEROS
 const DATABASE = getFirestore(FirebaseApp);
 const storage = getStorage();
-const analytics = getAnalytics(FirebaseApp);
 const auth = getAuth(FirebaseApp);
 
 export const firebaseAuth = () => auth;
@@ -419,19 +411,34 @@ export async function postSorteoImage(file) {
   } catch (error) {}
 }
 
-// CRONOGRAMA
+/// LÓGICA DE CRONOGRAMA
+
+/**
+ * Trae imagen desde firebase del cronograma.
+ * @returns url
+ */
 export async function getScheduleImage() {
   try {
     const storageRef = ref(storage, `cronograma/scheduleImage`);
-    console.log(storageRef);
     const url = await getDownloadURL(storageRef);
-    console.log(url);
     return url;
   } catch (error) {
-    throw new Error("Ooops! Algo salio mal.");
+    if (
+      error ===
+      "FirebaseError: Firebase Storage: Object 'cronograma/scheduleImage' does not exist. (storage/object-not-found)"
+    ) {
+      return 0;
+    } else {
+      throw new Error("Ooops! Algo salio mal.");
+    }
   }
 }
 
+/**
+ * Sube imagen del cronograma, formato data:x64.
+ * @param {String} file
+ * @returns
+ */
 export async function postScheduleImage(file) {
   try {
     const storageRef = ref(storage, `cronograma/scheduleImage`);
@@ -443,12 +450,14 @@ export async function postScheduleImage(file) {
   }
 }
 
+/**
+ * Elimina imagen del cronograma en firebase.
+ */
 export async function deleteScheduleImage() {
   try {
     const desertRef = ref(storage, `cronograma/scheduleImage`);
     await deleteObject(desertRef);
   } catch (error) {
-    console.log(error.message);
     throw new Error("Ooops! Algo salio mal.");
   }
 }

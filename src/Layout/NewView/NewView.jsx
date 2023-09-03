@@ -145,7 +145,6 @@ export const NewView = () => {
       >
         <StyledAdminOption className="d-flex flex-column flex-md-row gap-3 p-3  align-items-center">
           <h3>Cronograma</h3>
-          <h3>En desarrollo</h3>
           <div className="gap-2">
             <Link to="/cronograma">
               <MainButton>

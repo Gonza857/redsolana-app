@@ -19,7 +19,7 @@ import {
   postScheduleImage,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
-import { toastError, toastSuccess, toastInfo } from "../helpers/helpers";
+import { toastError, toastSuccess } from "../helpers/helpers";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -120,8 +120,6 @@ export const AdminContextProvider = (props) => {
 
   // PARTICIPANTES DEL SORTEO
   const [participants, setParticipants] = useState([]);
-  // ULTIMO NUMERO COMPRADO
-  const [lastNumber, setLastNumber] = useState(0);
   // SE AGREGO ALGUNO?
   const [wasAdded, setWasAdded] = useState(false);
   // ULTIMO PARTICIPANTE AGREGADO
@@ -495,23 +493,58 @@ export const AdminContextProvider = (props) => {
     });
   };
 
+  /**
+   * Actualiza imagen del cronograma, eliminando y subiendo si la actualiza y subiendo si agrega nueva.
+   * @param {String} newImageX64
+   */
   const handlePayScheduleImage = (newImageX64) => {
     setIsLoadingSchedule(true);
     if (!wantsToUpdateImage) {
       console.log("Actualiza");
       deleteScheduleImage().then(() => {
         postScheduleImage(newImageX64).then(() => {
+          setPayScheduleImg(newImageX64);
           toastSuccess("Imagen actualizada correctamente.");
           setIsLoadingSchedule(false);
-          navigate("/admin/cronograma/editar");
+          navigate("/admin");
         });
       });
     } else {
       postScheduleImage(newImageX64).then(() => {
         toastSuccess("Imagen actualizada correctamente.");
+        setPayScheduleImg(newImageX64);
         setIsLoadingSchedule(false);
-        navigate("/admin/cronograma/editar");
+        navigate("/admin");
       });
+    }
+  };
+
+  /**
+   * Solo elimina imagen del cronograma y deja su valor en null.
+   */
+  const firstDeleteScheduleImage = () => {
+    setIsLoadingSchedule(true);
+    deleteScheduleImage().then(() => {
+      toastSuccess("Imagen actualizada correctamente.");
+      setIsLoadingSchedule(false);
+      setPayScheduleImg(null);
+      navigate("/admin");
+    });
+  };
+
+  /**
+   * Trae imagen del cronograma, si no hay, será null y se vera reflejado en la interfaz
+   */
+  const getCronograma = async () => {
+    try {
+      let getImageFromSchedule = await getScheduleImage();
+      if (getImageFromSchedule === 0) {
+        setPayScheduleImg(null);
+      } else {
+        setPayScheduleImg(getImageFromSchedule);
+      }
+    } catch (error) {
+      toastError(error.message);
     }
   };
 
@@ -521,23 +554,21 @@ export const AdminContextProvider = (props) => {
       setParticipantsQuantity(participantsCounter(participants));
   }, [participants]);
 
+  // useEffect Montado
   useEffect(() => {
-    // TRAE OBJETO SORTEO
+    // Traemos data del sorteo.
     setSorteo();
-    // TRAE CAJEROS
+    // Traemos cajeros.
     traerCajeros();
-    // TRAER PARTICIPANTES
+    // Traemos participantes del sorteo
     getParticipants();
-    // VER SESION
+    // Vigilar sesión (admin)
     keepSession();
-    // TRAER CASINOS
+    // Traemos casinos.
     getCasinos();
-    // TRAER IMAGEN DE CRONOGRAMA
-    getScheduleImage().then((result) => {
-      console.log(result);
-      setPayScheduleImg(result);
-    });
-  }, []);
+    // Traemos imagen del cronograma
+    getCronograma();
+  });
 
   const value = {
     cajeros,
@@ -565,7 +596,7 @@ export const AdminContextProvider = (props) => {
     participants,
     addParticipant,
     sorteoArray,
-    lastNumber,
+
     isNumberAvaible,
     deleteParticipant,
     setLastParticipant,
@@ -606,6 +637,7 @@ export const AdminContextProvider = (props) => {
     handlePayScheduleImage,
     isLoadingSchedule,
     setIsLoadingSchedule,
+    firstDeleteScheduleImage,
   };
 
   return (

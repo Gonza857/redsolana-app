@@ -23,12 +23,15 @@
 }
 
 .modal-w10 {
-    width: 10% !important;
+    width: 100px !important;
+    margin: auto !important;
 }
 
 .modal-w10 div {
     background-color: #333 !important;
     border-radius: 1rem;
+    border :0.1rem solid #d4af37 !important;
+
 }
 
 .bor1 {

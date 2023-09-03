@@ -13,28 +13,13 @@ import { adminContext } from "../../storage/AdminContext";
 
 export const Wrapper = () => {
   const [firebaseImage, setFirebaseImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { setWantsToUpdateImage, payScheduleImg, isLoadingSchedule } =
-    useContext(adminContext);
+  const {
+    setWantsToUpdateImage,
+    payScheduleImg,
+    isLoadingSchedule,
+    firstDeleteScheduleImage,
+  } = useContext(adminContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // getScheduleImage().then((result) => {
-    //   console.log(result);
-    //   if (result == undefined) {
-    //     console.log("No existe nada");
-    //     setFirebaseImage(null);
-    //   } else {
-    //     setFirebaseImage(result);
-    //   }
-    //   setIsLoading(false);
-    // });
-    console.log(payScheduleImg);
-  }, []);
-
-  const deleteImageFromPaySchedule = () => {
-    deleteScheduleImage().then(() => setFirebaseImage(null));
-  };
 
   const deleteImageDialog = () => {
     Swal.fire({
@@ -48,14 +33,14 @@ export const Wrapper = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteImageFromPaySchedule();
+        firstDeleteScheduleImage();
         Swal.fire("Eliminada!", "Se eliminó correctamente.", "success");
       }
     });
   };
 
   return (
-    <StyledContainer className="col-8 mx-auto d-flexflex-column justify-content-center align-items-center p-3 pt-4">
+    <StyledContainer className="col-12 col-md-8 mx-auto d-flex flex-column justify-content-center align-items-center p-3 pt-4">
       <h3 className="text-white text-center">Administración - Cronograma</h3>
       {isLoadingSchedule ? (
         <RingContainer className="d-flex justify-content-center align-items-center">
@@ -64,9 +49,9 @@ export const Wrapper = () => {
       ) : (
         <>
           {payScheduleImg !== null ? (
-            <div className="d-flex flex-column align-items-center gap-2">
+            <div className="d-flex flex-column align-items-center col-8 h-100 py-2">
               <p className="p_subtitle">Imagén actual</p>
-              <PreviewImage>
+              <PreviewImage className="mb-3">
                 <img src={payScheduleImg} alt="Imagén cronograma de pagos." />
               </PreviewImage>
               <div className="d-flex gap-4 justify-content-center">
@@ -87,7 +72,7 @@ export const Wrapper = () => {
             </div>
           ) : (
             <div className="py-5 col-12 text-center text-white d-flex flex-column justify-content-center align-items-center">
-              <h1>Sin imágen de cronograma establecida.</h1>
+              <h5>Sin imágen de cronograma establecida.</h5>
               <MainButton
                 fn={() => {
                   setWantsToUpdateImage(true);
@@ -105,15 +90,23 @@ export const Wrapper = () => {
 };
 
 const StyledContainer = styled.div`
-  background-color: rgb(22, 25, 30);
-  box-shadow: 0px 0px 25px 6px rgba(255, 255, 255, 0.34);
+  @media screen and (min-width: 768px) {
+    background-color: rgb(22, 25, 30);
+    box-shadow: 0px 0px 25px 6px rgba(255, 255, 255, 0.34);
+  }
   form {
     color: #fff;
   }
 `;
 
 const PreviewImage = styled.div`
-  width: 25%;
+  width: 100%;
+  @media screen and (min-width: 500px) {
+    width: 50%;
+  }
+  @media screen and (min-width: 968px) {
+    width: 50%;
+  }
   img {
     width: 100%;
     object-fit: contain;

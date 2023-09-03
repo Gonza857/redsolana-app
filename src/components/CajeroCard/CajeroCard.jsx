@@ -16,7 +16,6 @@ function CajeroCard({ cajero }) {
     }
   }, [cajeros, cajero]);
 
-
   return (
     <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true}>
       <CajeroCardContainer>
@@ -81,7 +80,7 @@ const CajeroCardContainer = styled.div`
   justify-content: center;
   align-items: center;
   border: 0.8px solid #d4af37;
-  border-radius: 25px;
+  border-radius: 15px;
   margin-top: 15px;
   overflow: hidden;
   gap: 5px;
@@ -107,8 +106,8 @@ const CajeroName = styled.div`
     rgba(88, 88, 88, 1) 100%
   );
   color: #fff;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
   text-align: center;
   height: 40px;
   width: 100%;
@@ -169,8 +168,8 @@ const CajeroNumberContainer = styled.div`
     rgba(0, 0, 0, 1) 0%,
     rgba(88, 88, 88, 1) 100%
   );
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15  px;
   width: 100%;
   height: 40px;
   display: flex;
