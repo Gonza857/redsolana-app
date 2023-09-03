@@ -15,7 +15,7 @@ const bgImage =
 export default function App() {
   const { isAdmin, sorteoActivo, isOpenMenu } = useContext(adminContext);
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <StyledMain
         style={{
@@ -29,7 +29,7 @@ export default function App() {
       </StyledMain>
       <Footer />
       <BottomRightButton admin={isAdmin} />
-    </BrowserRouter>
+    </>
   );
 }
 

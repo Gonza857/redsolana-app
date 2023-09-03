@@ -9,7 +9,6 @@ function Rutas() {
   return (
     <Routes>
       {/* ADMIN ROUTES */}
-
       <Route path="/admin/*" element={<Admin />} errorElement={<ErrorPage />} />
       {/* USERS ROUTES */}
       <Route path="/*" element={<Users />} errorElement={<ErrorPage />} />

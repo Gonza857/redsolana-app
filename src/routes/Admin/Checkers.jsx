@@ -1,6 +1,6 @@
 import React from "react";
 import { AdminCajeros, ErrorPage } from "../../Layout";
-import { AddCheckerView } from "../../Layout/AddCheckerView/AddCheckerView";
+import { AddCheckerView } from "../../Layout/Admin/Cajeros/AddCheckerView/AddCheckerView";
 import { Route, Routes } from "react-router-dom";
 
 export const Checkers = () => {

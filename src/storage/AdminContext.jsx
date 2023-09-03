@@ -14,10 +14,14 @@ import {
   signInFirebase,
   firebaseAuth,
   logoutFirebase,
+  getScheduleImage,
+  deleteScheduleImage,
+  postScheduleImage,
 } from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toastError, toastSuccess, toastInfo } from "../helpers/helpers";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export const adminContext = createContext();
 
@@ -51,9 +55,18 @@ const findCheckerID = (checker, checkersArray) => {
 };
 
 export const AdminContextProvider = (props) => {
+  const navigate = useNavigate();
+  // - - - - MANEJO DE ESTADOS - - - -
+  /* / / / / / CRONOGRAMA / / / / / */
+  const [wantsToUpdateImage, setWantsToUpdateImage] = useState(false);
+  const [payScheduleImg, setPayScheduleImg] = useState(null);
+  const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+  /* / / / / / FIN CRONOGRAMA / / / / / */
+
   /* / / / / / USUARIO / / / / / */
   const [admin, setAdmin] = useState(null);
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
+  /* / / / / / FIN  USUARIO / / / / / */
 
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
@@ -262,7 +275,6 @@ export const AdminContextProvider = (props) => {
       setParticipants(result);
       markDataBaseParticipants(result);
       setIsLoading(false);
-      console.table(result);
     } catch (error) {
       toastError(error);
     }
@@ -483,7 +495,25 @@ export const AdminContextProvider = (props) => {
     });
   };
 
-  // VISUALIZADORES
+  const handlePayScheduleImage = (newImageX64) => {
+    setIsLoadingSchedule(true);
+    if (!wantsToUpdateImage) {
+      console.log("Actualiza");
+      deleteScheduleImage().then(() => {
+        postScheduleImage(newImageX64).then(() => {
+          toastSuccess("Imagen actualizada correctamente.");
+          setIsLoadingSchedule(false);
+          navigate("/admin/cronograma/editar");
+        });
+      });
+    } else {
+      postScheduleImage(newImageX64).then(() => {
+        toastSuccess("Imagen actualizada correctamente.");
+        setIsLoadingSchedule(false);
+        navigate("/admin/cronograma/editar");
+      });
+    }
+  };
 
   useEffect(() => {
     // CALCULA Y SETEA LOS CUPOS OCUPADOS
@@ -501,7 +531,12 @@ export const AdminContextProvider = (props) => {
     // VER SESION
     keepSession();
     // TRAER CASINOS
-    getCasinos().then(() => console.table(casinos));
+    getCasinos();
+    // TRAER IMAGEN DE CRONOGRAMA
+    getScheduleImage().then((result) => {
+      console.log(result);
+      setPayScheduleImg(result);
+    });
   }, []);
 
   const value = {
@@ -566,6 +601,11 @@ export const AdminContextProvider = (props) => {
     //  CASINOS
     setCasinoToEdit, // SETTER CASINO PARA EDITAR
     casinoToEdit, // INFO CASINO PARA EDITAR
+    payScheduleImg, // IMAGEN CRONOGRAMA
+    setWantsToUpdateImage,
+    handlePayScheduleImage,
+    isLoadingSchedule,
+    setIsLoadingSchedule,
   };
 
   return (

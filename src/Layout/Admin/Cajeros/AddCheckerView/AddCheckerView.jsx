@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/MainButton/MainButton";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useContext } from "react";
-import { adminContext } from "../../storage/AdminContext";
-import { postCajeros } from "../../firebase/firebase";
-import { toastError, toastSuccess } from "../../helpers/helpers";
+import { adminContext } from "../../../../storage/AdminContext";
+import { postCajeros } from "../../../../firebase/firebase";
+import { toastError, toastSuccess } from "../../../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { Ring } from "@uiball/loaders";
 
@@ -233,8 +233,6 @@ export const AddCheckerView = () => {
     </StyledView>
   );
 };
-
-
 
 const StyledView = styled.div`
   /* border: 5px solid blueviolet; */

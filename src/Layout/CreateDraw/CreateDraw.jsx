@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { DrawNumbersTable } from "../../components/DrawNumbersTable/DrawNumbersTable";
-import { DrawPreview } from "../DrawPreview/DrawPreview";
+import { DrawPreview } from "../Admin/Sorteos/DrawPreview/DrawPreview";
 import { useNavigate } from "react-router-dom";
 import { adminContext } from "../../storage/AdminContext";
 import { MainButton } from "../../components/MainButton/MainButton";

@@ -22,6 +22,15 @@
     font-weight: 500;
 }
 
+.modal-w10 {
+    width: 10% !important;
+}
+
+.modal-w10 div {
+    background-color: #333 !important;
+    border-radius: 1rem;
+}
+
 .bor1 {
     border: 6px solid red !important;
 }

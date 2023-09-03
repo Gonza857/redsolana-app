@@ -5,6 +5,7 @@ import { AdminView } from "../../Layout/AdminView/AdminView";
 import { ErrorPage } from "../../Layout";
 import { Route, Routes } from "react-router-dom";
 import { Draw } from "./Draw";
+import { PaySchedule } from "./PaySchedule";
 
 export const Admin = () => {
   return (
@@ -13,6 +14,7 @@ export const Admin = () => {
       <Route path={"/casinos/*"} element={<Casinos />} />
       <Route path={"/cajeros/*"} element={<Checkers />} />
       <Route path={"/sorteo/*"} element={<Draw />} />
+      <Route path={"/cronograma/*"} element={<PaySchedule />} />
       <Route path="/*" element={<ErrorPage />} />
     </Routes>
   );

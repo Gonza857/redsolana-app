@@ -2,12 +2,12 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { DrawNumbersTable } from "../../components/DrawNumbersTable/DrawNumbersTable";
 import { ErrorPage } from "../../Layout";
-import { AdminDrawView } from "../../Layout/AdminDrawView/AdminDrawView";
-import { EditDrawView } from "../../Layout/EditDrawView/EditDrawView";
+import { AdminDrawView } from "../../Layout/Admin/Sorteos/AdminDrawView/AdminDrawView";
+import { EditDrawView } from "../../Layout/Admin/Sorteos/EditDrawView/EditDrawView";
 import { DrawParticipantsTable } from "../../components/DrawParticipantsTable/DrawParticipantsTable";
 import { CreateDraw } from "../../Layout/CreateDraw/CreateDraw";
-import { DrawPreview } from "../../Layout/DrawPreview/DrawPreview";
-import { AddParticipantView } from "../../Layout/AddParticipantView/AddParticipantView";
+import { DrawPreview } from "../../Layout/Admin/Sorteos/DrawPreview/DrawPreview";
+import { AddParticipantView } from "../../Layout/Admin/Sorteos/AddParticipantView/AddParticipantView";
 
 export const Draw = () => {
   return (

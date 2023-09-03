@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { AddParticipantForm } from "../../components/AddParticipantForm/AddParticipantForm";
+import { AddParticipantForm } from "../../../../components/AddParticipantForm/AddParticipantForm";
 import { useContext } from "react";
-import { adminContext } from "../../storage/AdminContext";
+import { adminContext } from "../../../../storage/AdminContext";
 import { useState } from "react";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/MainButton/MainButton";
 
 export const AddParticipantView = ({}) => {
   const [wantToUseTheLast, setWantToUseTheLast] = useState(false);

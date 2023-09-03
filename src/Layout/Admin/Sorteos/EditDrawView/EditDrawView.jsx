@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useContext } from "react";
-import { adminContext } from "../../storage/AdminContext";
+import { adminContext } from "../../../../storage/AdminContext";
 import styled from "styled-components";
 import { useState } from "react";
-import { toastSuccess } from "../../helpers/helpers";
-import { postSorteoImage, updateDraw } from "../../firebase/firebase";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { toastSuccess } from "../../../../helpers/helpers";
+import { postSorteoImage, updateDraw } from "../../../../firebase/firebase";
+import { MainButton } from "../../../../components/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 
 const getInputData = (e) => {

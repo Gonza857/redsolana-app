@@ -153,7 +153,7 @@ export const NewView = () => {
                 <AiOutlineEye style={iconStyle} />
               </MainButton>
             </Link>
-            <Link to="/admin/editar/cronograma">
+            <Link to="/admin/cronograma/editar">
               <MainButton>
                 <p className="m-0 d-none d-lg-block">Editar</p>
                 <AiFillEdit style={iconStyle} />

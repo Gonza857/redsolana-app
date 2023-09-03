@@ -59,7 +59,7 @@ export function Footer() {
       </FooterWrapper>
       <DevInfo className="col-12">
         <p>
-          Creado y diseñado por{" "}
+          Desarrollado por{" "}
           <button
             onClick={() =>
               window.open(
@@ -105,7 +105,7 @@ const DevInfo = styled.div`
   align-items: center;
   justify-content: center;
   border-top: 0.8px solid #c7c7c7;
-  background-color: #00514e;
+  background-color: #004644;
   p {
     color: #fff;
     font-size: 0.7rem;

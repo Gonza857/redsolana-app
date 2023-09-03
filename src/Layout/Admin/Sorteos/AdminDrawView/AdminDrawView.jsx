@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { adminContext } from "../../storage/AdminContext";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { adminContext } from "../../../../storage/AdminContext";
+import { MainButton } from "../../../../components/MainButton/MainButton";
 import { Link, useNavigate } from "react-router-dom";
 
 export const AdminDrawView = () => {

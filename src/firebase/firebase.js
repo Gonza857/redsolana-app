@@ -418,3 +418,37 @@ export async function postSorteoImage(file) {
     return { url, randomId };
   } catch (error) {}
 }
+
+// CRONOGRAMA
+export async function getScheduleImage() {
+  try {
+    const storageRef = ref(storage, `cronograma/scheduleImage`);
+    console.log(storageRef);
+    const url = await getDownloadURL(storageRef);
+    console.log(url);
+    return url;
+  } catch (error) {
+    throw new Error("Ooops! Algo salio mal.");
+  }
+}
+
+export async function postScheduleImage(file) {
+  try {
+    const storageRef = ref(storage, `cronograma/scheduleImage`);
+    await uploadString(storageRef, file, "data_url");
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error) {
+    throw new Error("Ooops! Algo salio mal.");
+  }
+}
+
+export async function deleteScheduleImage() {
+  try {
+    const desertRef = ref(storage, `cronograma/scheduleImage`);
+    await deleteObject(desertRef);
+  } catch (error) {
+    console.log(error.message);
+    throw new Error("Ooops! Algo salio mal.");
+  }
+}
