@@ -283,7 +283,6 @@ export async function postCasinoImage(file) {
     const storageRef = ref(storage, `casinos/${id}`);
     await uploadString(storageRef, file, "data_url");
     const url = await getDownloadURL(storageRef);
-    console.log("FIREBASE: Imagen subida correctamente.");
     return { url, id };
   } catch (error) {
     throw new Error("Ooops! Algo salio mal.");
@@ -294,7 +293,6 @@ export async function deleteCasinoImage(image_id) {
   try {
     const desertRef = ref(storage, `casinos/${image_id}`);
     await deleteObject(desertRef);
-    console.log("borrada correctamente");
   } catch (error) {
     throw new Error("Ooops! Algo salio mal.");
   }
@@ -329,10 +327,8 @@ export async function deleteCasino(casino) {
 
 export const updateCasino = async (casino) => {
   try {
-    console.log(casino);
     const casinoRef = doc(DATABASE, "casinos", casino.id);
     await updateDoc(casinoRef, casino);
-    console.log("FIREBASE: Actualizado correctamente.");
   } catch (error) {
     throw new Error("Ooops! Algo salio mal.");
   }

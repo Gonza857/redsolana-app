@@ -40,7 +40,7 @@ export const Wrapper = () => {
   };
 
   return (
-    <StyledContainer className="col-12 col-md-8 mx-auto d-flex flex-column justify-content-center align-items-center p-3 pt-4">
+    <StyledContainer className="col-12 col-md-8 mx-auto d-flex flex-column justify-content-center align-items-center p-3 pt-5">
       <h3 className="text-white text-center">Administración - Cronograma</h3>
       {isLoadingSchedule ? (
         <RingContainer className="d-flex justify-content-center align-items-center">

@@ -2,7 +2,10 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { MainButton } from "../../../components/MainButton/MainButton";
-import { getScheduleImage, postScheduleImage } from "../../../firebase/firebase";
+import {
+  getScheduleImage,
+  postScheduleImage,
+} from "../../../firebase/firebase";
 import { toastSuccess } from "../../../helpers/helpers";
 import { useEffect } from "react";
 
@@ -13,7 +16,6 @@ export const EditPaySchedule = () => {
 
   useEffect(() => {
     getScheduleImage().then((result) => {
-      console.log(result);
       setFirebaseImage(result);
     });
   }, []);
@@ -33,13 +35,12 @@ export const EditPaySchedule = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (wantsToDelete) {
-        //  ELIMINAR LA ANTERIOR
-        // SUBIR
-        // ACTUALIZAR OBJETO EN FIRESTORE
+      //  ELIMINAR LA ANTERIOR
+      // SUBIR
+      // ACTUALIZAR OBJETO EN FIRESTORE
     }
     if (previewImage !== null) {
       postScheduleImage(previewImage).then((result) => {
-        console.log(result);
         toastSuccess("¡Imagén actualizada correctamente!");
       });
     }

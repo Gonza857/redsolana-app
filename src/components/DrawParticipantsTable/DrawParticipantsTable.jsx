@@ -54,7 +54,6 @@ export const DrawParticipantsTable = () => {
 
   const openModal = (participant) => {
     setShow(true);
-    console.log(participant);
     setParticipant(participant);
   };
 
@@ -67,7 +66,7 @@ export const DrawParticipantsTable = () => {
         show={show}
         participant={participant}
       />
-      {participants.length == 0 ? (
+      {participants?.length == 0 ? (
         <>
           <h3 className="text-white">No hay participantes registrados.</h3>
           <Link to="/admin/sorteo/agregar">

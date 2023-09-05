@@ -10,9 +10,6 @@ import { FaTrashAlt } from "react-icons/fa";
 export const AdminCasinoCard = ({ card }) => {
   const { handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log(card);
-  }, []);
   return (
     <StyledCard className="d-flex flex-column align-items-center p-2">
       <ImageContainer className="p-2">

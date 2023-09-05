@@ -147,13 +147,13 @@ export const NewView = () => {
           <h3>Cronograma</h3>
           <div className="gap-2">
             <Link to="/cronograma">
-              <MainButton>
+              <MainButton fn={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Ver</p>
                 <AiOutlineEye style={iconStyle} />
               </MainButton>
             </Link>
             <Link to="/admin/cronograma/editar">
-              <MainButton>
+              <MainButton fn={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Editar</p>
                 <AiFillEdit style={iconStyle} />
               </MainButton>

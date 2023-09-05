@@ -201,7 +201,7 @@ export const AdminContextProvider = (props) => {
       return newArray;
     } else {
       // CASO 2
-      // console.log("CAMBIADO DE POSICIÓN");
+      // ("CAMBIADO DE POSICIÓN");
       arrayCajeros.splice(cajeroIndex, 1);
       arrayCajeros.splice(posicion, 0, cajero);
       let newArray = [];
@@ -396,13 +396,14 @@ export const AdminContextProvider = (props) => {
   const setSorteo = () => {
     getSorteo().then((sorteo) => {
       // SETEAR OBJETO SORTEO
+      console.log(sorteo);
       setSorteoInfo(sorteo[0]);
       // SETEAR ESTADO
       setSorteoActivo(sorteo[0].isActive);
       // SETEAR ARRAY DE BOOLEAN
       setSorteoArray(sorteo[0].slots);
       setIsDrawLoading(false);
-    });
+    }, []);
   };
 
   const getSorteoAgain = () => {
@@ -500,7 +501,6 @@ export const AdminContextProvider = (props) => {
   const handlePayScheduleImage = (newImageX64) => {
     setIsLoadingSchedule(true);
     if (!wantsToUpdateImage) {
-      console.log("Actualiza");
       deleteScheduleImage().then(() => {
         postScheduleImage(newImageX64).then(() => {
           setPayScheduleImg(newImageX64);
@@ -550,7 +550,7 @@ export const AdminContextProvider = (props) => {
 
   useEffect(() => {
     // CALCULA Y SETEA LOS CUPOS OCUPADOS
-    if (participants.length > 0)
+    if (participants?.length > 0)
       setParticipantsQuantity(participantsCounter(participants));
   }, [participants]);
 
@@ -568,7 +568,7 @@ export const AdminContextProvider = (props) => {
     getCasinos();
     // Traemos imagen del cronograma
     getCronograma();
-  });
+  }, []);
 
   const value = {
     cajeros,

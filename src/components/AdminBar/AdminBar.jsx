@@ -13,7 +13,6 @@ export const AdminBar = () => {
     useContext(adminContext);
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = () => {
-    console.log(searchedName);
     if (searchedName === null)
       toastInfo("Debes ingresar un nombre antes de realizar la busqueda.");
   };

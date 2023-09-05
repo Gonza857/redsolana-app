@@ -31,7 +31,6 @@ export const EditCasinoView = () => {
 
   useEffect(() => {
     setActualImage(casinoToEdit.casinoImage);
-    console.log(id);
     getCasinoToEdit(id);
   }, []);
 
