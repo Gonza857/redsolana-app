@@ -18,29 +18,40 @@ import { useNavigate } from "react-router-dom";
 
 export const AddCasinoView = () => {
   const [casinoPreview, setCasinoPreview] = useState(null);
-  const [casinoLink, setCasinoLink] = useState(null);
+
   const [previewImageUrl, setPreviewImageUrl] = useState(null);
+  const [casinoLink, setCasinoLink] = useState(null);
   const [casinoName, setCasinoName] = useState(null);
+
   const [casinos, setCasinos] = useState([]);
-  const { viewNewCasino } = useContext(adminContext);
+
   const navigate = useNavigate();
 
   const { register, handleSubmit, resetField, reset } = useForm();
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
     reset();
     setPreviewImageUrl(null);
     setCasinoName(null);
   };
 
-  const uploadCasino = () => {
-    let imageInfo = { url: "", id: "" };
+  const uploadCasino = (e) => {
+    console.log(e);
+    let newObject = {
+      casinoName: null,
+      link: null,
+      casinoImage: { url: "", id: "" },
+    };
+
+    newObject.casinoName = casinoName;
+    newObject.link = casinoLink;
+
     postCasinoImage(previewImageUrl).then((result) => {
       setPreviewImageUrl(result.url);
-      imageInfo.url = result.url;
-      imageInfo.id = result.randomId;
-      casinoPreview.casinoImage = imageInfo;
-      postCasino(casinoPreview).then(() => {
+      newObject.casinoImage = result;
+
+      postCasino(newObject).then((resultado) => {
+        console.log(resultado);
         window.scrollTo(0, 0);
         toastSuccess("Casino cargado correctamente");
         navigate("/admin/casinos");
@@ -65,7 +76,7 @@ export const AddCasinoView = () => {
   }, []);
 
   return (
-    <div className="col-12 d-flex flex-column align-items-center py-4 py-xl-2">
+    <div className="col-12 d-flex flex-column align-items-center py-4 py-xl-2 bor2">
       <h3 className="mx-auto text-white py-xl-2">Añadir casino</h3>
       <div className="col-11 col-xl-12 d-flex d-flex flex-wrap justify-content-center">
         <div
@@ -95,6 +106,9 @@ export const AddCasinoView = () => {
                   name="link"
                   {...register("link", {
                     required: true,
+                    onChange: (e) => {
+                      setCasinoLink(e.target.value);
+                    },
                   })}
                 />
                 <ClearLinkBtn

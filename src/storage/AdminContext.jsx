@@ -159,6 +159,7 @@ export const AdminContextProvider = (props) => {
   async function getCasinos() {
     try {
       const result = await getAllCasinos();
+      console.log(result);
       setCasinos(result);
       setIsGettingCasinos(false);
     } catch (error) {

@@ -11,13 +11,9 @@ import { HiStatusOnline } from "react-icons/hi";
 import CajeroAdmin from "../../components/CajeroAdmin/CajeroAdmin";
 import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
-import { AddChecker } from "../AddCheckerView/AddCheckerView";
-import { useEffect } from "react";
 
 export const Cajeros = () => {
-  const { isSearchingCajero, isLoading, searchResult, cajeros } =
-    useContext(adminContext);
-  const { page } = useParams();
+  const { isSearchingCajero, searchResult, cajeros } = useContext(adminContext);
 
   return (
     <div className="col-8 bor2 m-auto text-center text-white">

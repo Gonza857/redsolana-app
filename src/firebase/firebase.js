@@ -279,10 +279,16 @@ export const getSingleParticipant = async (id) => {
 
 export async function postCasinoImage(file) {
   try {
+    console.log(file);
+
     const id = v4();
+    console.log(id);
+
     const storageRef = ref(storage, `casinos/${id}`);
     await uploadString(storageRef, file, "data_url");
     const url = await getDownloadURL(storageRef);
+
+    console.log(url);
     return { url, id };
   } catch (error) {
     throw new Error("Ooops! Algo salio mal.");
@@ -335,6 +341,8 @@ export const updateCasino = async (casino) => {
 };
 
 export async function postCasino(casino) {
+  console.log("---PostCasino()");
+  console.log(casino);
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionRef = collection(DATABASE, "casinos");

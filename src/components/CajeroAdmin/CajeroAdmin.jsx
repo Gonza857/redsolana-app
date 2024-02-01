@@ -80,7 +80,7 @@ function CajeroAdmin({ cajero }) {
           <MainButton
             circle={true}
             red={true}
-            onClick={() => {
+            fn={() => {
               handleDelete(cajero);
             }}
           >
