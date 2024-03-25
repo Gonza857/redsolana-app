@@ -106,7 +106,7 @@ export const Navbar = () => {
               ))}
             </ul>
             {isAdmin && (
-              <AdminMenu className="col-8 m-auto h-100">
+              <AdminMenu className="m-auto h-100">
                 <MenuItem>
                   <Link
                     to="/admin"
@@ -231,7 +231,7 @@ const StyledTextCarrousel = styled.div`
 const MobileNav = styled.nav`
   width: 80%;
   height: 100vh;
-  background-color: #000000;
+  background-color: #1b1a1e;
   border-top: 1px solid #fff;
   @media screen and (min-width: 500px) {
     width: 50%;
@@ -279,14 +279,13 @@ const BrandText = styled.p`
 `;
 
 const AdminMenu = styled.ul`
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #fff;
-  border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
+  align-items: center;
   li {
+    a {
+      color: #d4b237;
+    }
     &:first-child {
       margin-top: 0;
       margin-bottom: 10px;
@@ -297,6 +296,11 @@ const AdminMenu = styled.ul`
   }
   @media screen and (min-width: 991px) {
     flex-direction: row;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    color: #fff;
+    border-bottom: none;
     li {
       &:first-child {
         margin: 0;
@@ -327,6 +331,7 @@ const MenuItem = styled.li`
     font-family: "Bebas Neue", sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+    font-size: 1.3rem;
     &:hover {
       color: #d4b237;
     }

@@ -33,9 +33,14 @@ export function CajerosView({ limit }) {
         filter: isOpenMenu ? "brightness(50%)" : "unset",
       }}
     >
-      <div className="col-12">
-        <Divisor>Cajeros</Divisor>
-      </div>
+      {currentURL == "/Cajeros" ? (
+        <div className="col-12">
+          <Divisor>Cajeros</Divisor>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <CajerosEstadoInfo className="gap-2 gap-lg-5">
         <BotonPrincipal>
           Disponible:

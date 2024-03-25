@@ -80,7 +80,7 @@ export function Inicio() {
   return (
     <main className="d-flex flex-column gap-4 gap-lg-5 col-12">
       <HeaderContainer className="col-12 m-auto" id="Home">
-        <HeaderInfo className="d-flex flex-column flex-wrap gap-2 align-items-lg-center justify-content-lg-center bor1">
+        <HeaderInfo className="d-flex flex-column flex-wrap gap-2 align-items-lg-center justify-content-lg-center">
           <img src="./assets/images/header-bg-styled.jpg" />
           <div className="gap-2">
             <p>
@@ -94,14 +94,12 @@ export function Inicio() {
       <Divisor>Casinos</Divisor>
       <InicioContainer
         id="Casinos"
-        className={`bor1 col-12 m-0 ${
-          isOpenMenu ? "blockEvents" : "activeEvents"
-        }`}
+        className={`col-12 m-0 ${isOpenMenu ? "blockEvents" : "activeEvents"}`}
         style={{
           opacity: `${isOpenMenu ? "0.3" : "1"}`,
         }}
       >
-        <Wrapper className="col-12 gap-4 col-lg-10 py-4 bor4">
+        <Wrapper className="col-12 gap-4 col-lg-10 py-4">
           {loadFake ? (
             <>
               {cinco.map((card) => (
