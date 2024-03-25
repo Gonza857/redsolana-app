@@ -2,6 +2,8 @@
     box-sizing: border-box !important;
     margin: 0;
     padding: 0;
+    list-style: none !important;
+    text-decoration: none;
 }
 
 .blockButton {
@@ -140,4 +142,9 @@ th, tr {
 .secondary {
     background-color: #7037d4;
     color: #fff;
+}
+
+/* 18/02/24 */
+.styledTitle {
+    font-size: 2rem;
 }

@@ -18,18 +18,15 @@ function CajeroCard({ cajero }) {
 
   return (
     <Animated animationIn="fadeIn" animationOut="fadeOut" isVisible={true}>
-      <CajeroCardContainer>
-        <CajeroName>
-          <p className="">{cajero.nombre}</p>
-        </CajeroName>
+      <CajeroCardContainer className="py-2">
         <CajeroImgContainer>
-          <CajeroEstadoIcon>
-            <BsCircleFill
-              style={{
-                color: `${cajero.estado === "conectado" ? "green" : "red"}`,
-              }}
-            />
-          </CajeroEstadoIcon>
+          <CajeroEstadoIcon
+            style={{
+              backgroundColor: `${
+                cajero.estado === "conectado" ? "#00d60b" : "red"
+              }`,
+            }}
+          ></CajeroEstadoIcon>
           {cajero.imagen === null ? (
             cajero.genero === "M" ? (
               <img
@@ -50,19 +47,25 @@ function CajeroCard({ cajero }) {
             />
           )}
         </CajeroImgContainer>
+        <CajeroName>
+          <p className="">{cajero.nombre}</p>
+        </CajeroName>
+
         <CajeroNumberContainer>
-          <FaWhatsapp />
-          {cajero.enlace === "" ? (
-            <p className="m-0">{cajero.numero}</p>
-          ) : (
-            <a
-              href={`https://${cajero.enlace}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {cajero.numero}
-            </a>
-          )}
+          <BotonPrincipal>
+            {cajero.enlace === "" ? (
+              <p className="m-0">{cajero.numero}</p>
+            ) : (
+              <a
+                href={`https://${cajero.enlace}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Contactar
+              </a>
+            )}
+            <FaWhatsapp />
+          </BotonPrincipal>
         </CajeroNumberContainer>
       </CajeroCardContainer>
     </Animated>
@@ -71,17 +74,55 @@ function CajeroCard({ cajero }) {
 
 export default CajeroCard;
 
+const BotonPrincipal = styled.button`
+  font-family: "Bebas Neue", sans-serif;
+  /* padding: 5px 20px; */
+  text-transform: uppercase;
+  border-radius: 30px;
+  width: fit-content;
+  background-color: #d4af37;
+  outline: none;
+  border: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  svg,
+  p,
+  a {
+    color: #000 !important;
+    width: fit-content;
+  }
+  p,
+  a {
+    font-size: 1.3rem;
+  }
+  svg {
+    font-size: 1.7rem;
+  }
+  @media screen and (min-width: 320px) {
+    padding: 5px 15px;
+    p,
+    a {
+      font-size: 0.9rem;
+    }
+    svg {
+      font-size: 1rem;
+    }
+  }
+`;
+
 const CajeroCardContainer = styled.div`
   width: 145px;
   height: fit-content;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 0.8px solid #d4af37;
-  border-radius: 15px;
-  margin-top: 15px;
+  justify-content: space-around;
+  border: 0.1px solid #ffffff56;
+  box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
+  background-color: #3745d4;
+  border-radius: 20px;
   overflow: hidden;
   gap: 5px;
   @media screen and (min-width: 388px) {
@@ -91,7 +132,8 @@ const CajeroCardContainer = styled.div`
     width: 165px;
   }
   @media screen and (min-width: 768px) {
-    width: 170px;
+    width: 180px;
+    height: 250px;
   }
 `;
 
@@ -100,17 +142,8 @@ const CajeroName = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(88, 88, 88, 1) 100%
-  );
   color: #fff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
   text-align: center;
-  height: 40px;
-  width: 100%;
   p {
     padding: 0;
     margin: 0;
@@ -126,28 +159,45 @@ const CajeroName = styled.div`
 `;
 
 const CajeroImgContainer = styled.div`
+  width: 80%;
+  margin: 0 auto;
   position: relative;
+  display: flex;
+  justify-content: center;
   img {
-    width: 150px;
-    height: 150px;
+    display: block;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: center right;
-    @media screen and (max-width: 450px) {
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.562);
+    border: 0.1px solid #ffffff56;
+    @media screen and (min-width: 320px) {
+      width: 100px;
+      height: 100px;
+    }
+    /* @media screen and (max-width: 450px) {
       width: 130px;
       height: 130px;
-    }
+    } */
   }
 `;
 
 const CajeroEstadoIcon = styled.div`
+  /* border: 1px solid red; */
+  height: fit-content;
   position: absolute;
   left: 0;
-  top: -10px;
-  @media screen and (min-width: 388px) {
-    left: -11px;
-    top: -10px;
+  z-index: 950;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  border: 0.1px solid #ffffff10;
+  @media screen and (min-width: 320px) {
+    height: 0.8rem;
+    width: 0.8rem;
   }
-  @media screen and (min-width: 450px) {
+  /* @media screen and (min-width: 450px) {
     left: -1px;
     top: -10px;
   }
@@ -158,31 +208,12 @@ const CajeroEstadoIcon = styled.div`
   @media screen and (min-width: 765px) {
     left: -9px;
     top: -10px;
-  }
+  }  */
 `;
 
 const CajeroNumberContainer = styled.div`
-  margin: 0;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(88, 88, 88, 1) 100%
-  );
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15  px;
   width: 100%;
-  height: 40px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  svg {
-    font-size: 25px;
-    color: #fff;
-  }
-  a,
-  p {
-    margin: 0;
-    color: #fff;
-    font-size: 15px;
-  }
 `;

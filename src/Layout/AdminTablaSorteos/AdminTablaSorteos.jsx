@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export const AdminDraw = () => {
   return (
     <ContainerNumberTable>
-      <div className="bor1 col-12">
+      <div className="col-12">
         <button>
           <Link to={"/admin/sorteos"}>Volver</Link>
         </button>

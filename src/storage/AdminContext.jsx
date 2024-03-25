@@ -22,18 +22,19 @@ import Swal from "sweetalert2";
 import { toastError, toastSuccess } from "../helpers/helpers";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 export const adminContext = createContext();
 
 /**
- * Busca cajero con la misma ID
+ * Busca cajero con el mismo nombre
  * @param checkersArray - (array)
  * @param formData - Información tomada del formulario de busquedad
  * @returns Index del buscado
  */
-function cashierFilter(cashier, cajeros) {
-  let param = cashier.toLowerCase();
-  let busquedad = cajeros.filter((cajero) => {
+function cashierFilter(nombreCajero, arrayCajeros) {
+  let param = nombreCajero.toLowerCase();
+  let busquedad = arrayCajeros.filter((cajero) => {
     if (cajero.nombre.toLowerCase().includes(param)) {
       return cajero;
     } else {
@@ -46,12 +47,10 @@ function cashierFilter(cashier, cajeros) {
 /**
  * Busca cajero con la misma ID
  * @param Cajero - (object)
- * @returns Index del buscado
+ * @returns Index del cajero buscado
  */
-const findCheckerID = (checker, checkersArray) => {
-  return checkersArray.findIndex(
-    (thisChecker) => thisChecker.id === checker.id
-  );
+const findCheckerID = (cajero, arrayCajeros) => {
+  return arrayCajeros.findIndex((esteCajero) => esteCajero.id === cajero.id);
 };
 
 export const AdminContextProvider = (props) => {
@@ -84,13 +83,23 @@ export const AdminContextProvider = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   /* / / / / / CAJEROS / / / / / */
-
+  const [cincoChicos, setCincoChicos] = useState([]);
   // SET CAJEROS
   async function traerCajeros() {
     try {
+      console.log("#trayendo cajeros...");
+      let cincoCaras = [...cincoChicos];
       const result = await getAllCajeros();
       setCajeros(result);
       setIsLoading(false);
+      let limit = 5;
+      let actual = 0;
+      while (actual < limit) {
+        cincoCaras.push(result[actual]);
+        actual++;
+      }
+      setCincoChicos(cincoCaras);
+      console.log(cincoCaras);
     } catch (error) {
       toastError(error);
     }
@@ -186,13 +195,13 @@ export const AdminContextProvider = (props) => {
   function moveCajerosPosition(posicion, cajero, arrayCajeros) {
     /*
     CASOS:
-    1) SI EL ELEMENTO NO EXISTE, OSEA ESTAMOS AGREGANDO EN UNA POSICION DESEADA
-    2) SI EL ELEMENTO EXISTE, OSEA ESTAMOS CAMBIANDO LA POSICION DEL ELEMENTO
+    1) Cajero no existe previamente, agregamos en la posición deseada.
+    2) Cajero ya existe, cambiamos su posición  
     */
     let cajeroIndex = findCheckerID(cajero, arrayCajeros);
     if (cajeroIndex === -1) {
       // CASO 1
-      // console.log("AGREGADO Y CAMBIADO DE POSICIÓN");
+      //("AGREGADO Y CAMBIADO DE POSICIÓN");
       arrayCajeros.splice(posicion, 0, cajero);
       let newArray = [];
       arrayCajeros.forEach((caj, i) => {
@@ -462,6 +471,13 @@ export const AdminContextProvider = (props) => {
     });
   };
 
+  const scrollToSection = (id) => {
+    navigate("/");
+    setTimeout(() => {
+      navigate(`/#${id}`);
+    }, 500);
+  };
+
   // MANEJO DE LOGIN
   const adminSignIn = (email, pass) => {
     setIsVerifingAdmin(true);
@@ -534,7 +550,7 @@ export const AdminContextProvider = (props) => {
   };
 
   /**
-   * Trae imagen del cronograma, si no hay, será null y se vera reflejado en la interfaz
+   * Trae imagen del cronograma, si no hay, será null y se vera reflejado en la interfaz.
    */
   const getCronograma = async () => {
     try {
@@ -639,6 +655,8 @@ export const AdminContextProvider = (props) => {
     isLoadingSchedule,
     setIsLoadingSchedule,
     firstDeleteScheduleImage,
+    scrollToSection,
+    cincoChicos,
   };
 
   return (

@@ -9,7 +9,8 @@ export function Cronograma() {
   const { payScheduleImg, sorteoActivo } = useContext(adminContext);
   return (
     <Wrapper
-      className="d-flex justify-content-center align-items-center"
+      id="Cronograma"
+      className="d-flex justify-content-center align-items-center mb-5 p-3"
       style={{
         maxHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(100vh - 60px)",
       }}
@@ -32,10 +33,6 @@ export function Cronograma() {
 
 const Wrapper = styled.div`
   width: 100%;
-  background-image: url(./assets/images/fondoCardGold.png);
-  background-position: center center;
-  background-repeat: repeat;
-  background-size: cover;
   transition: all 0.3s;
   @media screen and (max-width: 736px) {
     background-size: 100% auto;
@@ -43,6 +40,8 @@ const Wrapper = styled.div`
 `;
 
 const ImageContainer = styled.div`
+  border-radius: 5px;
+  overflow: hidden;
   height: 100%;
   img {
     object-fit: contain;

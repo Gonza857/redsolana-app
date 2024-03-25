@@ -109,7 +109,7 @@ export const EditDrawView = () => {
               <>
                 {previewImage !== "" ? (
                   <>
-                    <div className="bor1">
+                    <div>
                       <img
                         src={
                           previewImage == ""
@@ -131,7 +131,7 @@ export const EditDrawView = () => {
                     </MainButton>
                   </>
                 ) : (
-                  <div className="col-12 d-flex flex-column bor2">
+                  <div className="col-12 d-flex flex-column">
                     <label htmlFor="image">Imagén del sorteo</label>
                     <input
                       className="col-12 bor"

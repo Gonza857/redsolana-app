@@ -16,7 +16,7 @@ export const Cajeros = () => {
   const { isSearchingCajero, searchResult, cajeros } = useContext(adminContext);
 
   return (
-    <div className="col-8 bor2 m-auto text-center text-white">
+    <div className="col-8 m-auto text-center text-white">
       <h3>Estas visualizando todos los cajeros</h3>
       <Table
         striped

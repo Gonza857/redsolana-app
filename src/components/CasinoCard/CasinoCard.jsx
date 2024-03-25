@@ -27,11 +27,9 @@ function CasinoCard({ casinoImage, casinoName, link, loadFake }) {
             </ImgContainer>
             <TextContainer>
               <p>
-                Haz click{" "}
                 <a href={link} target="_blank" rel="noreferrer">
-                  aqui
-                </a>{" "}
-                para ir a {casinoName}
+                  {casinoName}
+                </a>
               </p>
             </TextContainer>
           </>
@@ -46,40 +44,43 @@ export default CasinoCard;
 const CasinoCardLoading = styled.div`
   width: 100%;
   height: 250px;
-  border-radius: 20px;
-  transition: all 0.5s;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(88, 88, 88, 1) 100%
-  );
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
+  transition: all 0.5s;
+  border: 0.1px solid #ffffff56;
+  box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
+  background-color: #3745d4;
+  border-radius: 20px;
+  overflow: hidden;
 `;
 
 const CardContainer = styled.div`
   text-align: center;
-  border-radius: 20px;
   transition: transform 0.3s;
-  box-shadow: 1px 1px 50px -11px rgba(212, 175, 55, 0.75);
-  -webkit-box-shadow: 1px 1px 50px -11px rgba(212, 175, 55, 0.75);
-  -moz-box-shadow: 1px 1px 50px -11px rgba(212, 175, 55, 0.75);
-  overflow: hidden;
+  border: 0.1px solid #ffffff60;
+  box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
+  background-color: #3745d4;
+  border-radius: 20px;
+  overflow: hidden;zz
   &:hover {
     transform: scale(1.025);
   }
   @media (min-width: 320px) {
     height: fit-content;
-    width: 290px;
+    width: 250px;
+    height: 220px;
   }
-  @media (min-width: 700px) {
-    width: 320px;
+  @media (min-width: 720px) {
+    height: fit-content;
+    width: 300px;
+    height: 220px;
   }
 `;
 
 const ImgContainer = styled.div`
-  height: 200px;
+  height: 170px;
   a {
     width: 100%;
     height: 100%;
@@ -96,20 +97,18 @@ const TextContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 50px;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(88, 88, 88, 1) 100%
-  );
+  background-color: #3745d4;
+  border: 0.1px solid #ffffff60;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   @media (min-width: 320px) {
     font-size: 1rem;
   }
   p {
     font-weight: 600;
-    color: #fff;
     margin: 0;
     a {
-      color: #d4af37;
+      color: #fff;
     }
   }
 `;

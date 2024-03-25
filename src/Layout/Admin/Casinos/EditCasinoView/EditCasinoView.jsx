@@ -126,7 +126,7 @@ export const EditCasinoView = () => {
     return <h3 className="text-white">Nada Pana</h3>;
   } else {
     return (
-      <StyledWrapper className="p-2 py-lg-0 bor2">
+      <StyledWrapper className="p-2 py-lg-0">
         <StyledForm
           onSubmit={handleSubmit(onSubmit)}
           className={`p-2 p-lg-4 gap-2 ${
@@ -134,7 +134,7 @@ export const EditCasinoView = () => {
               ? "col-lg-8 col-xl-6" // PRINCIPAL - TIENE IMG
               : previewImageUrl !== null
               ? "col-lg-8 col-xl-6" // VIENDO PREVIEW
-              : "col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 bor1" // VIENDO NADA
+              : "col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4" // VIENDO NADA
           }`}
         >
           <h3 className="pReset text-center">

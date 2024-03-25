@@ -54,8 +54,8 @@ export const AdminSorteos = () => {
   };
 
   return (
-    <StyledSorteosContainer className="col-10 d-flex flex-column align-items-center bor2 p-1">
-      <AdminBarContainer className="col-10 gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row bor1">
+    <StyledSorteosContainer className="col-10 d-flex flex-column align-items-center p-1">
+      <AdminBarContainer className="col-10 gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
         {sorteoActivo ? (
           <>
             <button className="btn btn-danger" onClick={confirmDelete}>

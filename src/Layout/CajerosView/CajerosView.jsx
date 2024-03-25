@@ -4,55 +4,93 @@ import { Metronome } from "@uiball/loaders";
 import { BsCircleFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
 import CajeroCard from "../../components/CajeroCard/CajeroCard";
+import { Link } from "react-router-dom";
 
-export function CajerosView() {
+export function CajerosView({ limit }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { cajeros } = useContext(adminContext);
+  const { cincoChicos, cajeros, sorteoActivo, isOpenMenu } =
+    useContext(adminContext);
 
   useEffect(() => {
-    if (cajeros.length === 0) {
+    if (cincoChicos.length === 0) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [cajeros]);
+  }, [cincoChicos]);
 
   return (
-    <CajerosMainContainer className="col-12 m-0">
-      <CajerosEstadoInfo className="flex-md-row gap-3">
-        <p className="m-0 order-1">
-          Cajero en linea:
-          <BsCircleFill style={{ color: "green", marginLeft: "10px" }} />
-        </p>
-        <h4 className="m-0 order-0 order-md-1">Cajeros verificados</h4>
-        <p className="m-0 order-2">
-          Cajero desconectado:
+    <CajerosMainContainer
+      className="col-12 m-0 gap-4"
+      id="Cajeros"
+      style={{
+        minHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(77vh - 60px)",
+        filter: isOpenMenu ? "brightness(50%)" : "unset",
+      }}
+    >
+      <CajerosEstadoInfo className="gap-2 gap-lg-5">
+        <BotonPrincipal>
+          Disponible:
+          <BsCircleFill style={{ color: "#00d60b", marginLeft: "10px" }} />
+        </BotonPrincipal>
+        <BotonPrincipal>
+          Desconectado:
           <BsCircleFill style={{ color: "red", marginLeft: "10px" }} />
-        </p>
+        </BotonPrincipal>
       </CajerosEstadoInfo>
-      <CajerosListContainer className="col-12 col-sm-11 col-md-10">
+      <CajerosListContainer className="col-12 col-sm-11 col-md-10 px-2">
         {isLoading ? (
           <div className="m-auto">
             <Metronome size={40} speed={1.6} color="#fff" />
           </div>
         ) : (
           <>
-            {cajeros.map((cajero) => {
-              return <CajeroCard key={cajero.id} cajero={cajero} />;
-            })}
+            {limit ? (
+              <>
+                {cincoChicos.map((cajero) => {
+                  return <CajeroCard key={cajero.id} cajero={cajero} />;
+                })}
+              </>
+            ) : (
+              <>
+                {cajeros.map((cajero) => {
+                  return <CajeroCard key={cajero.id} cajero={cajero} />;
+                })}
+              </>
+            )}
           </>
         )}
       </CajerosListContainer>
+      <Link to={"/cajeros"}>
+        <BotonPrincipal>Ver más cajeros</BotonPrincipal>
+      </Link>
     </CajerosMainContainer>
   );
 }
 
+const BotonPrincipal = styled.button`
+  font-family: "Bebas Neue", sans-serif;
+  padding: 10px 30px;
+  text-transform: uppercase;
+  border-radius: 30px;
+  width: fit-content;
+  background-color: unset;
+  color: #fff;
+  outline: none;
+  border: 0;
+  font-size: 1.2rem;
+  box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
+  @media screen and (max-width: 320px) {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    border-radius: 10px;
+  }
+`;
+
 const CajerosMainContainer = styled.main`
-  overflow: hidden;
-  background-image: url(./assets/images/fondoCardDgr.png);
-  background-position: center center;
-  background-repeat: repeat;
-  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: all 1s;
   @media screen and (max-width: 736px) {
     background-size: 100% auto;
@@ -60,30 +98,17 @@ const CajerosMainContainer = styled.main`
 `;
 
 const CajerosEstadoInfo = styled.div`
-  padding: 10px 0;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
   justify-content: space-around;
-  h4 {
-    text-align: center;
-    color: #fff;
-    padding: 10px 20px;
-    margin: auto;
-    border-radius: 20px;
-    background-color: rgba(0, 0, 0, 80%);
-    box-shadow: 0px 1px 80px 6px #66cdff, 0px 1px 80px 6px #8c81ec;
-    -webkit-box-shadow: 0px 1px 106px 6px #66cdff, 0px 1px 106px 6px #8c81ec;
-    -moz-box-shadow: 0px 1px 106px 6px #66cdff, 0px 1px 106px 6px #8c81ec;
-  }
   p {
     background-color: #000000;
     padding: 10px 20px;
     border-radius: 20px;
     color: #fff;
-    box-shadow: 0px 1px 60px 0px #66cdff, 0px 1px 60px 0px #8c81ec;
-    -webkit-box-shadow: 0px 1px 60px 0px #66cdff, 0px 1px 60px 0px #8c81ec;
-    -moz-box-shadow: 0px 1px 60px 0px #66cdff, 0px 1px 60px 0px #8c81ec;
+    border: 0.1px solid #ffffff56;
+    box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
   }
 `;
 
@@ -95,7 +120,9 @@ const CajerosListContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   margin: auto;
-  padding-bottom: 40px;
+  @media screen and (min-width: 320px) {
+    gap: 10px;
+  }
   @media screen and (min-width: 420px) {
     gap: 20px;
   }

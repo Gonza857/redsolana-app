@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import CasinoCard from "../../components/CasinoCard/CasinoCard";
 import { adminContext } from "../../storage/AdminContext";
-import { Ring } from "@uiball/loaders";
-import { Animated } from "react-animated-css";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Cajeros } from "../Cajeros/Cajeros";
+import { CajerosView } from "../CajerosView/CajerosView";
+import { Cronograma } from "../Cronograma/Cronograma";
+import { Divisor } from "./Divisor";
 
 export const cards = [
   {
@@ -60,12 +62,13 @@ export const cards = [
   },
 ];
 
-const cinco = new Array(5).fill(null);
+const cinco = new Array(6).fill(null);
 
 export function Inicio() {
-  const { isOpenMenu, casinos, isGettingCasinos } = useContext(adminContext);
+  const { isOpenMenu, casinos, isGettingCasinos, sorteoActivo } =
+    useContext(adminContext);
   const [loadFake, setLoadFake] = useState(false);
-  
+
   useEffect(() => {
     if (casinos.length == 0) {
       setLoadFake(true);
@@ -75,44 +78,122 @@ export function Inicio() {
   }, [casinos]);
 
   return (
-    <InicioContainer
-      className={`col-12 m-0 ${isOpenMenu ? "blockEvents" : "activeEvents"}`}
-      style={{
-        opacity: `${isOpenMenu ? "0.3" : "1"}`,
-      }}
-    >
-      <Wrapper className="col-11 gap-4 col-lg-10 py-4">
-        {loadFake ? (
-          <>
-            {cinco.map((card) => (
-              <CasinoCard key={card?.link} {...card} loadFake={loadFake} />
-            ))}
-          </>
-        ) : (
-          <>
-            {casinos.map((card) => (
-              <CasinoCard key={card?.link} {...card} loadFake={loadFake} />
-            ))}
-          </>
-        )}
-      </Wrapper>
-    </InicioContainer>
+    <main className="d-flex flex-column gap-4 gap-lg-5 col-12">
+      <HeaderContainer className="col-12 m-auto" id="Home">
+        <HeaderInfo className="d-flex flex-column flex-wrap gap-2 align-items-lg-center justify-content-lg-center bor1">
+          <img src="./assets/images/header-bg-styled.jpg" />
+          <div className="gap-2">
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Architecto, a.
+            </p>
+            <BotonPrincipal>PEDÍ TU USUARIO</BotonPrincipal>
+          </div>
+        </HeaderInfo>
+      </HeaderContainer>
+      <Divisor>Casinos</Divisor>
+      <InicioContainer
+        id="Casinos"
+        className={`bor1 col-12 m-0 ${
+          isOpenMenu ? "blockEvents" : "activeEvents"
+        }`}
+        style={{
+          opacity: `${isOpenMenu ? "0.3" : "1"}`,
+        }}
+      >
+        <Wrapper className="col-12 gap-4 col-lg-10 py-4 bor4">
+          {loadFake ? (
+            <>
+              {cinco.map((card) => (
+                <CasinoCard key={card?.link} {...card} loadFake={loadFake} />
+              ))}
+            </>
+          ) : (
+            <>
+              {casinos.map((card) => (
+                <CasinoCard key={card?.link} {...card} loadFake={loadFake} />
+              ))}
+            </>
+          )}
+        </Wrapper>
+      </InicioContainer>
+      <Divisor>Cajeros</Divisor>
+      <CajerosView limit={true} />
+      <Divisor>Cronograma de pago</Divisor>
+      <Cronograma />
+    </main>
   );
 }
+
+const BotonPrincipal = styled.button`
+  font-family: "Bebas Neue", sans-serif;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 30px;
+  width: fit-content;
+  background-color: #d4af37;
+  color: #000;
+  outline: none;
+  border: 0;
+  font-size: 1rem;
+`;
+
+const HeaderContainer = styled.div`
+  @media screen and (min-width: 720px) {
+    height: calc(100vh - 60px);
+  }
+`;
+
+const HeaderInfo = styled.div`
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  @media screen and (min-width: 320px) {
+    width: 100%;
+    height: 300px;
+  }
+  img {
+    @media screen and (min-width: 320px) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  div {
+    /* width: 420px; */
+    height: fit-content;
+    position: absolute;
+    right: 0;
+    /* margin-right: 50px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* border: 3px solid violet; */
+    @media screen and (min-width: 320px) {
+      width: 100%;
+      height: 100%;
+      padding: 0 20px;
+    }
+    p {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      color: #fff;
+      border: 3px solid burlywood;
+      @media screen and (min-width: 320px) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+`;
 
 const InicioContainer = styled.main`
   display: grid;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  background-image: url(./assets/images/fondoCardGold.png);
-  background-position: center center;
-  background-repeat: repeat;
-  background-size: cover;
   transition: all 0.3s;
-  @media screen and (max-width: 736px) {
-    background-size: 100% auto;
-  }
 `;
 
 const Wrapper = styled.div`

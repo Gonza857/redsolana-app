@@ -60,7 +60,7 @@ export const DrawParticipantsTable = () => {
   const obtainParticipant = () => {};
 
   return (
-    <div className="col-12 d-flex flex-column align-items-center py-3 gap-3 bor3">
+    <div className="col-12 d-flex flex-column align-items-center py-3 gap-3">
       <ModalParticipant
         handleClose={handleClose}
         show={show}

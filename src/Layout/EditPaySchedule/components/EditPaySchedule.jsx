@@ -47,7 +47,7 @@ export const EditPaySchedule = () => {
   };
 
   return (
-    <StyledContainer className="bor2 d-flex justify-content-center align-items-center">
+    <StyledContainer className="d-flex justify-content-center align-items-center">
       {firebaseImage !== null ? (
         <div className="d-flex flex-column align-items-center gap-2">
           <p className="p_subtitle">Imagén actual</p>
@@ -60,7 +60,7 @@ export const EditPaySchedule = () => {
         </div>
       ) : (
         <>
-          <form className="bor1 d-flex flex-column" onSubmit={handleSubmit}>
+          <form className="d-flex flex-column" onSubmit={handleSubmit}>
             {previewImage == null ? (
               <>
                 <label htmlFor="schedule_image">Imagén</label>
@@ -72,7 +72,7 @@ export const EditPaySchedule = () => {
               </>
             ) : (
               <>
-                <PreviewImage className="bor2">
+                <PreviewImage>
                   <img src={previewImage} />
                 </PreviewImage>
                 <div className="bor4 d-flex gap-2 justify-content-center py-1">
