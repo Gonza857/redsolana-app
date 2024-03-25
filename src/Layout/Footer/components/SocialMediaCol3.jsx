@@ -7,20 +7,22 @@ export const SocialMediaCol = () => {
     <SocialMedia className="col-12 col-md-4 px-2 px-sm-0">
       <SocialMediaWrapper>
         <p>¡Seguinos!</p>
-        <a
-          href="https://instagram.com/casino.solana?igshid=YmMyMTA2M2Y="
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <AiOutlineInstagram />
-        </a>
-        <a
-          href="https://www.facebook.com/profile.php?id=100083974485666&mibextid=LQQJ4d"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <AiOutlineFacebook />
-        </a>
+        <div className="d-flex gap-2">
+          <a
+            href="https://instagram.com/casino.solana?igshid=YmMyMTA2M2Y="
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <AiOutlineInstagram />
+          </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=100083974485666&mibextid=LQQJ4d"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <AiOutlineFacebook />
+          </a>
+        </div>
       </SocialMediaWrapper>
     </SocialMedia>
   );
