@@ -4,14 +4,19 @@ import { Metronome } from "@uiball/loaders";
 import { BsCircleFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
 import CajeroCard from "../../components/CajeroCard/CajeroCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Divisor } from "../Inicio/Divisor";
 
 export function CajerosView({ limit }) {
   const [isLoading, setIsLoading] = useState(false);
   const { cincoChicos, cajeros, sorteoActivo, isOpenMenu } =
     useContext(adminContext);
+  const [currentURL, setCurrentURL] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
+    const url = location.pathname; // O location.href si necesitas la URL completa
+    setCurrentURL(url);
     if (cincoChicos.length === 0) {
       setIsLoading(true);
     } else {
@@ -21,13 +26,16 @@ export function CajerosView({ limit }) {
 
   return (
     <CajerosMainContainer
-      className="col-12 m-0 gap-4"
+      className="col-12 m-0 gap-4 py-4"
       id="Cajeros"
       style={{
         minHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(77vh - 60px)",
         filter: isOpenMenu ? "brightness(50%)" : "unset",
       }}
     >
+      <div className="col-12">
+        <Divisor>Cajeros</Divisor>
+      </div>
       <CajerosEstadoInfo className="gap-2 gap-lg-5">
         <BotonPrincipal>
           Disponible:
@@ -61,9 +69,15 @@ export function CajerosView({ limit }) {
           </>
         )}
       </CajerosListContainer>
-      <Link to={"/cajeros"}>
-        <BotonPrincipal>Ver más cajeros</BotonPrincipal>
-      </Link>
+      {currentURL !== "/Cajeros" ? (
+        <>
+          <Link to={"/cajeros"}>
+            <BotonPrincipal>Ver más cajeros</BotonPrincipal>
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
     </CajerosMainContainer>
   );
 }

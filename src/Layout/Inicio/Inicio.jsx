@@ -152,7 +152,7 @@ const HeaderInfo = styled.div`
   flex-wrap: wrap;
   @media screen and (min-width: 320px) {
     width: 100%;
-    height: 300px;
+    height: 400px;
   }
   img {
     @media screen and (min-width: 320px) {
