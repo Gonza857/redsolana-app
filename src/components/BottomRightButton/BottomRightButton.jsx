@@ -7,8 +7,11 @@ import { adminContext } from "../../storage/AdminContext";
 
 export const BottomRightButton = ({ admin = false }) => {
   const navigate = useNavigate();
-  const { setIsOpenMenu } = useContext(adminContext);
+  const { setIsOpenMenu, isOpenMenu } = useContext(adminContext);
   if (admin) {
+    if (isOpenMenu) {
+      return <></>;
+    }
     return (
       <>
         <HomeContainer
@@ -22,6 +25,9 @@ export const BottomRightButton = ({ admin = false }) => {
       </>
     );
   } else {
+    if (isOpenMenu) {
+      return <></>;
+    }
     return (
       <WhatsappContainer>
         <a

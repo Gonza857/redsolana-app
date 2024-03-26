@@ -92,7 +92,7 @@ export const AdminContextProvider = (props) => {
       const result = await getAllCajeros();
       setCajeros(result);
       setIsLoading(false);
-      let limit = 5;
+      let limit = 6;
       let actual = 0;
       while (actual < limit) {
         cincoCaras.push(result[actual]);

@@ -100,6 +100,7 @@ const BotonPrincipal = styled.button`
   svg {
     font-size: 1.7rem;
   }
+
   @media screen and (min-width: 320px) {
     padding: 5px 15px;
     p,
@@ -108,6 +109,16 @@ const BotonPrincipal = styled.button`
     }
     svg {
       font-size: 1rem;
+    }
+  }
+
+  @media screen and (min-width: 720px) {
+    p,
+    a {
+      font-size: 1.2rem;
+    }
+    svg {
+      font-size: 1.4rem;
     }
   }
 `;
@@ -122,7 +133,7 @@ const CajeroCardContainer = styled.div`
   border: 0.1px solid #ffffff56;
   box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
   background-color: #3745d4;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   gap: 5px;
   @media screen and (min-width: 388px) {
@@ -148,12 +159,12 @@ const CajeroName = styled.div`
     padding: 0;
     margin: 0;
     color: #fff;
-    font-size: 13px;
+    font-size: 0.8rem;
     @media screen and (min-width: 500px) {
-      font-size: 14px;
+      font-size: 1rem;
     }
-    @media screen and (min-width: 736px) {
-      font-size: 16px;
+    @media screen and (min-width: 720px) {
+      font-size: 1.1rem;
     }
   }
 `;
@@ -176,10 +187,10 @@ const CajeroImgContainer = styled.div`
       width: 100px;
       height: 100px;
     }
-    /* @media screen and (max-width: 450px) {
+    @media screen and (min-width: 720px) {
       width: 130px;
       height: 130px;
-    } */
+    }
   }
 `;
 

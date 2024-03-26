@@ -22,9 +22,12 @@ const StyledDivisor = styled.div`
     color: #fff;
     font-family: "Bebas Neue", sans-serif;
     text-transform: uppercase;
-    font-size: 3rem;
-    @media screen and (min-width: 320px) {
-      font-size: 2rem;
+    font-size: 2.2rem;
+    @media screen and (min-width: 720px) {
+      font-size: 2.5rem;
+    }
+    @media screen and (min-width: 992px) {
+      font-size: 3rem;
     }
   }
 `;

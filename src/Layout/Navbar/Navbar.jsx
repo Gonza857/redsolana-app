@@ -6,7 +6,7 @@ import styled, { keyframes } from "styled-components";
 
 const navbarLinks = [
   { to: "/", slug: "Home" },
-  { to: "/Cajeros", slug: "Cajeros" },
+  { to: "/cajeros", slug: "Cajeros" },
   { to: "/jugar", slug: "Jugar" },
 ];
 
@@ -58,7 +58,18 @@ export const Navbar = () => {
             <ul className="d-flex flex-wrap gap-0 p-0 m-0 h-100">
               {navbarLinks.map((link) => (
                 <MenuItem key={link.to}>
-                  <a href={link.to}>{link.slug}</a>
+                  <Link
+                    to={link.to}
+                    onClick={() => {
+                      console.log("tocaste un botón");
+                      if (window.scrollY !== 0) {
+                        // Si ya estás en la parte superior, desplázate automáticamente hacia arriba
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }
+                    }}
+                  >
+                    {link.slug}
+                  </Link>
                 </MenuItem>
               ))}
             </ul>
@@ -233,6 +244,7 @@ const MobileNav = styled.nav`
   height: 100vh;
   background-color: #1b1a1e;
   border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
   @media screen and (min-width: 500px) {
     width: 50%;
   }

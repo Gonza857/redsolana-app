@@ -5,7 +5,7 @@ import { BsCircleFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
 import CajeroCard from "../../components/CajeroCard/CajeroCard";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Divisor } from "../Inicio/Divisor";
+import { Divisor } from "../Inicio/components/Divisor";
 
 export function CajerosView({ limit }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,7 @@ export function CajerosView({ limit }) {
   const location = useLocation();
 
   useEffect(() => {
-    const url = location.pathname; // O location.href si necesitas la URL completa
+    const url = location.pathname;
     setCurrentURL(url);
     if (cincoChicos.length === 0) {
       setIsLoading(true);
@@ -33,7 +33,7 @@ export function CajerosView({ limit }) {
         filter: isOpenMenu ? "brightness(50%)" : "unset",
       }}
     >
-      {currentURL == "/Cajeros" ? (
+      {currentURL == "/cajeros" ? (
         <div className="col-12">
           <Divisor>Cajeros</Divisor>
         </div>
@@ -74,7 +74,7 @@ export function CajerosView({ limit }) {
           </>
         )}
       </CajerosListContainer>
-      {currentURL !== "/Cajeros" ? (
+      {currentURL !== "/cajeros" ? (
         <>
           <Link to={"/cajeros"}>
             <BotonPrincipal>Ver más cajeros</BotonPrincipal>

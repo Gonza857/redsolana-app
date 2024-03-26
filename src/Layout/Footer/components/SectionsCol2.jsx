@@ -8,6 +8,7 @@ const navbarLinks = [
   { to: "/cajeros", slug: "Cajeros" },
   { to: "/cronograma", slug: "Cronograma" },
   { to: "/jugar", slug: "Jugar" },
+  { to: "/admin", slug: "Administración" },
 ];
 
 const scrollToZero = () => window.scrollTo(0, 0);
