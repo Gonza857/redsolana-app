@@ -1,18 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import {
-  deleteImg,
-  uploadImgToDB,
-  updateAllCajeros,
-  updateCajeroInfo,
-} from "../../firebase/firebase";
 import { animateScroll } from "react-scroll";
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { BsFillTrashFill } from "react-icons/bs";
 import { adminContext } from "../../storage/AdminContext";
 import { toastError, toastInfo, toastSuccess } from "../../helpers/helpers";
+import { deleteImg, uploadImgToDB } from "../../firebase/storage/cajeros";
+import {
+  updateAllCajeros,
+  updateCajeroInfo,
+} from "../../firebase/database/cajeros";
 
 const updateLocalChecker = (actualChecherInfo, newCheckerInfo) => {
   actualChecherInfo.red = newCheckerInfo.red;
@@ -89,7 +88,7 @@ const updateFormData = async (
   }
 };
 
-function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
+export const EditCajerosForm = ({ onClose, show, cajeroData, cajeroIndex }) => {
   const [laQuiereBorrar, setLaQuiereBorrar] = useState(false);
 
   const scrollToTop = () => {
@@ -436,7 +435,7 @@ function EditCajerosForm({ onClose, show, cajeroData, cajeroIndex }) {
       </SubmitContainer>
     </AddForm>
   );
-}
+};
 
 export default EditCajerosForm;
 

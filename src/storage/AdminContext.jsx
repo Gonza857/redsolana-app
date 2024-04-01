@@ -1,28 +1,29 @@
 import { createContext, useEffect, useState } from "react";
-import {
-  deleteCajero,
-  deleteParticipantDB,
-  getAllCajeros,
-  getAllCasinos,
-  getAllParticipants,
-  postParticipant,
-  deleteCasino,
-  getSorteo,
-  updateDraw,
-  updateBooleanArray,
-  uploadCheckerImageDB,
-  signInFirebase,
-  firebaseAuth,
-  logoutFirebase,
-  getScheduleImage,
-  deleteScheduleImage,
-  postScheduleImage,
-} from "../firebase/firebase";
 import Swal from "sweetalert2";
 import { toastError, toastSuccess } from "../helpers/helpers";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineConsoleSql } from "react-icons/ai";
+import { deleteCajero, getAllCajeros } from "../firebase/database/cajeros";
+import { uploadCheckerImageDB } from "../firebase/storage/cajeros";
+import { deleteCasino, getAllCasinos } from "../firebase/database/casinos";
+import {
+  deleteParticipantDB,
+  getAllParticipants,
+  getSorteo,
+  postParticipant,
+  updateBooleanArray,
+  updateDraw,
+} from "../firebase/database/sorteo";
+import {
+  firebaseAuth,
+  logoutFirebase,
+  signInFirebase,
+} from "../firebase/firebase";
+import {
+  deleteScheduleImage,
+  postScheduleImage,
+} from "../firebase/storage/cronograma";
+import { getScheduleImage } from "../firebase/storage/cronograma";
 
 export const adminContext = createContext();
 
@@ -99,7 +100,6 @@ export const AdminContextProvider = (props) => {
         actual++;
       }
       setCincoChicos(cincoCaras);
-      console.log(cincoCaras);
     } catch (error) {
       toastError(error);
     }

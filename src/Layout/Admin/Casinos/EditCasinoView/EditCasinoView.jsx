@@ -1,21 +1,18 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { adminContext } from "../../../../storage/AdminContext";
-import { useEffect } from "react";
 import styled from "styled-components";
 import { MainButton } from "../../../../components/MainButton/MainButton";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../../helpers/helpers";
-import {
-  deleteCasinoImage,
-  postCasinoImage,
-  updateCasino,
-} from "../../../../firebase/firebase";
 import { Ring } from "@uiball/loaders";
 import { AiFillEdit } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
+import {
+  deleteCasinoImage,
+  postCasinoImage,
+} from "../../../../firebase/storage/casino";
+import { updateCasino } from "../../../../firebase/database/casinos";
 
 export const EditCasinoView = () => {
   const { casinoToEdit, casinos } = useContext(adminContext);

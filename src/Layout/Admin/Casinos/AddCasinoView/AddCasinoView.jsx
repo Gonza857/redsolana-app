@@ -1,20 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { useContext } from "react";
-import { adminContext } from "../../../../storage/AdminContext";
-import { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { useEffect } from "react";
 import { PreviewCard } from "../../../../components/PreviewCard/PreviewCard";
-import {
-  getAllCasinos,
-  postCasino,
-  postCasinoImage,
-} from "../../../../firebase/firebase";
 import { toastSuccess } from "../../../../helpers/helpers";
 import { MainButton } from "../../../../components/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
+import {
+  getAllCasinos,
+  postCasino,
+} from "../../../../firebase/database/casinos";
+import { postCasinoImage } from "../../../../firebase/storage/casino";
 
 export const AddCasinoView = () => {
   const [casinoPreview, setCasinoPreview] = useState(null);

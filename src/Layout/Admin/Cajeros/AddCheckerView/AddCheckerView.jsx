@@ -1,23 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { MainButton } from "../../../../components/MainButton/MainButton";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useContext } from "react";
 import { adminContext } from "../../../../storage/AdminContext";
-import { postCajeros } from "../../../../firebase/firebase";
 import { toastError, toastSuccess } from "../../../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { Ring } from "@uiball/loaders";
+import { postCajeros } from "../../../../firebase/database/cajeros";
+import { useForm } from "react-hook-form";
 
 export const AddCheckerView = () => {
-  const {
-    uploadCheckerImage,
-    addCajero,
-    cajeros,
-    lastCheckerPos,
-    traerCajeros,
-  } = useContext(adminContext);
+  const { uploadCheckerImage, cajeros, lastCheckerPos, traerCajeros } =
+    useContext(adminContext);
   const [lastPos, setLastPos] = useState(0);
   const [previewImage, setPreviewImage] = useState("");
   const navigate = useNavigate();

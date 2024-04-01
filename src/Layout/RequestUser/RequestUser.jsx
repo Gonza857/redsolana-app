@@ -38,8 +38,8 @@ export const RequestUser = () => {
   const platforms = ["Vikingo", "Konabet", "ajugar.pro", "Bet39"];
 
   return (
-    <Wrapper className="col-12 d-flex justify-content-center align-items-center bor1">
-      <FormContainer className="d-flex flex-column col-12 col-lg-5 p-lg-5 bor2">
+    <Wrapper className="col-12 d-flex justify-content-center align-items-center py-lg-3">
+      <FormContainer className="d-flex flex-column col-12 col-lg-5 px-lg-5 py-lg-4">
         <h3 className="m-0 p-0 mb-4 text-center">Solicitud de usuario</h3>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -55,7 +55,7 @@ export const RequestUser = () => {
             />
           </StyledInputContainer>
           <div className="col-12 d-flex flex-column flex-lg-row gap-4 gap-lg-0 justify-content-between">
-            <StyledInputContainer className="col-12 col-sm-5">
+            <StyledInputContainer className="col-12 col-sm-6">
               <StyledInput
                 required
                 type="text"
@@ -64,7 +64,7 @@ export const RequestUser = () => {
                 {...register("phone")}
               />
             </StyledInputContainer>
-            <StyledInputContainer className="col-12 col-sm-6">
+            <StyledInputContainer className="col-12 col-sm-5">
               <StyledSelect name="platform" {...register("platform")}>
                 <option value="" disabled selected>
                   Plataforma
@@ -125,6 +125,9 @@ const FormContainer = styled.div`
   border-radius: 30px;
   box-shadow: 0px 0px 20px 0px #d4af3781;
   border: 0.5px solid #ffffff4f;
+  @media screen and (min-width: 200px) {
+    min-height: calc(100vh - 60px);
+  }
 `;
 
 const CaptchaContainer = styled.div`

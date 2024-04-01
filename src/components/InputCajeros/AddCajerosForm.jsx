@@ -5,11 +5,8 @@ import { Button } from "react-bootstrap";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { adminContext } from "../../storage/AdminContext";
-import {
-  postCajeros,
-  uploadImgToDB,
-  updateAllCajeros,
-} from "../../firebase/firebase";
+import { uploadImgToDB } from "../../firebase/firebase";
+import { postCajeros, updateAllCajeros } from "../../firebase/cajeros";
 
 const successfullAdd = () => {
   toast.success("Cajero agregado correctamente!", {

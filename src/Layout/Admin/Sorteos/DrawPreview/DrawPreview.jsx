@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { DrawNumbersTable } from "../../../../components/DrawNumbersTable/DrawNumbersTable";
 import styled from "styled-components";
-import { useEffect } from "react";
-import { useContext } from "react";
 import { adminContext } from "../../../../storage/AdminContext";
 import { MainButton } from "../../../../components/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
-import { postSorteoImage, updateDraw } from "../../../../firebase/firebase";
-import { toastError, toastSuccess } from "../../../../helpers/helpers";
+import { toastSuccess } from "../../../../helpers/helpers";
+import { postSorteoImage } from "../../../../firebase/storage/sorteo";
+import { updateDraw } from "../../../../firebase/database/sorteo";
 
 export const DrawPreview = () => {
   const { previewDraw, setSorteoActivo, setSorteo } = useContext(adminContext);
