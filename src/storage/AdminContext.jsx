@@ -15,15 +15,15 @@ import {
   updateDraw,
 } from "../firebase/database/sorteo";
 import {
-  firebaseAuth,
   logoutFirebase,
   signInFirebase,
-} from "../firebase/firebase";
+} from "../firebase/authentication/login";
 import {
   deleteScheduleImage,
   postScheduleImage,
 } from "../firebase/storage/cronograma";
 import { getScheduleImage } from "../firebase/storage/cronograma";
+import { firebaseAuth } from "../firebase/firebase";
 
 export const adminContext = createContext();
 

@@ -10,7 +10,7 @@ import { toastError } from "../../helpers/helpers";
 import { DATABASE } from "../firebase";
 import { deleteImg } from "../storage/cajeros";
 
-export async function getAllCajeros() {
+export const getAllCajeros = async () => {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionCajeros = collection(DATABASE, "cajeros");
@@ -29,9 +29,9 @@ export async function getAllCajeros() {
   } catch (error) {
     toastError(error.message);
   }
-}
+};
 
-export async function postCajeros(cajero) {
+export const postCajeros = async (cajero) => {
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionRef = collection(DATABASE, "cajeros");
@@ -44,25 +44,25 @@ export async function postCajeros(cajero) {
   } catch (error) {
     toastError(error.message);
   }
-}
+};
 
 // ACTUALIZAR CAJERO
-export async function updateCajeroInfo(cajeroId, newCajero) {
+export const updateCajeroInfo = async (cajeroId, newCajero) => {
   const docRef = doc(DATABASE, "cajeros", cajeroId);
   try {
     await updateDoc(docRef, newCajero);
   } catch (error) {
     toastError(error);
   }
-}
+};
 
-export async function updateAllCajeros(arrayCajeros) {
+export const updateAllCajeros = async (arrayCajeros) => {
   for (let cajero of arrayCajeros) {
     // const docRef = doc(DATABASE, "cajeros", cajero.id);
     // updateDoc(docRef, cajero);
     await updateDoc(doc(DATABASE, "cajeros", cajero.id), cajero);
   }
-}
+};
 
 export async function deleteCajero(cajero) {
   await deleteDoc(doc(DATABASE, "cajeros", cajero.id));
