@@ -24,8 +24,16 @@ import {
 } from "../firebase/storage/cronograma";
 import { getScheduleImage } from "../firebase/storage/cronograma";
 import { firebaseAuth } from "../firebase/firebase";
+import {
+  deleteSolicitud,
+  getTodasLasSolicitudes,
+  updateSolicitud,
+} from "../firebase/database/solicitudes";
+import moment from "moment";
 
 export const adminContext = createContext();
+
+export const solicitudesContext = createContext();
 
 /**
  * Busca cajero con el mismo nombre
@@ -571,6 +579,8 @@ export const AdminContextProvider = (props) => {
       setParticipantsQuantity(participantsCounter(participants));
   }, [participants]);
 
+  // new functions
+
   // useEffect Montado
   useEffect(() => {
     // Traemos data del sorteo.
@@ -663,5 +673,119 @@ export const AdminContextProvider = (props) => {
     <adminContext.Provider value={value}>
       {props.children}
     </adminContext.Provider>
+  );
+};
+
+export const SolicitudesContextProvider = (props) => {
+  const [pendientes, setPendientes] = useState([]);
+  const [historial, setHistorial] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getSolicitudes();
+  }, []);
+
+  const getSolicitudes = () => {
+    getTodasLasSolicitudes().then((pedidos) => {
+      let noRes = [];
+      let res = [];
+      let resCount = 0;
+      let noResCount = 0;
+      pedidos.forEach((pedido) => {
+        if (!pedido.state) {
+          noResCount++;
+          noRes.push(pedido);
+        } else {
+          resCount++;
+          res.push(pedido);
+        }
+      });
+      setHistorial(res);
+      setPendientes(noRes);
+      setIsLoading(false);
+    });
+  };
+
+  const enviarPendienteHaciaHistorial = (solicitud) => {
+    console.log(solicitud);
+    let { id } = solicitud;
+    let copyOfPendientes = [...pendientes];
+    let indiceParaMover = copyOfPendientes.findIndex(
+      (pendiente) => pendiente.id == id
+    );
+    let eliminado = copyOfPendientes[indiceParaMover];
+    copyOfPendientes.splice(indiceParaMover, 1);
+    let copyOfHistorial = [...historial];
+    copyOfHistorial.push(eliminado);
+    setPendientes(copyOfPendientes);
+    setHistorial(copyOfHistorial);
+  };
+
+  const enviarHistorialHaciaPendiente = (solicitud) => {
+    let { id } = solicitud;
+    let copyOfHistorial = [...historial];
+    let indiceParaMover = copyOfHistorial.findIndex(
+      (pendiente) => pendiente.id == id
+    );
+    let buscado = copyOfHistorial[indiceParaMover];
+    copyOfHistorial.splice(indiceParaMover, 1);
+    let copyOfPendientes = [...pendientes];
+    copyOfPendientes.push(buscado);
+    setPendientes(copyOfPendientes);
+    setHistorial(copyOfHistorial);
+  };
+
+  const actualizarEstadoSolicitud = (solicitud) => {
+    solicitud.state = true;
+    solicitud.solved = `${moment().format("LTS")} - ${moment().format("L")}`;
+    enviarPendienteHaciaHistorial(solicitud);
+
+    updateSolicitud(solicitud.id, solicitud).then(() => {
+      toastSuccess("Actualizada correctamente.");
+    });
+  };
+
+  const deleteThisSolicitud = (solicitud) => {
+    console.log(solicitud);
+    let copyOfHistorial = [...historial];
+    let indiceBuscado = copyOfHistorial.findIndex(
+      (thisSolicitud) => (thisSolicitud.id = solicitud.id)
+    );
+    copyOfHistorial.splice(indiceBuscado, 1);
+    setHistorial(copyOfHistorial);
+    deleteSolicitud(solicitud)
+      .then(() => {
+        toastSuccess("Solicitud eliminada correctamente");
+      })
+      .catch(() => {
+        toastError("Error");
+      });
+  };
+
+  const devolverHistorialHaciaPendiente = (solicitud) => {
+    solicitud.state = false;
+    solicitud.solved = null;
+    enviarHistorialHaciaPendiente(solicitud);
+
+    updateSolicitud(solicitud.id, solicitud).then(() => {
+      toastSuccess("Actualizada correctamente.");
+    });
+  };
+
+  const value = {
+    enviarPendienteHaciaHistorial,
+    enviarHistorialHaciaPendiente,
+    actualizarEstadoSolicitud,
+    devolverHistorialHaciaPendiente,
+    deleteThisSolicitud,
+    getSolicitudes,
+    pendientes,
+    historial,
+    isLoading,
+  };
+  return (
+    <solicitudesContext.Provider value={value}>
+      {props.children}
+    </solicitudesContext.Provider>
   );
 };

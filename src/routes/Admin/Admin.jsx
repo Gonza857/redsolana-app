@@ -6,6 +6,8 @@ import { ErrorPage } from "../../Layout";
 import { Route, Routes } from "react-router-dom";
 import { Draw } from "./Draw";
 import { PaySchedule } from "./PaySchedule";
+import { ViewSolicitudes } from "../../Layout/Admin/Solicitudes/ViewSolicitudes";
+import { Solicitudes } from "./Solicitudes";
 
 export const Admin = () => {
   return (
@@ -15,6 +17,7 @@ export const Admin = () => {
       <Route path={"/cajeros/*"} element={<Checkers />} />
       <Route path={"/sorteo/*"} element={<Draw />} />
       <Route path={"/cronograma/*"} element={<PaySchedule />} />
+      <Route path={"/solicitudes/*"} element={<Solicitudes />} />
       <Route path="/*" element={<ErrorPage />} />
     </Routes>
   );

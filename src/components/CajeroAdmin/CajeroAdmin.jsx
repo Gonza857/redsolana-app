@@ -4,7 +4,7 @@ import { FaTrash, FaPen, FaEye } from "react-icons/fa";
 import { adminContext } from "../../storage/AdminContext";
 import ModalEditCajeros from "../ModalEditCajeros/ModalEditCajeros";
 import "animate.css";
-import ModalViewInfo from "../ModalViewInfo/ModalViewInfo";
+import { ModalViewInfo } from "../ModalViewInfo/ModalViewInfo";
 import "./cajeroAdmin.css";
 import { BsCircleFill } from "react-icons/bs";
 import { MainButton } from "../MainButton/MainButton";

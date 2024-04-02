@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { Cronograma, ErrorPage, Inicio, Login } from "../../Layout";
 import { CajerosView } from "../../Layout/CajerosView/CajerosView";
 import { Draw } from "../../Layout/Draw/Draw";
-import { RequestUser } from "../../Layout/RequestUser/RequestUser";
+import { RequestUser } from "../../Layout/User/RequestUser";
 
 export const Users = () => {
   return (

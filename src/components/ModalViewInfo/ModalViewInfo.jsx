@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
 import { BsCircleFill } from "react-icons/bs";
 
-function ModalViewInfo({ onClose, show, cajeroData }) {
+export const ModalViewInfo = ({ onClose, show, cajeroData }) => {
   return (
     <Modal
       show={show}
@@ -25,7 +25,7 @@ function ModalViewInfo({ onClose, show, cajeroData }) {
             {cajeroData.genero !== "M" ? " Femenino" : " Masculino"}
           </p>
           <p>
-            Estado: {" "}
+            Estado:{" "}
             {cajeroData.estado === "desconectado" ? (
               <BsCircleFill style={{ color: "red" }} />
             ) : (
@@ -62,9 +62,7 @@ function ModalViewInfo({ onClose, show, cajeroData }) {
       </Modal.Body>
     </Modal>
   );
-}
-
-export default ModalViewInfo;
+};
 
 const CajeroPhoto = styled.img`
   width: 100%;

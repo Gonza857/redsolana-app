@@ -2,9 +2,10 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { MainButton } from "../../components/MainButton/MainButton";
-import { FaTelegram, FaWhatsapp } from "react-icons/fa";
 import ReCAPTCHA from "react-google-recaptcha";
-import { toastError } from "../../helpers/helpers";
+import { toastError, toastSuccess } from "../../helpers/helpers";
+import { postSolicitud } from "../../firebase/database/solicitudes";
+import moment from "moment";
 
 export const RequestUser = () => {
   const {
@@ -20,9 +21,21 @@ export const RequestUser = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    data.date = moment().format("L");
+    data.state = false;
     console.log(validCaptcha);
     if (!validCaptcha) {
       toastError("Resuelva la Captcha");
+    } else {
+      toastSuccess("Captcha correctamente completada");
+      postSolicitud(data)
+        .then((result) => {
+          console.log(result);
+          toastSuccess("Formmulario enviado");
+        })
+        .catch((error) => {
+          toastError(error.message);
+        });
     }
   };
 
@@ -51,6 +64,7 @@ export const RequestUser = () => {
               type="email"
               name="email"
               placeholder="Correo electrónico"
+              defaultValue={"test@test.com"}
               {...register("email")}
             />
           </StyledInputContainer>
@@ -61,12 +75,21 @@ export const RequestUser = () => {
                 type="text"
                 name="phone"
                 placeholder="Número de telefono"
+                defaultValue={"11 1234 5678"}
                 {...register("phone")}
               />
+              <p>
+                Con número de area Ejemplo: <strong>11</strong>44008833
+              </p>
             </StyledInputContainer>
             <StyledInputContainer className="col-12 col-sm-5">
-              <StyledSelect name="platform" {...register("platform")}>
-                <option value="" disabled selected>
+              <StyledSelect
+                name="platform"
+                {...register("platform")}
+                defaultValue={"Vikingo"}
+              >
+                <option value="" disabled>
+                  {/* selected */}
                   Plataforma
                 </option>
                 {platforms.map((platform) => (
@@ -81,6 +104,7 @@ export const RequestUser = () => {
               type="text"
               name="fullname"
               placeholder="Nombre y apellido"
+              defaultValue={"Mengano Fulano"}
               {...register("fullname")}
             />
           </StyledInputContainer>

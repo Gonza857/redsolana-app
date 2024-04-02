@@ -64,9 +64,9 @@ export const updateAllCajeros = async (arrayCajeros) => {
   }
 };
 
-export async function deleteCajero(cajero) {
+export const deleteCajero = async (cajero) => {
   await deleteDoc(doc(DATABASE, "cajeros", cajero.id));
   if (cajero.imagen !== null) {
     deleteImg(cajero.imagen.randomId);
   }
-}
+};

@@ -12,7 +12,6 @@ import {
 } from "react-icons/ai";
 import { FaUserEdit } from "react-icons/fa";
 import styled from "styled-components";
-import { HiStatusOnline } from "react-icons/hi";
 
 export function AdminCajeros() {
   const {
@@ -28,9 +27,9 @@ export function AdminCajeros() {
   return (
     <>
       {isAdmin ? (
-        <AdminCajerosContainer className="col-12 py-2">
+        <AdminCajerosContainer className="col-12 py-2 bor1">
           <Wrapper className="col-12 col-sm-10 col-lg-9 col-xl-8">
-            <AdminBar busquedad={searchResult !== [] || false} />
+            <AdminBar busquedad={searchResult.lenght !== 0 || false} />
             {isSearchingCajero ? (
               <>
                 {searchResult.length === 0 ? (
