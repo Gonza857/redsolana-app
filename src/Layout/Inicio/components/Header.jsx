@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Header = () => {
@@ -9,7 +10,9 @@ export const Header = () => {
         <div className="gap-2">
           <p>¡Jugá y ganá!</p>
           <p>Grandes premios te esperan</p>
-          <BotonPrincipal>PEDÍ TU USUARIO</BotonPrincipal>
+          <BotonPrincipal>
+            <Link to={"/jugar"}>PEDÍ TU USUARIO</Link>
+          </BotonPrincipal>
         </div>
       </HeaderInfo>
     </HeaderContainer>
@@ -30,6 +33,9 @@ const BotonPrincipal = styled.button`
   @media screen and (min-width: 720px) {
     font-size: 1.5rem;
     padding: 10px 30px;
+  }
+  a {
+    color: #000;
   }
 `;
 

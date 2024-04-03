@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import { postSolicitud } from "../../firebase/database/solicitudes";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 export const RequestUser = () => {
   const {
@@ -19,6 +20,8 @@ export const RequestUser = () => {
 
   const captcha = useRef(null);
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
     console.log(data);
     data.date = moment().format("L");
@@ -27,11 +30,11 @@ export const RequestUser = () => {
     if (!validCaptcha) {
       toastError("Resuelva la Captcha");
     } else {
-      toastSuccess("Captcha correctamente completada");
       postSolicitud(data)
         .then((result) => {
           console.log(result);
-          toastSuccess("Formmulario enviado");
+          toastSuccess("Solicitud realizada correctamente");
+          navigate("/");
         })
         .catch((error) => {
           toastError(error.message);
@@ -52,8 +55,10 @@ export const RequestUser = () => {
 
   return (
     <Wrapper className="col-12 d-flex justify-content-center align-items-center py-lg-3">
-      <FormContainer className="d-flex flex-column col-12 col-lg-5 px-lg-5 py-lg-4">
-        <h3 className="m-0 p-0 mb-4 text-center">Solicitud de usuario</h3>
+      <FormContainer className="d-flex flex-column col-12 col-sm-10 col-md-7 col-lg-6 col-xl-5 p-2 p-sm-4 pb-5 px-lg-5 py-lg-4">
+        <h3 className="m-0 p-0 mt-2 mt-sm-0 mb-2 mb-sm-4 text-center">
+          Solicitud de usuario
+        </h3>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="d-flex gap-4 flex-wrap flex-column"
@@ -64,32 +69,25 @@ export const RequestUser = () => {
               type="email"
               name="email"
               placeholder="Correo electrónico"
-              defaultValue={"test@test.com"}
               {...register("email")}
             />
           </StyledInputContainer>
-          <div className="col-12 d-flex flex-column flex-lg-row gap-4 gap-lg-0 justify-content-between">
+          <div className="col-12 d-flex flex-column flex-sm-row gap-3 gap-lg-0 justify-content-between">
             <StyledInputContainer className="col-12 col-sm-6">
               <StyledInput
                 required
                 type="text"
                 name="phone"
                 placeholder="Número de telefono"
-                defaultValue={"11 1234 5678"}
                 {...register("phone")}
               />
-              <p>
+              <p className="m-0 p-0">
                 Con número de area Ejemplo: <strong>11</strong>44008833
               </p>
             </StyledInputContainer>
             <StyledInputContainer className="col-12 col-sm-5">
-              <StyledSelect
-                name="platform"
-                {...register("platform")}
-                defaultValue={"Vikingo"}
-              >
-                <option value="" disabled>
-                  {/* selected */}
+              <StyledSelect name="platform" {...register("platform")}>
+                <option value="" disabled selected>
                   Plataforma
                 </option>
                 {platforms.map((platform) => (
@@ -104,7 +102,6 @@ export const RequestUser = () => {
               type="text"
               name="fullname"
               placeholder="Nombre y apellido"
-              defaultValue={"Mengano Fulano"}
               {...register("fullname")}
             />
           </StyledInputContainer>
@@ -132,8 +129,13 @@ export const RequestUser = () => {
           >
             <p className="m-0 p-0">¿Necesitas ayuda? Contactános</p>
             <StyledHelpIconContainer className="gap-3">
-              <img src="./assets/images/wsp-logo.png" />
-              <img src="./assets/images/telegram-logo.png" />
+              <a href="https://wa.link/jc3ov2" target="_BLANK" rel="noreferrer">
+                <img src="./assets/images/wsp-logo.png" />
+              </a>
+
+              <a href="https://t.me/Solana43s" target="_BLANK" rel="noreferrer">
+                <img src="./assets/images/telegram-logo.png" />
+              </a>
             </StyledHelpIconContainer>
           </div>
         </form>
@@ -149,8 +151,9 @@ const FormContainer = styled.div`
   border-radius: 30px;
   box-shadow: 0px 0px 20px 0px #d4af3781;
   border: 0.5px solid #ffffff4f;
-  @media screen and (min-width: 200px) {
-    min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
+  @media screen and (max-width: 500px) {
+    border-radius: 0;
   }
 `;
 

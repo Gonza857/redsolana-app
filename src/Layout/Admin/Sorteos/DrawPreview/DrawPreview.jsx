@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { DrawNumbersTable } from "../../../../components/DrawNumbersTable/DrawNumbersTable";
 import styled from "styled-components";
 import { adminContext } from "../../../../storage/AdminContext";
-import { MainButton } from "../../../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../../../../helpers/helpers";
 import { postSorteoImage } from "../../../../firebase/storage/sorteo";

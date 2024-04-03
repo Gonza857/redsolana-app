@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
+import { MainButton } from "../../APublic/MainButton/MainButton";
 
 export const ModalViewHistorialData = ({ onClose, show, solicitud }) => {
   return (
@@ -31,10 +32,11 @@ export const ModalViewHistorialData = ({ onClose, show, solicitud }) => {
           <strong>Plataforma:</strong> {solicitud.platform}
         </p>
         <p>
-          <strong>Resuelto:</strong> {solicitud.solved}
+          <strong>Resuelto:</strong>
+          {solicitud.solved == null ? "No resuelto" : solicitud.solved}
         </p>
         <SubmitContainer>
-          <Button onClick={onClose}>Cerrar</Button>
+          <MainButton fn={() => onClose()}>Cerrar</MainButton>
         </SubmitContainer>
       </Modal.Body>
     </Modal>

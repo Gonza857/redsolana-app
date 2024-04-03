@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { adminContext } from "../../../../storage/AdminContext";
 import styled from "styled-components";
-import { MainButton } from "../../../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/APublic/MainButton/MainButton";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../../helpers/helpers";

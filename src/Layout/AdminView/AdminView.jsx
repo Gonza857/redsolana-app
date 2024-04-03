@@ -1,20 +1,11 @@
-import React, { useEffect } from "react";
-import { useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { adminContext } from "../../storage/AdminContext";
-import styled from "styled-components";
 import { Ring } from "@uiball/loaders";
 import { NewView } from "../NewView/NewView";
-import { useNavigate } from "react-router-dom";
 import { Login } from "../Login/Login";
 
 export const AdminView = () => {
   const { isAdmin, isVerifingAdmin } = useContext(adminContext);
-  // const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("Renderizado");
-    console.log(isVerifingAdmin);
-  }, []);
 
   if (isVerifingAdmin) {
     return (

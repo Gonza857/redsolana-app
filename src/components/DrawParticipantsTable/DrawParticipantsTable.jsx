@@ -9,7 +9,7 @@ import {
 import { adminContext } from "../../storage/AdminContext";
 import { useContext } from "react";
 import Swal from "sweetalert2";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 import { Link } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { useState } from "react";

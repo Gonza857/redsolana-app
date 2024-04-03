@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 
 export const ModalParticipant = ({ handleClose, show, participant }) => {
   return (

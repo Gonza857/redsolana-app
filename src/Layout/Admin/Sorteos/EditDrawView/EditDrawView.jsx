@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { adminContext } from "../../../../storage/AdminContext";
 import styled from "styled-components";
 import { toastSuccess } from "../../../../helpers/helpers";
-import { MainButton } from "../../../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { postSorteoImage } from "../../../../firebase/storage/sorteo";
 import { updateDraw } from "../../../../firebase/database/sorteo";

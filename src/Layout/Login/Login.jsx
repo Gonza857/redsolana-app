@@ -9,7 +9,7 @@ import { Animated } from "react-animated-css";
 import { AiOutlineUser } from "react-icons/ai";
 import { Metronome } from "@uiball/loaders";
 import styled from "styled-components";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 
 export function Login() {
   const navigate = useNavigate();

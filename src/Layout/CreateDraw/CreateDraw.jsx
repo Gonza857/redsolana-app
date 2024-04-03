@@ -5,7 +5,7 @@ import { DrawNumbersTable } from "../../components/DrawNumbersTable/DrawNumbersT
 import { DrawPreview } from "../Admin/Sorteos/DrawPreview/DrawPreview";
 import { useNavigate } from "react-router-dom";
 import { adminContext } from "../../storage/AdminContext";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 import { get } from "react-hook-form";
 import { toastError } from "../../helpers/helpers";
 import { useEffect } from "react";

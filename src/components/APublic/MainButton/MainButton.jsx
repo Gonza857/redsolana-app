@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 export const MainButton = ({ children, fn, primary, type, circle, red }) => {
   const style = {
-    backgroundColor: primary ? "#d4af37" : red ? "#ab0000" : "#7037d4",
-    color: primary ? "#000" : "#fff",
+    backgroundColor: primary ? "#3745d4" : red ? "#ab0000" : "#d4af37",
+    color: primary ? "#fff" : "#000",
   };
   return (
     <>

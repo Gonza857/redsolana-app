@@ -4,7 +4,7 @@ import { FaTimes } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { adminContext } from "../../storage/AdminContext";
 import styled from "styled-components";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 import { Link } from "react-router-dom";
 import { toastInfo } from "../../helpers/helpers";
 

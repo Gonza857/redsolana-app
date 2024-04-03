@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AiFillEdit } from "react-icons/ai";

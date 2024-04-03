@@ -4,9 +4,7 @@ import styled from "styled-components";
 
 const navbarLinks = [
   { to: "/", slug: "Home" },
-  { to: "/casinos", slug: "Casinos" },
   { to: "/cajeros", slug: "Cajeros" },
-  { to: "/cronograma", slug: "Cronograma" },
   { to: "/jugar", slug: "Jugar" },
   { to: "/admin", slug: "Administración" },
 ];

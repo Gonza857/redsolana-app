@@ -7,7 +7,7 @@ import "animate.css";
 import { ModalViewInfo } from "../ModalViewInfo/ModalViewInfo";
 import "./cajeroAdmin.css";
 import { BsCircleFill } from "react-icons/bs";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 import styled from "styled-components";
 
 function CajeroAdmin({ cajero }) {

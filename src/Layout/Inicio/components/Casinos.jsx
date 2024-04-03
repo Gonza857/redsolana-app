@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../../storage/AdminContext";
-import CasinoCard from "../../../components/CasinoCard/CasinoCard";
+import { CasinoCard } from "../../../components/CasinoCard/CasinoCard";
 
 export const Casinos = () => {
   const { casinos } = useContext(adminContext);

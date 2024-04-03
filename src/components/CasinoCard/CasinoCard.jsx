@@ -1,16 +1,9 @@
 import React from "react";
-import { useContext } from "react";
 import { Animated } from "react-animated-css";
 import styled from "styled-components";
-import { adminContext } from "../../storage/AdminContext";
 import { Ring } from "@uiball/loaders";
-import { useEffect } from "react";
 
-const cinco = new Array(5).fill(null);
-
-function CasinoCard({ casinoImage, casinoName, link, loadFake }) {
-  const { isGettingCasinos } = useContext(adminContext);
-
+export const CasinoCard = ({ casinoImage, casinoName, link, loadFake }) => {
   return (
     <Animated animationIn="fadeIn" animationOut="fedeOut" isVisible={true}>
       <CardContainer>
@@ -37,9 +30,7 @@ function CasinoCard({ casinoImage, casinoName, link, loadFake }) {
       </CardContainer>
     </Animated>
   );
-}
-
-export default CasinoCard;
+};
 
 const CasinoCardLoading = styled.div`
   width: 100%;
@@ -63,8 +54,8 @@ const CardContainer = styled.div`
   box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.32);
   background-color: #3745d4;
   border-radius: 20px;
-  overflow: hidden;zz
-  &:hover {
+  overflow: hidden;
+  zz &:hover {
     transform: scale(1.025);
   }
   @media (min-width: 320px) {

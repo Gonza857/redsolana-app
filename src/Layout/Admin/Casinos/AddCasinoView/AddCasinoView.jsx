@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { AiFillDelete } from "react-icons/ai";
 import { PreviewCard } from "../../../../components/PreviewCard/PreviewCard";
 import { toastSuccess } from "../../../../helpers/helpers";
-import { MainButton } from "../../../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import {
   getAllCasinos,

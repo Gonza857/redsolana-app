@@ -27,7 +27,7 @@ export function AdminCajeros() {
   return (
     <>
       {isAdmin ? (
-        <AdminCajerosContainer className="col-12 py-2 bor1">
+        <AdminCajerosContainer className="col-12 py-2">
           <Wrapper className="col-12 col-sm-10 col-lg-9 col-xl-8">
             <AdminBar busquedad={searchResult.lenght !== 0 || false} />
             {isSearchingCajero ? (

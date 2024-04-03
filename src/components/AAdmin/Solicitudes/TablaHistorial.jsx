@@ -7,103 +7,72 @@ import {
   AiOutlineWhatsApp,
 } from "react-icons/ai";
 import { HistorialRow } from "./HistorialRow";
+import { Subtitles } from "../../Comprobados/Subtitles";
+import { Metronome } from "@uiball/loaders";
 
-export const TablaHistorial = ({
-  devolverHistorialHaciaPendiente,
-  deleteThisSolicitud,
-  isLoading,
-  resueltas,
-}) => {
+export const TablaHistorial = ({ isLoading, resueltas }) => {
   return (
-    <Table
-      striped
-      bordered
-      hover
-      responsive
-      variant="dark"
-      className="align-middle"
-    >
-      <thead className="animate__animated animate__fadeIn">
-        <tr className="align-middle">
-          <StyledTh className="">Fecha</StyledTh>
-          <StyledTh className="">Nombre completo</StyledTh>
-          <th className="d-none d-lg-table-cell">E-Mail</th>
-          <th className="d-none d-md-table-cell">Celular</th>
-          <th className="d-none d-sm-table-cell">Plataforma</th>
-          <StyledTh className="">
-            <AiOutlineWhatsApp />
-          </StyledTh>
-          <th className="d-none d-lg-table-cell">Resuelto</th>
-          <StyledTh className="">
-            <AiOutlineArrowLeft />
-          </StyledTh>
-          <StyledTh className="">
-            <AiOutlineDelete />
-          </StyledTh>
-          <StyledTh className="d-lg-none">Ver</StyledTh>
-
-          {/* <th className="d-none d-md-table-cell">Fecha</th> */}
-          {/* <th className="d-md-none" style={{ width: "5%" }}>
-                <AiOutlineOrderedList
-                  style={{ color: "fff", fontSize: "20px" }}
-                />
-              </th> */}
-          {/* <th className="p-0">Red</th> */}
-          {/* <StyledTh className="p-0">Nombre</StyledTh> */}
-          {/* <th className="d-none d-md-table-cell p-0">Numero</th> */}
-          {/* <th className="d-none d-lg-table-cell p-0">Genero</th> */}
-          {/* <th className="d-none d-md-table-cell">Estado</th> */}
-          {/* <th className="d-md-none">
-                    <HiStatusOnline
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th> */}
-
-          {/* <th className="d-none d-md-table-cell">Ver</th> */}
-          {/* <th className="d-md-none">
-                <AiFillInfoCircle style={{ color: "fff", fontSize: "20px" }} />
-              </th> */}
-          {/* <th className="d-none d-md-table-cell">Editar</th> */}
-          {/* <th className="d-md-none">
-                <FaUserEdit style={{ color: "fff", fontSize: "20px" }} />
-              </th> */}
-          {/* <th className="d-none d-md-table-cell">Eliminar</th> */}
-          {/* <th className="d-md-none">
-                <AiOutlineUserDelete
-                  style={{ color: "fff", fontSize: "20px" }}
-                />
-              </th> */}
-        </tr>
-      </thead>
-      <tbody>
-        {isLoading || resueltas.length == 0 ? (
-          <tr>
-            <td>Cargando...</td>
-          </tr>
-        ) : (
-          <>
-            {resueltas.map((solicitud) => {
-              console.log(solicitud);
-              return <HistorialRow solicitud={solicitud} />;
-            })}
-          </>
-        )}
-        {/* {isSearchingCajero ? (
-              <>
-                {searchResult.map((cajero) => {
-                  return <CajeroAdmin cajero={cajero} key={cajero.id} />;
-                })}
-              </>
-            ) : (
-              <>
-                {!isLoading &&
-                  cajeros.map((cajero) => {
-                    return <CajeroAdmin cajero={cajero} key={cajero.id} />;
-                  })}
-              </>
-            )} */}
-      </tbody>
-    </Table>
+    <>
+      {isLoading ? (
+        <>
+          <Subtitles>Cargando historial</Subtitles>
+        </>
+      ) : (
+        <>
+          {resueltas.length == 0 ? (
+            <>
+              <Subtitles>No hay registros</Subtitles>
+            </>
+          ) : (
+            <>
+              <Table
+                striped
+                bordered
+                hover
+                responsive
+                variant="dark"
+                className="align-middle"
+              >
+                <thead className="animate__animated animate__fadeIn">
+                  <tr className="align-middle">
+                    <StyledTh className="">Fecha</StyledTh>
+                    <StyledTh className="">Nombre completo</StyledTh>
+                    <th className="d-none d-lg-table-cell">E-Mail</th>
+                    <th className="d-none d-md-table-cell">Celular</th>
+                    <th className="d-none d-sm-table-cell">Plataforma</th>
+                    <StyledTh>
+                      <AiOutlineWhatsApp />
+                    </StyledTh>
+                    <th className="d-none d-lg-table-cell">Resuelto</th>
+                    <StyledTh>
+                      <AiOutlineArrowLeft />
+                    </StyledTh>
+                    <StyledTh>
+                      <AiOutlineDelete />
+                    </StyledTh>
+                    <StyledTh className="d-lg-none">Ver</StyledTh>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!isLoading && (
+                    <>
+                      {resueltas.map((solicitud) => {
+                        return <HistorialRow solicitud={solicitud} />;
+                      })}
+                    </>
+                  )}
+                </tbody>
+              </Table>
+            </>
+          )}
+        </>
+      )}
+      {isLoading && (
+        <div className="m-auto">
+          <Metronome size={40} speed={1.6} color="#fff" />
+        </div>
+      )}
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import { adminContext } from "../../storage/AdminContext";
 import { postParticipant } from "../../firebase/firebase";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import styled from "styled-components";
-import { MainButton } from "../MainButton/MainButton";
+import { MainButton } from "../APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 
 export const AddParticipantForm = ({

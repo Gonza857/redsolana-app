@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { MainButton } from "../../../components/MainButton/MainButton";
+import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import styled from "styled-components";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
 import { adminContext } from "../../../storage/AdminContext";

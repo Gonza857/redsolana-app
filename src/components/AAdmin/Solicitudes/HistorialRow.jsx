@@ -6,7 +6,6 @@ import {
 } from "react-icons/ai";
 import styled from "styled-components";
 import { solicitudesContext } from "../../../storage/AdminContext";
-import { MainButton } from "../../MainButton/MainButton";
 import { FaEye } from "react-icons/fa";
 import { ModalViewHistorialData } from "./ModalViewHistorialData";
 
@@ -31,9 +30,13 @@ export const HistorialRow = ({ solicitud }) => {
         <td className="d-none d-sm-table-cell">{solicitud.platform}</td>
         <td>
           <StyledWspBtn className="m-auto">
-            <AiOutlineWhatsApp>
-              <a href={`https://wa.me/549${solicitud.phone}`}></a>
-            </AiOutlineWhatsApp>
+            <a
+              href={`https://wa.me/549${solicitud.phone}`}
+              target="_BLANK"
+              rel="noreferrer"
+            >
+              <AiOutlineWhatsApp />
+            </a>
           </StyledWspBtn>
         </td>
         <td className="d-none d-lg-table-cell">

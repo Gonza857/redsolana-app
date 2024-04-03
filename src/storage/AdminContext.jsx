@@ -686,6 +686,7 @@ export const SolicitudesContextProvider = (props) => {
   }, []);
 
   const getSolicitudes = () => {
+    setIsLoading(true);
     getTodasLasSolicitudes().then((pedidos) => {
       let noRes = [];
       let res = [];

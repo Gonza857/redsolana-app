@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
-import { MainButton } from "../../../../components/MainButton/MainButton";
+import { MainButton } from "../../../../components/APublic/MainButton/MainButton";
 import { adminContext } from "../../../../storage/AdminContext";
 import { toastError, toastSuccess } from "../../../../helpers/helpers";
 import { useNavigate } from "react-router-dom";

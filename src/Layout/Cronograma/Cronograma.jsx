@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 import { Link } from "react-router-dom";
 
 export function Cronograma() {

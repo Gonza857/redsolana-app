@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { deleteScheduleImage, getScheduleImage } from "../../firebase/firebase";
 import { useState } from "react";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { Ring } from "@uiball/loaders";

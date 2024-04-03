@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
 import { IoRadioButtonOn } from "react-icons/io5";
-import { MainButton } from "../../components/MainButton/MainButton";
+import { MainButton } from "../../components/APublic/MainButton/MainButton";
 import {
   AiFillEdit,
   AiOutlineAppstoreAdd,
+  AiOutlineEdit,
   AiOutlineEye,
+  AiOutlineHistory,
   AiOutlineOrderedList,
   AiOutlineTable,
   AiOutlineUserAdd,
@@ -16,14 +18,13 @@ import {
 import { FiUsers } from "react-icons/fi";
 import { Ring } from "@uiball/loaders";
 import { Animated } from "react-animated-css";
-import { useEffect } from "react";
 
 const iconStyle = { fontSize: "1.5rem" };
 
 export const NewView = () => {
   const { sorteoActivo, isDrawLoading } = useContext(adminContext);
   return (
-    <StyledView className="gap-3 gap-xl-5 col-12 py-4 py-md-0">
+    <StyledView className="gap-3 gap-lg-2 gap-xl-3 col-12 py-4 py-md-3">
       <Animated
         animationIn="fadeIn"
         animationOut="fedeOut"
@@ -127,7 +128,10 @@ export const NewView = () => {
                 ) : (
                   <>
                     <Link to="/admin/sorteo/crear">
-                      <MainButton>Crear sorteo</MainButton>
+                      <MainButton>
+                        Crear sorteo
+                        <AiOutlineEdit style={iconStyle} />
+                      </MainButton>
                     </Link>
                   </>
                 )}
@@ -155,7 +159,7 @@ export const NewView = () => {
             <Link to="/admin/cronograma/editar">
               <MainButton fn={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Editar</p>
-                <AiFillEdit style={iconStyle} />
+                <AiOutlineEdit style={iconStyle} />
               </MainButton>
             </Link>
           </div>
@@ -171,10 +175,22 @@ export const NewView = () => {
         <StyledAdminOption className="d-flex flex-column flex-md-row gap-3 p-3  align-items-center">
           <h3>Solicitudes</h3>
           <div className="gap-2">
+            <Link to="/admin/solicitudes/plataformas">
+              <MainButton fn={() => window.scrollTo(0, 0)}>
+                <p className="m-0 d-none d-lg-block">Plataformas</p>
+                <AiOutlineEdit style={iconStyle} />
+              </MainButton>
+            </Link>
             <Link to="/admin/solicitudes">
               <MainButton fn={() => window.scrollTo(0, 0)}>
-                <p className="m-0 d-none d-lg-block">Ver solicitudes</p>
+                <p className="m-0 d-none d-lg-block">Pendientes</p>
                 <AiOutlineEye style={iconStyle} />
+              </MainButton>
+            </Link>
+            <Link to="/admin/solicitudes/historial">
+              <MainButton fn={() => window.scrollTo(0, 0)}>
+                <p className="m-0 d-none d-lg-block">Historial</p>
+                <AiOutlineHistory style={iconStyle} />
               </MainButton>
             </Link>
           </div>
