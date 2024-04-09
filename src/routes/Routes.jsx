@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import { ErrorPage } from "../Layout";
 import { Users } from "./Users/Users";
 import { Admin } from "./Admin/Admin";
-import { AdminView } from "../Layout/AdminView/AdminView";
 
 function Rutas() {
   return (

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { adminContext } from "../../storage/AdminContext";
-import { CajerosView } from "../CajerosView/CajerosView";
-import { Cronograma } from "../Cronograma/Cronograma";
-import { Divisor } from "./components/Divisor";
-import { Header } from "./components/Header";
-import { Casinos } from "./components/Casinos";
+import { VistaCajeros } from "../User/VistaCajeros/VistaCajeros";
+import { Cronograma } from "../User/Cronograma/Cronograma";
+import { Divisor } from "../../components/AUser/Inicio/Divisor";
+import { Header } from "../../components/AUser/Inicio/Header";
+import { Casinos } from "../../components/AUser/Inicio/Casinos";
 
 export const Inicio = () => {
   const { isOpenMenu } = useContext(adminContext);
@@ -22,7 +22,7 @@ export const Inicio = () => {
       <Divisor>Casinos</Divisor>
       <Casinos />
       <Divisor>Cajeros</Divisor>
-      <CajerosView limit={true} />
+      <VistaCajeros limit={true} />
       <Divisor>Cronograma de pago</Divisor>
       <Cronograma />
     </main>

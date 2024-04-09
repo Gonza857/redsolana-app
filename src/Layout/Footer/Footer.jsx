@@ -6,7 +6,7 @@ import {
   DevInfoRow,
   SectionsCol,
   SocialMediaCol,
-} from "./index.js";
+} from "../../components/AUser/Footer/index.js";
 
 export const Footer = () => {
   return (

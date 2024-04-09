@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { AddCasinoView } from "../../Layout/Admin/Casinos/AddCasinoView/AddCasinoView";
+import { AddCasinoView } from "../../Layout/Admin/Casinos/VistaAgregar";
 import { ErrorPage } from "../../Layout";
-import { AdminCasinosView } from "../../Layout/Admin/Casinos/AdminCasinosView/AdminCasinosView";
-import { EditCasinoView } from "../../Layout/Admin/Casinos/EditCasinoView/EditCasinoView";
+import { AdminCasinosView } from "../../Layout/Admin/Casinos/VerCasinos";
+import { EditCasinoView } from "../../Layout/Admin/Casinos/VistaEditar";
 
 export const Casinos = () => {
   return (

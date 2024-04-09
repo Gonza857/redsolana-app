@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Cronograma, ErrorPage, Inicio, Login } from "../../Layout";
-import { CajerosView } from "../../Layout/CajerosView/CajerosView";
-import { Draw } from "../../Layout/Draw/Draw";
-import { RequestUser } from "../../Layout/User/RequestUser";
+import { VistaCajeros } from "../../Layout/User/VistaCajeros/VistaCajeros";
+import { Sorteo } from "../../Layout/User/Sorteo/Sorteo";
+import { RequestUser } from "../../Layout/User/Solicitud/RequestUser";
 
 export const Users = () => {
   return (
@@ -14,7 +14,7 @@ export const Users = () => {
       {/* RUTA DE CAJEROS */}
       <Route
         path="/cajeros"
-        element={<CajerosView />}
+        element={<VistaCajeros />}
         errorElement={<ErrorPage />}
       ></Route>
       {/* RUTA DE SOLICITUD DE USUARIO */}
@@ -25,7 +25,7 @@ export const Users = () => {
       ></Route>
 
       {/* RUTA DE SORTEO (REVISAR) */}
-      {/* <Route path="/sorteo" element={<Draw />} errorElement={<ErrorPage />} /> */}
+      <Route path="/sorteo" element={<Sorteo />} errorElement={<ErrorPage />} />
 
       {/* RUTA DE LOGIN ADMIN */}
       <Route path="/login" element={<Login />} errorElement={<ErrorPage />} />
