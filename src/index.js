@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import {
   AdminContextProvider,
+  CronoAndNewsContextProvider,
   SolicitudesContextProvider,
 } from "./storage/AdminContext";
 import { BrowserRouter } from "react-router-dom";
@@ -13,7 +14,9 @@ root.render(
   <BrowserRouter>
     <AdminContextProvider>
       <SolicitudesContextProvider>
-        <App />
+        <CronoAndNewsContextProvider>
+          <App />
+        </CronoAndNewsContextProvider>
       </SolicitudesContextProvider>
     </AdminContextProvider>
   </BrowserRouter>

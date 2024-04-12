@@ -1,9 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Cronograma, ErrorPage, Inicio, Login } from "../../Layout";
+import { ErrorPage, Inicio, Login } from "../../Layout";
 import { VistaCajeros } from "../../Layout/User/VistaCajeros/VistaCajeros";
 import { Sorteo } from "../../Layout/User/Sorteo/Sorteo";
 import { RequestUser } from "../../Layout/User/Solicitud/RequestUser";
+import { Novedades } from "../../Layout/User/Novedades/Novedades";
 
 export const Users = () => {
   return (
@@ -23,7 +24,12 @@ export const Users = () => {
         element={<RequestUser />}
         errorElement={<ErrorPage />}
       ></Route>
-
+      {/* NOVEDADES*/}
+      <Route
+        path="/novedades"
+        element={<Novedades />}
+        errorElement={<ErrorPage />}
+      />
       {/* RUTA DE SORTEO (REVISAR) */}
       <Route path="/sorteo" element={<Sorteo />} errorElement={<ErrorPage />} />
 

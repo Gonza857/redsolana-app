@@ -1,32 +1,20 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
-import {
-  deleteScheduleImage,
-  getScheduleImage,
-} from "../../../firebase/firebase";
-import { useState } from "react";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
-import { toastError, toastSuccess } from "../../../helpers/helpers";
-import { useNavigate } from "react-router-dom";
-import { Ring } from "@uiball/loaders";
-import Swal from "sweetalert2";
-import { useContext } from "react";
-import {
-  adminContext,
-  cronoAndNewsContext,
-} from "../../../storage/AdminContext";
+import { cronoAndNewsContext } from "../../../storage/AdminContext";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
+import { MainButton } from "../../../components/APublic/MainButton/MainButton";
+import Swal from "sweetalert2";
 
-export const VistaCronograma = () => {
+export const Novedades = () => {
   const {
-    isLoadingImage,
+    handleNovedadImg,
+    isLoadingSchedule,
     setPreviewImage,
     previewImage,
     handleFileUpload,
-    scheduleImage,
-    deleteSchedule,
-    handleCronogramaImg,
+    newsImage,
+    deleteNovedad,
+    getNovedades,
   } = useContext(cronoAndNewsContext);
 
   const handleDelete = () => {
@@ -41,7 +29,7 @@ export const VistaCronograma = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteSchedule();
+        deleteNovedad();
       }
     });
   };
@@ -49,13 +37,13 @@ export const VistaCronograma = () => {
   return (
     <div className="col-12 d-flex justify-content-center">
       <MainContainer className="col-12 col-md-8 d-flex gap-lg-2 flex-column align-items-center px-3 pt-2 pt-lg-3 pb-4">
-        <LoadingModal show={isLoadingImage} />
+        <LoadingModal show={isLoadingSchedule} />
         {/* SI TENGO IMAGEN, MUESTRO LA QUE TENGO Y LOS BOTONES PARA EDITARLA */}
-        {scheduleImage !== null ? (
+        {newsImage !== null ? (
           <>
             <h3 className="text-white">Imagén actual</h3>
-            <StyledImageContainer className="col-12 col-sm-11 col-md-8 col-lg-5">
-              <img src={scheduleImage} />
+            <StyledImageContainer className="col-12 col-sm-11 col-md-10 col-lg-5">
+              <img src={newsImage} />
             </StyledImageContainer>
             <div>
               <MainButton fn={() => handleDelete()}>Eliminar</MainButton>
@@ -72,7 +60,7 @@ export const VistaCronograma = () => {
                   </PreviewImage>
                   <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
                     <MainButton
-                      fn={() => handleCronogramaImg()}
+                      fn={() => handleNovedadImg()}
                       primary={true}
                       type={"button"}
                     >
@@ -108,6 +96,21 @@ export const VistaCronograma = () => {
   );
 };
 
+const StyledImageContainer = styled.div`
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const MainContainer = styled.div`
+  min-height: calc(100vh - 70px);
+  @media screen and (min-width: 768px) {
+    background-color: rgb(22, 25, 30);
+    box-shadow: 0px 0px 25px 6px rgba(255, 255, 255, 0.34);
+  }
+`;
+
 const ButtonsContainer = styled.div`
   height: 15%;
 `;
@@ -123,21 +126,5 @@ const PreviewImage = styled.div`
   img {
     width: 100%;
     object-fit: contain;
-  }
-`;
-
-// --------
-const MainContainer = styled.div`
-  min-height: calc(100vh - 70px);
-  @media screen and (min-width: 768px) {
-    background-color: rgb(22, 25, 30);
-    box-shadow: 0px 0px 25px 6px rgba(255, 255, 255, 0.34);
-  }
-`;
-
-const StyledImageContainer = styled.div`
-  img {
-    width: 100%;
-    height: 100%;
   }
 `;

@@ -30,10 +30,22 @@ import {
   updateSolicitud,
 } from "../firebase/database/solicitudes";
 import moment from "moment";
+import {
+  deletePlataforma,
+  getTodasLasPlataformas,
+  updatePlataforma,
+} from "../firebase/database/plataformas";
+import {
+  deleteNovedadImg,
+  getNovedadImg,
+  postNovedadImg,
+} from "../firebase/storage/novedades";
 
 export const adminContext = createContext();
 
 export const solicitudesContext = createContext();
+
+export const cronoAndNewsContext = createContext();
 
 /**
  * Busca cajero con el mismo nombre
@@ -65,12 +77,6 @@ const findCheckerID = (cajero, arrayCajeros) => {
 export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
   // - - - - MANEJO DE ESTADOS - - - -
-  /* / / / / / CRONOGRAMA / / / / / */
-  const [wantsToUpdateImage, setWantsToUpdateImage] = useState(false);
-  const [payScheduleImg, setPayScheduleImg] = useState(null);
-  const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
-  /* / / / / / FIN CRONOGRAMA / / / / / */
-
   /* / / / / / USUARIO / / / / / */
   const [admin, setAdmin] = useState(null);
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
@@ -519,60 +525,6 @@ export const AdminContextProvider = (props) => {
     });
   };
 
-  /**
-   * Actualiza imagen del cronograma, eliminando y subiendo si la actualiza y subiendo si agrega nueva.
-   * @param {String} newImageX64
-   */
-  const handlePayScheduleImage = (newImageX64) => {
-    setIsLoadingSchedule(true);
-    if (!wantsToUpdateImage) {
-      deleteScheduleImage().then(() => {
-        postScheduleImage(newImageX64).then(() => {
-          setPayScheduleImg(newImageX64);
-          toastSuccess("Imagen actualizada correctamente.");
-          setIsLoadingSchedule(false);
-          navigate("/admin");
-        });
-      });
-    } else {
-      postScheduleImage(newImageX64).then(() => {
-        toastSuccess("Imagen actualizada correctamente.");
-        setPayScheduleImg(newImageX64);
-        setIsLoadingSchedule(false);
-        navigate("/admin");
-      });
-    }
-  };
-
-  /**
-   * Solo elimina imagen del cronograma y deja su valor en null.
-   */
-  const firstDeleteScheduleImage = () => {
-    setIsLoadingSchedule(true);
-    deleteScheduleImage().then(() => {
-      toastSuccess("Imagen actualizada correctamente.");
-      setIsLoadingSchedule(false);
-      setPayScheduleImg(null);
-      navigate("/admin");
-    });
-  };
-
-  /**
-   * Trae imagen del cronograma, si no hay, será null y se vera reflejado en la interfaz.
-   */
-  const getCronograma = async () => {
-    try {
-      let getImageFromSchedule = await getScheduleImage();
-      if (getImageFromSchedule === 0) {
-        setPayScheduleImg(null);
-      } else {
-        setPayScheduleImg(getImageFromSchedule);
-      }
-    } catch (error) {
-      toastError(error.message);
-    }
-  };
-
   useEffect(() => {
     // CALCULA Y SETEA LOS CUPOS OCUPADOS
     if (participants?.length > 0)
@@ -593,8 +545,6 @@ export const AdminContextProvider = (props) => {
     keepSession();
     // Traemos casinos.
     getCasinos();
-    // Traemos imagen del cronograma
-    getCronograma();
   }, []);
 
   const value = {
@@ -659,12 +609,6 @@ export const AdminContextProvider = (props) => {
     //  CASINOS
     setCasinoToEdit, // SETTER CASINO PARA EDITAR
     casinoToEdit, // INFO CASINO PARA EDITAR
-    payScheduleImg, // IMAGEN CRONOGRAMA
-    setWantsToUpdateImage,
-    handlePayScheduleImage,
-    isLoadingSchedule,
-    setIsLoadingSchedule,
-    firstDeleteScheduleImage,
     scrollToSection,
     cincoChicos,
   };
@@ -680,10 +624,21 @@ export const SolicitudesContextProvider = (props) => {
   const [pendientes, setPendientes] = useState([]);
   const [historial, setHistorial] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [platforms, setPlatforms] = useState([]);
 
   useEffect(() => {
     getSolicitudes();
+    getPlataformas();
   }, []);
+
+  const getPlataformas = () => {
+    setIsLoading(true);
+    getTodasLasPlataformas().then((result) => {
+      console.log(result);
+      setPlatforms(result);
+      setIsLoading(false);
+    });
+  };
 
   const getSolicitudes = () => {
     setIsLoading(true);
@@ -773,6 +728,30 @@ export const SolicitudesContextProvider = (props) => {
     });
   };
 
+  const changePlatformVisibility = (platform) => {
+    let copyOfPlatforms = [...platforms];
+    let buscado = copyOfPlatforms.findIndex((p) => p.id == platform.id);
+    copyOfPlatforms[buscado] = platform;
+    setPlatforms(copyOfPlatforms);
+  };
+
+  const deletePlatform = (platform) => {
+    deletePlataforma(platform).then(() => {
+      toastSuccess("Eliminada correctamente.");
+      let copyOfPlatforms = [...platforms];
+      let buscado = copyOfPlatforms.findIndex((p) => p.id == platform.id);
+      copyOfPlatforms.splice(buscado, 1);
+      setPlatforms(copyOfPlatforms);
+    });
+  };
+
+  const handleUpdate = (e, platform) => {
+    updatePlataforma(platform).then(() => {
+      changePlatformVisibility(platform);
+      platform.visible = e.target.checked;
+    });
+  };
+
   const value = {
     enviarPendienteHaciaHistorial,
     enviarHistorialHaciaPendiente,
@@ -780,13 +759,177 @@ export const SolicitudesContextProvider = (props) => {
     devolverHistorialHaciaPendiente,
     deleteThisSolicitud,
     getSolicitudes,
+    setPlatforms,
+    changePlatformVisibility,
+    deletePlatform,
+    handleUpdate,
     pendientes,
     historial,
     isLoading,
+    platforms,
   };
   return (
     <solicitudesContext.Provider value={value}>
       {props.children}
     </solicitudesContext.Provider>
+  );
+};
+
+export const CronoAndNewsContextProvider = (props) => {
+  const navigate = useNavigate();
+  const [previewImage, setPreviewImage] = useState(null); // mismo estado para crono y news
+  const [newsImage, setNewsImage] = useState(null);
+  const [scheduleImage, setScheduleImage] = useState(null);
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    let fileContent;
+    reader.onload = (event) => {
+      fileContent = event.target.result;
+      setPreviewImage(fileContent);
+    };
+    reader.readAsDataURL(file);
+    return fileContent;
+  };
+
+  /**
+   * Actualiza imagen de novedades, eliminando y subiendo si la actualiza y subiendo si agrega nueva.
+   */
+  const handleNovedadImg = () => {
+    setIsLoadingImage(true);
+    if (newsImage != null && previewImage != null) {
+      deleteNovedadImg().then(() => {
+        postNovedadImg(previewImage).then(() => {
+          toastSuccess("Imagen actualizada correctamente.");
+          setIsLoadingImage(false);
+          setPreviewImage(null);
+          setNewsImage(previewImage);
+          navigate("/admin");
+        });
+      });
+    } else {
+      postNovedadImg(previewImage).then(() => {
+        toastSuccess("Imagen actualizada correctamente.");
+        setIsLoadingImage(false);
+        setPreviewImage(null);
+        setNewsImage(previewImage);
+        navigate("/admin");
+      });
+    }
+  };
+
+  /**
+   * Solo elimina imagen de novedades y deja su valor en null.
+   */
+  const deleteNovedad = () => {
+    setIsLoadingImage(true);
+    deleteNovedadImg().then(() => {
+      toastSuccess("Imagen eliminada correctamente.");
+      setNewsImage(null);
+      setIsLoadingImage(false);
+      setPreviewImage(null);
+      navigate("/admin");
+    });
+  };
+
+  /**
+   * Trae imagen del cronograma, si no hay, será null y se vera reflejado en la interfaz.
+   */
+  const getCronograma = async () => {
+    try {
+      let scheduleImg = await getScheduleImage();
+      if (scheduleImg === 0) {
+        setScheduleImage(null);
+      } else {
+        setScheduleImage(scheduleImg);
+      }
+    } catch (error) {
+      toastError(error.message);
+    }
+  };
+
+  const getNovedades = async () => {
+    try {
+      let novedadImg = await getNovedadImg();
+      if (novedadImg === 0) {
+        setNewsImage(null);
+      } else {
+        setNewsImage(novedadImg);
+      }
+    } catch (error) {
+      toastError(error.message);
+    }
+  };
+
+  /**
+   * Actualiza imagen del cronograma, eliminando y subiendo si la actualiza y subiendo si agrega nueva.
+   * @param {String} newImageX64
+   */
+  const handleCronogramaImg = () => {
+    setIsLoadingImage(true);
+    if (scheduleImage != null && previewImage != null) {
+      deleteScheduleImage().then(() => {
+        postScheduleImage(previewImage)
+          .then(() => {
+            setScheduleImage(previewImage);
+            toastSuccess("Imagen actualizada correctamente.");
+            setIsLoadingImage(false);
+            setPreviewImage(null);
+            console.log("Vieja eliminada, nueva puesta");
+            navigate("/admin");
+          })
+          .catch((error) => toastError(error.message));
+      });
+    } else {
+      postScheduleImage(previewImage)
+        .then(() => {
+          toastSuccess("Imagen actualizada correctamente.");
+          setScheduleImage(previewImage);
+          setIsLoadingImage(false);
+          setPreviewImage(null);
+          console.log("Nueva puesta");
+          navigate("/admin");
+        })
+        .catch((error) => toastError(error.message));
+    }
+  };
+
+  const deleteSchedule = () => {
+    setIsLoadingImage(true);
+    deleteScheduleImage().then(() => {
+      toastSuccess("Imagen eliminada correctamente.");
+      setScheduleImage(null);
+      setIsLoadingImage(false);
+      setPreviewImage(null);
+      navigate("/admin");
+    });
+  };
+
+  useEffect(() => {
+    getCronograma();
+    getNovedades();
+  }, []);
+
+  const value = {
+    previewImage,
+    setPreviewImage,
+    newsImage,
+    setNewsImage,
+    handleFileUpload,
+    handleNovedadImg,
+    handleCronogramaImg,
+    getNovedades,
+    deleteNovedad,
+    deleteSchedule,
+    isLoadingImage,
+    scheduleImage,
+  };
+
+  return (
+    <cronoAndNewsContext.Provider value={value}>
+      {props.children}
+    </cronoAndNewsContext.Provider>
   );
 };

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { ErrorPage } from "../../Layout";
 import { ViewHistorial } from "../../Layout/Admin/Solicitudes/VerHistorial";
 import { ViewSolicitudes } from "../../Layout/Admin/Solicitudes/VerSolicitudes";
+import { VistaEditarPlataformas } from "../../Layout/Admin/Solicitudes/VistaEditarPlataformas";
 
 export const Solicitudes = () => {
   return (
@@ -20,8 +21,8 @@ export const Solicitudes = () => {
       />
       {/*  EDITAR PLATAFORMAS */}
       <Route
-        path="/editar-plataformas"
-        element={<>Hola!</>}
+        path="/plataformas"
+        element={<VistaEditarPlataformas />}
         errorElement={<ErrorPage />}
       />
     </Routes>

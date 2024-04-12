@@ -2,7 +2,10 @@ import React from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { adminContext } from "../../../storage/AdminContext";
+import {
+  adminContext,
+  cronoAndNewsContext,
+} from "../../../storage/AdminContext";
 import { IoRadioButtonOn } from "react-icons/io5";
 import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import {
@@ -12,6 +15,7 @@ import {
   AiOutlineEye,
   AiOutlineHistory,
   AiOutlineOrderedList,
+  AiOutlinePlus,
   AiOutlineTable,
   AiOutlineUserAdd,
 } from "react-icons/ai";
@@ -23,6 +27,8 @@ const iconStyle = { fontSize: "1.5rem" };
 
 export const VistaAdmin = () => {
   const { sorteoActivo, isDrawLoading } = useContext(adminContext);
+  const { newsImage, scheduleImage } = useContext(cronoAndNewsContext);
+
   return (
     <StyledView className="gap-3 gap-lg-2 gap-xl-3 col-12 py-4 py-md-3">
       <Animated
@@ -150,16 +156,19 @@ export const VistaAdmin = () => {
         <StyledAdminOption className="d-flex flex-column flex-md-row gap-3 p-3  align-items-center">
           <h3>Cronograma</h3>
           <div className="gap-2">
-            <Link to="/cronograma">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
-                <p className="m-0 d-none d-lg-block">Ver</p>
-                <AiOutlineEye style={iconStyle} />
-              </MainButton>
-            </Link>
             <Link to="/admin/cronograma/editar">
               <MainButton fn={() => window.scrollTo(0, 0)}>
-                <p className="m-0 d-none d-lg-block">Editar</p>
-                <AiOutlineEdit style={iconStyle} />
+                {scheduleImage != null ? (
+                  <>
+                    <p className="m-0 d-none d-lg-block">Ver</p>
+                    <AiOutlineEye style={iconStyle} />
+                  </>
+                ) : (
+                  <>
+                    <p className="m-0 d-none d-lg-block">Agregar</p>
+                    <AiOutlinePlus style={iconStyle} />
+                  </>
+                )}
               </MainButton>
             </Link>
           </div>
@@ -178,7 +187,7 @@ export const VistaAdmin = () => {
             <Link to="/admin/solicitudes/plataformas">
               <MainButton fn={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Plataformas</p>
-                <AiOutlineEdit style={iconStyle} />
+                <AiOutlineOrderedList style={iconStyle} />
               </MainButton>
             </Link>
             <Link to="/admin/solicitudes">
@@ -191,6 +200,34 @@ export const VistaAdmin = () => {
               <MainButton fn={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Historial</p>
                 <AiOutlineHistory style={iconStyle} />
+              </MainButton>
+            </Link>
+          </div>
+        </StyledAdminOption>
+      </Animated>
+      <Animated
+        animationIn="fadeIn"
+        animationOut="fedeOut"
+        isVisible={true}
+        animationInDelay={50}
+        className="col-10 col-sm-6 col-md-9 col-lg-10 col-xl-7"
+      >
+        <StyledAdminOption className="d-flex flex-column flex-md-row gap-3 p-3  align-items-center">
+          <h3>Novedades</h3>
+          <div className="gap-2">
+            <Link to="/admin/novedades">
+              <MainButton fn={() => window.scrollTo(0, 0)}>
+                {newsImage != null ? (
+                  <>
+                    <p className="m-0 d-none d-lg-block">Ver</p>
+                    <AiOutlineEye style={iconStyle} />
+                  </>
+                ) : (
+                  <>
+                    <p className="m-0 d-none d-lg-block">Agregar</p>
+                    <AiOutlinePlus style={iconStyle} />
+                  </>
+                )}
               </MainButton>
             </Link>
           </div>

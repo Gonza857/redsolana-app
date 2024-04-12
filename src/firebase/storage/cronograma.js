@@ -43,15 +43,9 @@ export const getScheduleImage = async () => {
   try {
     const storageRef = ref(storage, `cronograma/scheduleImage`);
     const url = await getDownloadURL(storageRef);
+    console.log(url);
     return url;
   } catch (error) {
-    if (
-      error ===
-      "FirebaseError: Firebase Storage: Object 'cronograma/scheduleImage' does not exist. (storage/object-not-found)"
-    ) {
-      return 0;
-    } else {
-      toastError("Ooops! Algo salio mal.");
-    }
+    return null;
   }
 };

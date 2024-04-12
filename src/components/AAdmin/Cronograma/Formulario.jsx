@@ -2,32 +2,27 @@ import React, { useState, useContext } from "react";
 import { MainButton } from "../../APublic/MainButton/MainButton";
 import styled from "styled-components";
 import { LoadingModal } from "../../OK-Components/LoadingModal/LoadingModal";
-import { adminContext } from "../../../storage/AdminContext";
+import {
+  adminContext,
+  cronoAndNewsContext,
+} from "../../../storage/AdminContext";
 
 export const Formulario = () => {
-  const [previewImage, setPreviewImage] = useState(null);
-  const { handlePayScheduleImage, isLoadingSchedule } =
-    useContext(adminContext);
+  const {
+    handleFileUpload,
+    previewImage,
+    setPreviewImage,
+    isLoadingImage,
+    handleCronogramaImg,
+  } = useContext(cronoAndNewsContext);
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    let fileContent;
-    reader.onload = (event) => {
-      fileContent = event.target.result;
-      setPreviewImage(fileContent);
-    };
-    reader.readAsDataURL(file);
-    return fileContent;
-  };
-
-  const handleAction = (previewImage) => {
-    handlePayScheduleImage(previewImage);
+  const handleAction = () => {
+    handleCronogramaImg();
   };
 
   return (
     <MainContainer className="col-12 col-md-8 d-flex flex-column align-items-center px-3 pt-2 pb-4">
-      <LoadingModal show={isLoadingSchedule} />
+      <LoadingModal show={isLoadingImage} />
       <h3 className="text-white">Selecciona una imagén</h3>
       {previewImage == null ? (
         <FormContainer className="col-12 col-md-auto d-flex flex-column pt-4">
@@ -45,7 +40,7 @@ export const Formulario = () => {
           </PreviewImage>
           <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
             <MainButton
-              fn={() => handleAction(previewImage)}
+              fn={() => handleAction()}
               primary={true}
               type={"button"}
             >

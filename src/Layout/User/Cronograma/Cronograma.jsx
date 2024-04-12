@@ -1,12 +1,15 @@
 import React from "react";
 import { useContext } from "react";
 import styled from "styled-components";
-import { adminContext } from "../../../storage/AdminContext";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
-import { Link } from "react-router-dom";
+import {
+  adminContext,
+  cronoAndNewsContext,
+} from "../../../storage/AdminContext";
 
 export function Cronograma() {
-  const { payScheduleImg, sorteoActivo } = useContext(adminContext);
+  const { sorteoActivo } = useContext(adminContext);
+  const { scheduleImage } = useContext(cronoAndNewsContext);
+
   return (
     <Wrapper
       id="Cronograma"
@@ -15,18 +18,26 @@ export function Cronograma() {
         maxHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(100vh - 60px)",
       }}
     >
-      {payScheduleImg != null ? (
+      {scheduleImage != null ? (
         <ImageContainer className="col-12 col-sm-8 col-md-6 col-lg-4">
-          <img src={payScheduleImg} />
+          <img src={scheduleImage} />
         </ImageContainer>
       ) : (
-        <div className="mx-auto text-white text-center py-5 col-12 d-flex flex-column gap-4 align-items-center">
+        <StyledScheduleContainer
+          className="text-white d-flex justify-content-center
+        align-items-center"
+        >
           <h3>Sin cronograma establecido.</h3>
-        </div>
+        </StyledScheduleContainer>
       )}
     </Wrapper>
   );
 }
+
+const StyledScheduleContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const Wrapper = styled.div`
   width: 100%;

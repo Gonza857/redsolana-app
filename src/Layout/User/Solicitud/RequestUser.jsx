@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { MainButton } from "../../../components/APublic/MainButton/MainButton";
@@ -7,14 +7,12 @@ import { toastError, toastSuccess } from "../../../helpers/helpers";
 import { postSolicitud } from "../../../firebase/database/solicitudes";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { solicitudesContext } from "../../../storage/AdminContext";
 
 export const RequestUser = () => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
+  const { platforms } = useContext(solicitudesContext);
+
+  const { register, handleSubmit } = useForm();
 
   const [validCaptcha, setValidCaptcha] = useState(false);
 
@@ -23,17 +21,15 @@ export const RequestUser = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    console.log(data);
     data.date = moment().format("L");
     data.state = false;
-    console.log(validCaptcha);
     if (!validCaptcha) {
       toastError("Resuelva la Captcha");
     } else {
       postSolicitud(data)
-        .then((result) => {
-          console.log(result);
+        .then(() => {
           toastSuccess("Solicitud realizada correctamente");
+          window.scrollTo(0, 0);
           navigate("/");
         })
         .catch((error) => {
@@ -43,15 +39,12 @@ export const RequestUser = () => {
   };
 
   const onChange = () => {
-    console.log(captcha.current.getValue());
     if (captcha.current.getValue()) {
       setValidCaptcha(true);
     } else {
       setValidCaptcha(false);
     }
   };
-
-  const platforms = ["Vikingo", "Konabet", "ajugar.pro", "Bet39"];
 
   return (
     <Wrapper className="col-12 d-flex justify-content-center align-items-center py-lg-3">
@@ -90,8 +83,8 @@ export const RequestUser = () => {
                 <option value="" disabled selected>
                   Plataforma
                 </option>
-                {platforms.map((platform) => (
-                  <option>{platform}</option>
+                {platforms.map(({ visible, id, name }) => (
+                  <>{visible && <option key={id}>{name}</option>}</>
                 ))}
               </StyledSelect>
             </StyledInputContainer>
@@ -146,11 +139,12 @@ export const RequestUser = () => {
 
 const FormContainer = styled.div`
   height: fit-content;
-  background: linear-gradient(#3d3d3d 0%, rgba(0, 0, 0, 1) 100%);
+  background-color: #303030;
+  /* background: linear-gradient(#3d3d3d 0%, rgba(0, 0, 0, 1) 100%); */
   color: #fff;
-  border-radius: 30px;
   box-shadow: 0px 0px 20px 0px #d4af3781;
-  border: 0.5px solid #ffffff4f;
+  border-right: 0.5px solid #ffffff4f;
+  border-left: 0.5px solid #ffffff4f;
   min-height: calc(100vh - 60px);
   @media screen and (max-width: 500px) {
     border-radius: 0;

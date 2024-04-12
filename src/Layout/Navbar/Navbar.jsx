@@ -8,18 +8,12 @@ const navbarLinks = [
   { to: "/", slug: "Home" },
   { to: "/cajeros", slug: "Cajeros" },
   { to: "/jugar", slug: "Jugar" },
+  { to: "/novedades", slug: "Novedades" },
 ];
 
 export const Navbar = () => {
-  const {
-    isAdmin,
-    setIsAdmin,
-    isOpenMenu,
-    setIsOpenMenu,
-    sorteoActivo,
-    logout,
-    scrollToSection,
-  } = useContext(adminContext);
+  const { isAdmin, isOpenMenu, setIsOpenMenu, sorteoActivo, logout } =
+    useContext(adminContext);
 
   window.addEventListener("resize", function () {
     if (this.window.innerWidth > 968) setIsOpenMenu(false);
