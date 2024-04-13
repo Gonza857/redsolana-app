@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { solicitudesContext } from "../../../storage/AdminContext";
 import { AiOutlineCheck, AiOutlineWhatsApp } from "react-icons/ai";
@@ -14,10 +14,6 @@ export const PendienteRow = ({ solicitud }) => {
   const handleShowInfo = () => {
     setShowInfo(true);
   };
-
-  useEffect(() => {
-    console.log(solicitud);
-  }, []);
 
   return (
     <>

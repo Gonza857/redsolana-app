@@ -102,7 +102,6 @@ export const AdminContextProvider = (props) => {
   // SET CAJEROS
   async function traerCajeros() {
     try {
-      console.log("#trayendo cajeros...");
       let cincoCaras = [...cincoChicos];
       const result = await getAllCajeros();
       setCajeros(result);
@@ -182,7 +181,6 @@ export const AdminContextProvider = (props) => {
   async function getCasinos() {
     try {
       const result = await getAllCasinos();
-      console.log(result);
       setCasinos(result);
       setIsGettingCasinos(false);
     } catch (error) {
@@ -420,7 +418,6 @@ export const AdminContextProvider = (props) => {
   const setSorteo = () => {
     getSorteo().then((sorteo) => {
       // SETEAR OBJETO SORTEO
-      console.log(sorteo);
       setSorteoInfo(sorteo[0]);
       // SETEAR ESTADO
       setSorteoActivo(sorteo[0].isActive);
@@ -634,7 +631,6 @@ export const SolicitudesContextProvider = (props) => {
   const getPlataformas = () => {
     setIsLoading(true);
     getTodasLasPlataformas().then((result) => {
-      console.log(result);
       setPlatforms(result);
       setIsLoading(false);
     });
@@ -663,7 +659,6 @@ export const SolicitudesContextProvider = (props) => {
   };
 
   const enviarPendienteHaciaHistorial = (solicitud) => {
-    console.log(solicitud);
     let { id } = solicitud;
     let copyOfPendientes = [...pendientes];
     let indiceParaMover = copyOfPendientes.findIndex(
@@ -702,7 +697,6 @@ export const SolicitudesContextProvider = (props) => {
   };
 
   const deleteThisSolicitud = (solicitud) => {
-    console.log(solicitud);
     let copyOfHistorial = [...historial];
     let indiceBuscado = copyOfHistorial.findIndex(
       (thisSolicitud) => (thisSolicitud.id = solicitud.id)
@@ -877,7 +871,6 @@ export const CronoAndNewsContextProvider = (props) => {
             toastSuccess("Imagen actualizada correctamente.");
             setIsLoadingImage(false);
             setPreviewImage(null);
-            console.log("Vieja eliminada, nueva puesta");
             navigate("/admin");
           })
           .catch((error) => toastError(error.message));
@@ -889,7 +882,6 @@ export const CronoAndNewsContextProvider = (props) => {
           setScheduleImage(previewImage);
           setIsLoadingImage(false);
           setPreviewImage(null);
-          console.log("Nueva puesta");
           navigate("/admin");
         })
         .catch((error) => toastError(error.message));

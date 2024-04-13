@@ -2,18 +2,13 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
 import { MainButton } from "../APublic/MainButton/MainButton";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
 
 export const AdminCasinoCard = ({ card }) => {
   const { handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(card);
-  }, []);
 
   return (
     <StyledCard className="d-flex flex-column align-items-center p-2">

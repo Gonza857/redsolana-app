@@ -81,7 +81,6 @@ function AddCajerosForm({ onClose }) {
         });
         onClose();
       } else {
-        // console.log("no cambiaste la posición");
         data.pos = data.pos - 1;
         postCajeros(data).then((result) => {
           addCajero(result);

@@ -43,7 +43,6 @@ export const getScheduleImage = async () => {
   try {
     const storageRef = ref(storage, `cronograma/scheduleImage`);
     const url = await getDownloadURL(storageRef);
-    console.log(url);
     return url;
   } catch (error) {
     return null;

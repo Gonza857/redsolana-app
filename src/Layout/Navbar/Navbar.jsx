@@ -55,7 +55,6 @@ export const Navbar = () => {
                   <Link
                     to={link.to}
                     onClick={() => {
-                      console.log("tocaste un botón");
                       if (window.scrollY !== 0) {
                         // Si ya estás en la parte superior, desplázate automáticamente hacia arriba
                         window.scrollTo({ top: 0, behavior: "smooth" });

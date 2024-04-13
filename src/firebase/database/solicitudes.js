@@ -10,7 +10,6 @@ import { DATABASE } from "../firebase";
 import { toastError } from "../../helpers/helpers";
 
 export const postSolicitud = async (solicitud) => {
-  console.log(solicitud);
   try {
     // coleccion --> referencia a la funcion base, referencia al nombre de la base
     const collectionRef = collection(DATABASE, "solicitudes");
