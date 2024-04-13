@@ -2,9 +2,7 @@ import React, { useContext, useState } from "react";
 import { solicitudesContext } from "../../../storage/AdminContext";
 import styled from "styled-components";
 import { MainButton } from "../../../components/APublic/MainButton/MainButton";
-import {
-  AiOutlinePlus,
-} from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import { Animated } from "react-animated-css";
 import { postPlataforma } from "../../../firebase/database/plataformas";
 import { toastSuccess } from "../../../helpers/helpers";
@@ -102,70 +100,5 @@ const StyledInput = styled.input`
   }
   &:-moz-placeholder {
     color: #000;
-  }
-`;
-
-const StyledBtn = styled.button`
-  outline: none;
-  background: none;
-  border: none;
-  border-radius: 50%;
-  overflow: hidden;
-  width: 30px;
-  height: 30px;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  @media screen and (min-width: 992px) {
-    width: 40px;
-    height: 40px;
-  }
-  svg {
-    font-size: 1rem;
-    border-radius: 50%;
-    color: #000;
-    @media screen and (min-width: 992px) {
-      font-size: 1.5rem;
-    }
-  }
-`;
-
-const DeleteBtn = styled(StyledBtn)`
-  background-color: #ff0000;
-
-  &:hover {
-    background-color: #9b0000;
-  }
-  svg {
-    color: #fff;
-  }
-`;
-
-const ViewBtn = styled(StyledBtn)`
-  background-color: #3745d4;
-
-  &:hover {
-    background-color: #273197;
-  }
-  svg {
-    color: #fff;
-  }
-`;
-
-const StyledTh = styled.th`
-  font-size: 0.7rem;
-  @media screen and (min-width: 500px) {
-    font-size: 0.85rem;
-  }
-  @media screen and (min-width: 600px) {
-    font-size: 1rem;
-  }
-  svg {
-    font-size: 1.2rem;
-    @media screen and (min-width: 500px) {
-      font-size: 1.5rem;
-    }
   }
 `;

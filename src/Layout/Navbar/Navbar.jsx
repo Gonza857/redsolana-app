@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { adminContext } from "../../storage/AdminContext";
 import { ToastContainer } from "react-toastify";
 import styled, { keyframes } from "styled-components";
@@ -18,8 +18,6 @@ export const Navbar = () => {
   window.addEventListener("resize", function () {
     if (this.window.innerWidth > 968) setIsOpenMenu(false);
   });
-
-  const navigate = useNavigate();
 
   return (
     <>

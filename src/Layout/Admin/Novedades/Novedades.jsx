@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { cronoAndNewsContext } from "../../../storage/AdminContext";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
@@ -14,7 +14,6 @@ export const Novedades = () => {
     handleFileUpload,
     newsImage,
     deleteNovedad,
-    getNovedades,
   } = useContext(cronoAndNewsContext);
 
   const handleDelete = () => {
@@ -43,7 +42,7 @@ export const Novedades = () => {
           <>
             <h3 className="text-white">Imagén actual</h3>
             <StyledImageContainer className="col-12 col-sm-11 col-md-10 col-lg-5">
-              <img src={newsImage} />
+              <img src={newsImage} alt="Imagen de la novedad" />
             </StyledImageContainer>
             <div>
               <MainButton fn={() => handleDelete()}>Eliminar</MainButton>
@@ -56,7 +55,10 @@ export const Novedades = () => {
                 <div className="d-flex flex-column align-items-center col-8 h-100 py-2">
                   <h3 className="text-white">Vista previa</h3>
                   <PreviewImage className="mb-3">
-                    <img src={previewImage} />
+                    <img
+                      src={previewImage}
+                      alt="Preview de la imagén de la novedad"
+                    />
                   </PreviewImage>
                   <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
                     <MainButton

@@ -23,8 +23,8 @@ export const ViewSolicitudes = () => {
       <div className="align-self-center pt-2">
         <Subtitles>Pendientes</Subtitles>
       </div>
-      <div className="d-flex gap-2">
-        <Link to={"/admin/solicitudes/historial"}>
+      <div className="d-flex flex-column flex-sm-row gap-2 col-12 align-items-center">
+        <Link to="/admin/solicitudes/plataformas">
           <MainButton primary={true}>
             Editar plataformas
             <AiOutlineEdit />

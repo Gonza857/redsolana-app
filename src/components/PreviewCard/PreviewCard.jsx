@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
 import styled from "styled-components";
 
 export const PreviewCard = ({ casinoPreview, previewImageUrl, casinoName }) => {
@@ -12,9 +11,9 @@ export const PreviewCard = ({ casinoPreview, previewImageUrl, casinoName }) => {
       </ImgContainer>
       <TextContainer>
         <p>
-          Haz click{" "}
+          Haz click
           <a href={casinoPreview?.link} target="_blank" rel="noreferrer">
-            aqui{" "}
+            aqui
           </a>
           para ir a {casinoName}
         </p>
@@ -60,16 +59,6 @@ const BgImg = styled.img`
   object-fit: cover;
 `;
 
-const LogoImg = styled.img`
-  position: absolute;
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 10;
-`;
-
 const TextContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -91,15 +80,4 @@ const TextContainer = styled.div`
       color: #d4af37 !important;
     }
   }
-`;
-
-const BgFlatColor = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 0;
 `;

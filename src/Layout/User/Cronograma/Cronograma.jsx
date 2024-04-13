@@ -20,7 +20,7 @@ export function Cronograma() {
     >
       {scheduleImage != null ? (
         <ImageContainer className="col-12 col-sm-8 col-md-6 col-lg-4">
-          <img src={scheduleImage} />
+          <img src={scheduleImage} alt="Imagén Cronograma" />
         </ImageContainer>
       ) : (
         <StyledScheduleContainer

@@ -1,11 +1,8 @@
-import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import "./App.css";
-import { Navbar, Footer, ErrorPage } from "./Layout/";
+import { Navbar, Footer } from "./Layout/";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Rutas from "./routes/Routes";
-import WhatsappBtn, {
-  BottomRightButton,
-} from "./components/BottomRightButton/BottomRightButton";
+import { BottomRightButton } from "./components/BottomRightButton/BottomRightButton";
 import { useContext } from "react";
 import { adminContext } from "./storage/AdminContext";
 import styled from "styled-components";

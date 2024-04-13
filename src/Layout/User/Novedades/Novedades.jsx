@@ -13,7 +13,7 @@ export const Novedades = () => {
           <>
             <h3 className="text-white">Cartelera de novedades</h3>
             <StyledImageContainer className="col-12 col-sm-11 col-md-10 col-lg-6">
-              <img src={newsImage} />
+              <img src={newsImage} alt="Imagén de la novedad" />
             </StyledImageContainer>
           </>
         ) : (
@@ -46,25 +46,5 @@ const MainContainer = styled.div`
   @media screen and (min-width: 768px) {
     background-color: rgb(22, 25, 30);
     box-shadow: 0px 0px 25px 6px rgba(255, 255, 255, 0.34);
-  }
-`;
-
-const FormContainer = styled.form``;
-
-const ButtonsContainer = styled.div`
-  height: 15%;
-`;
-
-const PreviewImage = styled.div`
-  width: 100%;
-  @media screen and (min-width: 500px) {
-    width: 50%;
-  }
-  @media screen and (min-width: 968px) {
-    width: 50%;
-  }
-  img {
-    width: 100%;
-    object-fit: contain;
   }
 `;

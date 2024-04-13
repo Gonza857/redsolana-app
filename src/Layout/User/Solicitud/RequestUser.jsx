@@ -105,7 +105,7 @@ export const RequestUser = () => {
               sitekey="6Ld8qqQpAAAAAHNa8HfLDfL2_QhX4kOn16-tvLl5"
               onChange={onChange}
               theme={"dark"}
-              size={window.screen.width < 992 ? "compact" : "normal"}
+              size={"normal"}
               style={{
                 margin: `${window.screen.width < 992 ? "unset" : "auto"}`,
               }}
@@ -123,11 +123,14 @@ export const RequestUser = () => {
             <p className="m-0 p-0">¿Necesitas ayuda? Contactános</p>
             <StyledHelpIconContainer className="gap-3">
               <a href="https://wa.link/jc3ov2" target="_BLANK" rel="noreferrer">
-                <img src="./assets/images/wsp-logo.png" />
+                <img src="./assets/images/wsp-logo.png" alt="WhatsApp Logo" />
               </a>
 
               <a href="https://t.me/Solana43s" target="_BLANK" rel="noreferrer">
-                <img src="./assets/images/telegram-logo.png" />
+                <img
+                  src="./assets/images/telegram-logo.png"
+                  alt="Telegram Logo"
+                />
               </a>
             </StyledHelpIconContainer>
           </div>

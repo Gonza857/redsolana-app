@@ -1,21 +1,9 @@
 import React from "react";
-import { useEffect } from "react";
 import styled from "styled-components";
-import {
-  deleteScheduleImage,
-  getScheduleImage,
-} from "../../../firebase/firebase";
-import { useState } from "react";
 import { MainButton } from "../../../components/APublic/MainButton/MainButton";
-import { toastError, toastSuccess } from "../../../helpers/helpers";
-import { useNavigate } from "react-router-dom";
-import { Ring } from "@uiball/loaders";
 import Swal from "sweetalert2";
 import { useContext } from "react";
-import {
-  adminContext,
-  cronoAndNewsContext,
-} from "../../../storage/AdminContext";
+import { cronoAndNewsContext } from "../../../storage/AdminContext";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
 
 export const VistaCronograma = () => {
@@ -55,7 +43,7 @@ export const VistaCronograma = () => {
           <>
             <h3 className="text-white">Imagén actual</h3>
             <StyledImageContainer className="col-12 col-sm-11 col-md-8 col-lg-5">
-              <img src={scheduleImage} />
+              <img src={scheduleImage} alt="Imagén del cronograma" />
             </StyledImageContainer>
             <div>
               <MainButton fn={() => handleDelete()}>Eliminar</MainButton>
@@ -68,7 +56,10 @@ export const VistaCronograma = () => {
                 <div className="d-flex flex-column align-items-center col-8 h-100 py-2">
                   <h3 className="text-white">Vista previa</h3>
                   <PreviewImage className="mb-3">
-                    <img src={previewImage} />
+                    <img
+                      src={previewImage}
+                      alt="Preview de imagén de cronograma"
+                    />
                   </PreviewImage>
                   <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
                     <MainButton

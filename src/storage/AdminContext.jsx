@@ -78,7 +78,6 @@ export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
   // - - - - MANEJO DE ESTADOS - - - -
   /* / / / / / USUARIO / / / / / */
-  const [admin, setAdmin] = useState(null);
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
   /* / / / / / FIN  USUARIO / / / / / */
 
@@ -306,13 +305,6 @@ export const AdminContextProvider = (props) => {
     }
   };
 
-  function addLocalParticipant(participantObj) {
-    setWasAdded(true);
-    setLastParticipant(participantObj);
-    getNumberAndMarkOnTable(participantObj);
-    setParticipants((participant) => [...participant, participantObj]);
-  }
-
   const markBusySlots = (participant) => {
     let { numero } = participant;
     const copyOfBooleanArray = [...sorteoArray];
@@ -493,9 +485,8 @@ export const AdminContextProvider = (props) => {
   const adminSignIn = (email, pass) => {
     setIsVerifingAdmin(true);
     signInFirebase(email, pass)
-      .then((firebaseUser) => {
+      .then(() => {
         toastSuccess("Sesión iniciada correctamente.");
-        setAdmin(firebaseUser);
         setIsAdmin(true);
         setIsVerifingAdmin(false);
       })
@@ -508,7 +499,6 @@ export const AdminContextProvider = (props) => {
     onAuthStateChanged(firebaseAuth(), (user) => {
       if (user) {
         setIsVerifingAdmin(false);
-        setAdmin(user);
         setIsAdmin(user.emailVerified);
       }
     });
@@ -516,7 +506,6 @@ export const AdminContextProvider = (props) => {
 
   const logout = () => {
     logoutFirebase().then(() => {
-      setAdmin(null);
       setIsAdmin(false);
       toastSuccess("Cerraste sesión correctamente");
     });
@@ -641,14 +630,10 @@ export const SolicitudesContextProvider = (props) => {
     getTodasLasSolicitudes().then((pedidos) => {
       let noRes = [];
       let res = [];
-      let resCount = 0;
-      let noResCount = 0;
       pedidos.forEach((pedido) => {
         if (!pedido.state) {
-          noResCount++;
           noRes.push(pedido);
         } else {
-          resCount++;
           res.push(pedido);
         }
       });
@@ -662,7 +647,7 @@ export const SolicitudesContextProvider = (props) => {
     let { id } = solicitud;
     let copyOfPendientes = [...pendientes];
     let indiceParaMover = copyOfPendientes.findIndex(
-      (pendiente) => pendiente.id == id
+      (pendiente) => pendiente.id === id
     );
     let eliminado = copyOfPendientes[indiceParaMover];
     copyOfPendientes.splice(indiceParaMover, 1);
@@ -676,7 +661,7 @@ export const SolicitudesContextProvider = (props) => {
     let { id } = solicitud;
     let copyOfHistorial = [...historial];
     let indiceParaMover = copyOfHistorial.findIndex(
-      (pendiente) => pendiente.id == id
+      (pendiente) => pendiente.id === id
     );
     let buscado = copyOfHistorial[indiceParaMover];
     copyOfHistorial.splice(indiceParaMover, 1);
@@ -724,7 +709,7 @@ export const SolicitudesContextProvider = (props) => {
 
   const changePlatformVisibility = (platform) => {
     let copyOfPlatforms = [...platforms];
-    let buscado = copyOfPlatforms.findIndex((p) => p.id == platform.id);
+    let buscado = copyOfPlatforms.findIndex((p) => p.id === platform.id);
     copyOfPlatforms[buscado] = platform;
     setPlatforms(copyOfPlatforms);
   };
@@ -733,7 +718,7 @@ export const SolicitudesContextProvider = (props) => {
     deletePlataforma(platform).then(() => {
       toastSuccess("Eliminada correctamente.");
       let copyOfPlatforms = [...platforms];
-      let buscado = copyOfPlatforms.findIndex((p) => p.id == platform.id);
+      let buscado = copyOfPlatforms.findIndex((p) => p.id === platform.id);
       copyOfPlatforms.splice(buscado, 1);
       setPlatforms(copyOfPlatforms);
     });

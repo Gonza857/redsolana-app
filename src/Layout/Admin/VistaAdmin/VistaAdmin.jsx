@@ -9,7 +9,6 @@ import {
 import { IoRadioButtonOn } from "react-icons/io5";
 import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import {
-  AiFillEdit,
   AiOutlineAppstoreAdd,
   AiOutlineEdit,
   AiOutlineEye,
@@ -273,14 +272,4 @@ const StyledAdminOption = styled.div`
   div {
     display: flex;
   }
-`;
-
-const StyledButton = styled.button`
-  background-color: #d4af37;
-  color: #000;
-  outline: none;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 8px 15px;
-  font-weight: 600;
 `;
