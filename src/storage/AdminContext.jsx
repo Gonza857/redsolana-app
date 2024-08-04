@@ -23,7 +23,7 @@ import {
   postScheduleImage,
 } from "../firebase/storage/cronograma";
 import { getScheduleImage } from "../firebase/storage/cronograma";
-import { firebaseAuth } from "../firebase/firebase";
+import { firebaseAuth, messaging } from "../firebase/firebase";
 import {
   deleteSolicitud,
   getTodasLasSolicitudes,
@@ -502,6 +502,7 @@ export const AdminContextProvider = (props) => {
         setIsAdmin(user.emailVerified);
       }
     });
+    // BGN66FLIYjnVnO6c13K6Ad2GXIU_oPcbz8kXvkyS5ED5A0iWaXVzhRGiOm2SBE7DIVHhwsfUhXQ34cxU73g4Z5U
   };
 
   const logout = () => {
@@ -516,8 +517,6 @@ export const AdminContextProvider = (props) => {
     if (participants?.length > 0)
       setParticipantsQuantity(participantsCounter(participants));
   }, [participants]);
-
-  // new functions
 
   // useEffect Montado
   useEffect(() => {

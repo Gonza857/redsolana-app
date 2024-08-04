@@ -31,7 +31,7 @@ export const BottomRightButton = ({ admin = false }) => {
     return (
       <WhatsappContainer>
         <a
-          href="https://wa.link/f0rcku"
+          href="https://wa.me/5492804337217"
           target="_blank"
           rel="noopener noreferrer"
         >

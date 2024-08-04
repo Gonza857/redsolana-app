@@ -122,7 +122,11 @@ export const RequestUser = () => {
           >
             <p className="m-0 p-0">¿Necesitas ayuda? Contactános</p>
             <StyledHelpIconContainer className="gap-3">
-              <a href="https://wa.link/jc3ov2" target="_BLANK" rel="noreferrer">
+              <a
+                href="https://wa.me/5492804337217"
+                target="_BLANK"
+                rel="noreferrer"
+              >
                 <img src="./assets/images/wsp-logo.png" alt="WhatsApp Logo" />
               </a>
 
