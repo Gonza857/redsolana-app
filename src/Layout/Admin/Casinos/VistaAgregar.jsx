@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { AiFillDelete } from "react-icons/ai";
@@ -8,17 +8,15 @@ import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { getAllCasinos, postCasino } from "../../../firebase/database/casinos";
 import { postCasinoImage } from "../../../firebase/storage/casino";
+import { adminContext } from "../../../storage/AdminContext";
 
 export const AddCasinoView = () => {
   const [casinoPreview, setCasinoPreview] = useState(null);
-
   const [previewImageUrl, setPreviewImageUrl] = useState(null);
   const [casinoLink, setCasinoLink] = useState(null);
   const [casinoName, setCasinoName] = useState(null);
-
   const [casinos, setCasinos] = useState([]);
-
-  const navigate = useNavigate();
+  const { solana } = useContext(adminContext);
 
   const { register, handleSubmit, resetField, reset } = useForm();
 
@@ -29,15 +27,11 @@ export const AddCasinoView = () => {
   };
 
   const uploadCasino = () => {
-    let newObject = {
-      casinoName: null,
-      link: null,
-      casinoImage: { url: "", id: "" },
-    };
-    newObject.casinoName = casinoName;
-    newObject.link = casinoLink;
-    if (!newObject.link.includes("https://")) {
-      newObject.link = `https://${newObject.link}`;
+    let c = solana.createCasino();
+    c.link = casinoLink;
+    c.name = casinoName;
+    if (!c.link.includes("https://")) {
+      c.link = `https://${c.link}`;
     }
     // postCasinoImage(previewImageUrl).then((result) => {
     //   setPreviewImageUrl(result.url);
@@ -61,9 +55,10 @@ export const AddCasinoView = () => {
   };
 
   useEffect(() => {
-    getAllCasinos().then((result) => {
-      setCasinos(result);
-    });
+    setCasinos(solana.getCasinos());
+    // getAllCasinos().then((result) => {
+    //   setCasinos(result);
+    // });
   }, []);
 
   return (

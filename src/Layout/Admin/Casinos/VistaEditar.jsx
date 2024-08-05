@@ -13,9 +13,10 @@ import {
   postCasinoImage,
 } from "../../../firebase/storage/casino";
 import { updateCasino } from "../../../firebase/database/casinos";
+import { Firebase } from "../../../classes/Firebase";
 
 export const EditCasinoView = () => {
-  const { casinoToEdit, casinos } = useContext(adminContext);
+  const { casinoToEdit, solana } = useContext(adminContext);
   const [previewImageUrl, setPreviewImageUrl] = useState(null);
   const [actualImage, setActualImage] = useState(null);
   const [searchedCasino, setSearchedCasino] = useState(null);
@@ -33,19 +34,19 @@ export const EditCasinoView = () => {
 
   useEffect(() => {
     getCasinoToEdit(id);
-  }, [casinos]);
+  }, [solana.getCasinos()]);
 
   const fullUpdate = (data) => {
     setIsUpdating(true);
-    deleteCasinoImage(searchedCasino?.casinoImage?.id)
+    deleteCasinoImage(searchedCasino.image.id)
       .then(() => {
         toastSuccess("Eliminada correctamente");
-        postCasinoImage(previewImageUrl)
+        Firebase.postCasinoImage(previewImageUrl)
           .then((result) => {
             let { url, id } = result;
             data.casinoImage = { url, id };
             toastSuccess("Nueva imagen agregada correctamente.");
-            updateCasino(data)
+            Firebase.updateCasino(data)
               .then(() => {
                 toastSuccess("Actualizado correctamente");
                 setIsUpdating(false);
@@ -60,7 +61,7 @@ export const EditCasinoView = () => {
 
   const textUpdate = (data) => {
     setIsUpdating(true);
-    updateCasino(data)
+    Firebase.updateCasino(data)
       .then(() => {
         toastSuccess("Actualizado correctamente");
         setIsUpdating(false);
@@ -70,10 +71,9 @@ export const EditCasinoView = () => {
   };
 
   const getCasinoToEdit = (id) => {
-    let copyOfCasinos = [...casinos];
-    let buscado = copyOfCasinos.find((casino) => id == casino.id);
-    setSearchedCasino(buscado);
-    setActualImage(buscado?.casinoImage?.url);
+    let a = solana.getCasinoById(id);
+    setSearchedCasino(a);
+    setActualImage(a.image.url);
   };
 
   const handleFileUpload = (e) => {

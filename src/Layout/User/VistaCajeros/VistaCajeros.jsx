@@ -8,11 +8,13 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { Divisor } from "../../../components/AUser/Inicio/Divisor";
 
 export const VistaCajeros = ({ limit }) => {
+  const { solana, isOpenMenu, cincoChicos } = useContext(adminContext);
   const [isLoading, setIsLoading] = useState(false);
-  const { cincoChicos, cajeros, sorteoActivo, isOpenMenu } =
-    useContext(adminContext);
   const [currentURL, setCurrentURL] = useState("");
   const location = useLocation();
+
+  let cajeros = solana.getCashiers();
+  let isDrawActive = solana.getDraw().isActive;
 
   useEffect(() => {
     const url = location.pathname;
@@ -29,7 +31,7 @@ export const VistaCajeros = ({ limit }) => {
       className="col-12 m-0 gap-4 py-4"
       id="Cajeros"
       style={{
-        minHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(77vh - 60px)",
+        minHeight: isDrawActive ? "calc(100vh - 90px)" : "calc(77vh - 60px)",
         filter: isOpenMenu ? "brightness(50%)" : "unset",
       }}
     >

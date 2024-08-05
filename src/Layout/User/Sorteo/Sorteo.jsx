@@ -5,36 +5,38 @@ import { adminContext } from "../../../storage/AdminContext";
 import { useEffect } from "react";
 
 export const Sorteo = () => {
-  const { sorteoArray, sorteoInfo, sorteoActivo } = useContext(adminContext);
+  const { solana } = useContext(adminContext);
   const [ocupados, setOcupados] = useState(0);
+  let draw = solana.getDraw();
+  let { isActive, slots } = solana.getDraw();
   useEffect(() => {
-    if (sorteoActivo) {
-      if (sorteoInfo !== null) {
+    if (isActive) {
+      if (solana.getDraw() !== null) {
         let slotsOcupados = 0;
-        for (let i = 0; i < sorteoInfo.slots.length; i++) {
-          if (sorteoInfo.slots[i]) {
+        for (let i = 0; i < slots.length; i++) {
+          if (slots[i]) {
             slotsOcupados++;
           }
         }
-        slotsOcupados = sorteoInfo.slots.length - slotsOcupados;
+        slotsOcupados = slots.length - slotsOcupados;
         setOcupados(slotsOcupados);
       }
     }
-  }, [sorteoInfo]);
+  }, [solana.getDraw()]);
   return (
     <>
-      {sorteoActivo ? (
+      {isActive ? (
         <>
           <SorteoContainer>
             <Overlay className="d-flex flex-column align-items-center py-4 gap-3 col-12">
               <h3 className="m-0 text-white pb-3">¡Participa del sorteo!</h3>
               <StyledDrawCard className="col-12 d-flex flex-column flex-wrap align-items-center flex-md-row justify-content-md-center align-items-md-stretch mx-auto">
                 <StyledImg className="col-12 col-md-6 col-xl-4 d-flex align-items-center justify-content-center">
-                  <img src={sorteoInfo?.image?.url} alt="Draw Image" />
+                  <img src={solana.getDraw()?.image?.url} alt="Draw Image" />
                 </StyledImg>
                 <StyledTextContainer className="col-12 col-md-6 col-xl-4 p-3 px-lg-4">
                   <p>Descripción:</p>
-                  <pre>{sorteoInfo?.description}</pre>
+                  <pre>{solana.getDraw()?.description}</pre>
                 </StyledTextContainer>
               </StyledDrawCard>
               <h3 className="text-white">
@@ -42,7 +44,7 @@ export const Sorteo = () => {
                 <strong>{" " + ocupados}</strong>
               </h3>
               <StyledTableNumbers className="col-11 col-lg-8 d-flex flex-wrap text-white justify-content-center">
-                {sorteoArray.map((value, i) => {
+                {slots.map((value, i) => {
                   return (
                     <div
                       className={`numberBox ${value ? "marcado" : "noMarcado"}`}

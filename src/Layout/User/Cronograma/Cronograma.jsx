@@ -7,15 +7,15 @@ import {
 } from "../../../storage/AdminContext";
 
 export function Cronograma() {
-  const { sorteoActivo } = useContext(adminContext);
+  const { solana } = useContext(adminContext);
   const { scheduleImage } = useContext(cronoAndNewsContext);
-
+  let isDrawActive = solana.getDraw().isActive();
   return (
     <Wrapper
       id="Cronograma"
       className="d-flex justify-content-center align-items-center mb-5 p-3"
       style={{
-        maxHeight: sorteoActivo ? "calc(100vh - 90px)" : "calc(100vh - 60px)",
+        maxHeight: isDrawActive ? "calc(100vh - 90px)" : "calc(100vh - 60px)",
       }}
     >
       {scheduleImage != null ? (

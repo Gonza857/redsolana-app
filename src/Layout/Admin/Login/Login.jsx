@@ -21,38 +21,9 @@ export function Login() {
     handleSubmit,
   } = useForm();
 
-  const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     if (isAdmin) navigate("/admin");
   }, [isAdmin]);
-
-  const signInToast = () =>
-    toast.success("Iniciaste sesión correctamente", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: "colored",
-    });
-
-  const errorSignIn = (error) => {
-    toast.error(`${error}`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: "colored",
-    });
-  };
 
   const completeFields = () => {
     toast.error(`Completa los campos vacios`, {

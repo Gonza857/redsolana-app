@@ -4,15 +4,15 @@ import { adminContext } from "../../../storage/AdminContext";
 import { CasinoCard } from "../../CasinoCard/CasinoCard";
 
 export const Casinos = () => {
-  const { casinos } = useContext(adminContext);
+  const { solana } = useContext(adminContext);
   const [loadFake, setLoadFake] = useState(false);
   useEffect(() => {
-    if (casinos.length == 0) {
+    if (solana.getCasinos().length == 0) {
       setLoadFake(true);
     } else {
       setLoadFake(false);
     }
-  }, [casinos]);
+  }, [solana.getCasinos()]);
 
   return (
     <Wrapper className="col-12 gap-4 col-lg-12 py-4">
@@ -24,7 +24,7 @@ export const Casinos = () => {
         </>
       ) : (
         <>
-          {casinos.map((card) => (
+          {solana.getCasinos().map((card) => (
             <CasinoCard key={card?.link} {...card} loadFake={loadFake} />
           ))}
         </>

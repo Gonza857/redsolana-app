@@ -40,6 +40,7 @@ import {
   getNovedadImg,
   postNovedadImg,
 } from "../firebase/storage/novedades";
+import { Casino, Solana } from "../classes/Solana";
 
 export const adminContext = createContext();
 
@@ -47,39 +48,43 @@ export const solicitudesContext = createContext();
 
 export const cronoAndNewsContext = createContext();
 
-/**
- * Busca cajero con el mismo nombre
- * @param checkersArray - (array)
- * @param formData - Información tomada del formulario de busquedad
- * @returns Index del buscado
- */
-function cashierFilter(nombreCajero, arrayCajeros) {
-  let param = nombreCajero.toLowerCase();
-  let busquedad = arrayCajeros.filter((cajero) => {
-    if (cajero.nombre.toLowerCase().includes(param)) {
-      return cajero;
-    } else {
-      return null;
-    }
-  });
-  return busquedad;
-}
+// /**
+//  * Buscar cajeros por nombre
+//  * @param cashierName - Nombre del cajero
+//  * @returns Array de coincidencias
+//  */
+// const cashierFilter = (cashierName, Casino) => {
+//   return Casino.getCashiersByName(cashierName.toLowerCase());
+
+//   // let busquedad = arrayCajeros.filter((cajero) => {
+//   //   if (cajero.nombre.toLowerCase().includes(param)) {
+//   //     return cajero;
+//   //   } else {
+//   //     return null;
+//   //   }
+//   // });
+
+//   // return busquedad;
+// };
 
 /**
- * Busca cajero con la misma ID
- * @param Cajero - (object)
- * @returns Index del cajero buscado
- */
-const findCheckerID = (cajero, arrayCajeros) => {
-  return arrayCajeros.findIndex((esteCajero) => esteCajero.id === cajero.id);
-};
+//  * Busca cajero con la misma ID
+//  * @param Cajero - (object)
+//  * @returns Index del cajero buscado
+//  */
+// const findCheckerID = (cashier, Casino) => {
+//   return Casino.getCashierIndexById(cashier);
+// };
 
 export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
-  // - - - - MANEJO DE ESTADOS - - - -
-  /* / / / / / USUARIO / / / / / */
+
+  /* ------ ESTADOS REVISADOS ------ */
+  // ESTADO DE MENU ABIERTO
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  // Estado de usuario
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
-  /* / / / / / FIN  USUARIO / / / / / */
 
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
@@ -91,36 +96,35 @@ export const AdminContextProvider = (props) => {
   const [cajeros, setCajeros] = useState([]);
   // ESTADO DE ADMIN
   const [isAdmin, setIsAdmin] = useState(false);
-  // ESTADO DE MENU ABIERTO
-  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
   // ESTADO CARGA DE CAJEROS
   const [isLoading, setIsLoading] = useState(true);
 
   /* / / / / / CAJEROS / / / / / */
   const [cincoChicos, setCincoChicos] = useState([]);
   // SET CAJEROS
-  async function traerCajeros() {
-    try {
-      let cincoCaras = [...cincoChicos];
-      const result = await getAllCajeros();
-      setCajeros(result);
-      setIsLoading(false);
-      let limit = 6;
-      let actual = 0;
-      while (actual < limit) {
-        cincoCaras.push(result[actual]);
-        actual++;
-      }
-      setCincoChicos(cincoCaras);
-    } catch (error) {
-      toastError(error);
-    }
-  }
+  // async function traerCajeros() {
+  //   try {
+  //     let cincoCaras = [...cincoChicos];
+  //     const result = await getAllCajeros();
+  //     setCajeros(result);
+  //     setIsLoading(false);
+  //     let limit = 6;
+  //     let actual = 0;
+  //     while (actual < limit) {
+  //       cincoCaras.push(result[actual]);
+  //       actual++;
+  //     }
+  //     setCincoChicos(cincoCaras);
+  //   } catch (error) {
+  //     toastError(error);
+  //   }
+  // }
 
-  // SUBIR IMAGEN DE CAJERO A DB
-  const uploadCheckerImage = (file) => {
-    return uploadCheckerImageDB(file);
-  };
+  // // SUBIR IMAGEN DE CAJERO A DB
+  // const uploadCheckerImage = (file) => {
+  //   return uploadCheckerImageDB(file);
+  // };
 
   /* / / / / / FIN CAJEROS / / / / / */
 
@@ -177,30 +181,32 @@ export const AdminContextProvider = (props) => {
   /* FUNCIONES */
 
   // GET CASINOS
-  async function getCasinos() {
-    try {
-      const result = await getAllCasinos();
-      setCasinos(result);
-      setIsGettingCasinos(false);
-    } catch (error) {
-      toastError(error);
-    }
-  }
+  // async function getCasinos() {
+  //   let result = [];
+  //   try {
+  //     const result = await getAllCasinos();
+  //     setCasinos(result);
+  //     setIsGettingCasinos(false);
+  //   } catch (error) {
+  //     toastError(error);
+  //   }
+  //   return result;
+  // }
 
-  // ELIMINAR CASINO
-  const handleDeleteCasino = (casino) => {
-    deleteCasino(casino).then(() => {
-      toastSuccess("Eliminado correctamente");
-      getCasinos();
-    });
-  };
+  // ELIMINAR CASINO - PASADA al OBJETO
+  // const handleDeleteCasino = (casino) => {
+  //   deleteCasino(casino).then(() => {
+  //     toastSuccess("Eliminado correctamente");
+  //     getCasinos();
+  //   });
+  // };
 
   /* / / / / / FIN SORTEO / / / / / */
 
   // AÑADIR CAJEROS
-  function addCajero(cajeroObj) {
+  const addCajero = (cajeroObj) => {
     setCajeros((cajeros) => [...cajeros, cajeroObj]);
-  }
+  };
 
   // CAMBIAR POSICIÓN DE CAJEROS
   function moveCajerosPosition(posicion, cajero, arrayCajeros) {
@@ -240,12 +246,12 @@ export const AdminContextProvider = (props) => {
   }
 
   // BUSCAR CAJERO
-  function buscarCajero(cachierName) {
+  const buscarCajero = (cachierName) => {
     setIsSearchingCajero(true);
     setSearchedName(cachierName);
     let checkerFilterArray = cashierFilter(cachierName, cajeros);
     setSearchResult(checkerFilterArray);
-  }
+  };
 
   // RESET DATOS DEL CAJERO BUSCADO
   const resetCheckerData = () => {
@@ -320,80 +326,81 @@ export const AdminContextProvider = (props) => {
     return copyOfBooleanArray;
   };
 
-  const unCheckBusySlots = (participant) => {
-    let { numero } = participant;
-    const copyOfBooleanArray = [...sorteoArray];
-    let indice = 0;
-    let unCheck = false;
-    while (indice < copyOfBooleanArray.length && !unCheck) {
-      if (copyOfBooleanArray[numero]) {
-        copyOfBooleanArray[numero] = false;
-        unCheck = true;
-      }
-      indice++;
-    }
-    return copyOfBooleanArray;
-  };
+  // const unCheckBusySlots = (participant) => {
+  //   let { numero } = participant;
+  //   const copyOfBooleanArray = [...sorteoArray];
+  //   let indice = 0;
+  //   let unCheck = false;
+  //   while (indice < copyOfBooleanArray.length && !unCheck) {
+  //     if (copyOfBooleanArray[numero]) {
+  //       copyOfBooleanArray[numero] = false;
+  //       unCheck = true;
+  //     }
+  //     indice++;
+  //   }
+  //   return copyOfBooleanArray;
+  // };
 
-  const addParticipant = (participant) => {
-    postParticipant(participant)
-      .then(() => {
-        toastSuccess("Participante añadido correctamente.");
-        getParticipants();
-        let newBooleanArray = markBusySlots(participant);
-        updateBooleanArray(newBooleanArray).then(() => {
-          setSorteoArray(newBooleanArray);
-        });
-      })
-      .catch((error) => {
-        toastError(error.message);
-      });
-  };
+  // const addParticipant = (participant) => {
+  //   // postParticipant(participant)
+  //   //   .then(() => {
+  //   //     toastSuccess("Participante añadido correctamente.");
+  //   //     getParticipants();
+  //   //     let newBooleanArray = markBusySlots(participant);
+  //   //     updateBooleanArray(newBooleanArray).then(() => {
+  //   //       setSorteoArray(newBooleanArray);
+  //   //     });
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     toastError(error.message);
+  //   //   });
+  //   Casino.addDrawParticipant(participant);
+  // };
 
   /** Función para eliminar participantes de Firebase
    * @param participant Object
-   */
-  const deleteParticipant = (participant) => {
-    deleteParticipantDB(participant)
-      .then(() => {
-        toastSuccess("Participante eliminado correctamente.");
-        getParticipants();
-        let newBooleanArray = unCheckBusySlots(participant);
-        updateBooleanArray(newBooleanArray).then(() => {
-          setSorteoArray(newBooleanArray);
-        });
-      })
-      .catch((error) => {
-        toastError(error.message);
-      });
-  };
+  //  */
+  // const deleteParticipant = (participant) => {
+  //   deleteParticipantDB(participant)
+  //     .then(() => {
+  //       toastSuccess("Participante eliminado correctamente.");
+  //       getParticipants();
+  //       let newBooleanArray = unCheckBusySlots(participant);
+  //       updateBooleanArray(newBooleanArray).then(() => {
+  //         setSorteoArray(newBooleanArray);
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       toastError(error.message);
+  //     });
+  // };
 
-  const getNumberAndMarkOnTable = (participant) => {
-    let { numero } = participant;
-    sorteoArray[numero - 1] = true;
-  };
+  // const getNumberAndMarkOnTable = (participant) => {
+  //   let { numero } = participant;
+  //   sorteoArray[numero - 1] = true;
+  // };
 
   /** Función para controlar si se escribe un número fuera de los admitidos
    * en la tabla de numeros del sorteo
    * @param number
    * @returns boolean si es posible ocupar ese espacio
    */
-  const isNumberAvaible = (number) => {
-    let indice = 0;
-    let puedeOcupar = false;
-    if (number > sorteoArray.length - 1 || number < 0) {
-      return -1;
-    } else {
-      while (indice < sorteoArray.length) {
-        if (!sorteoArray[number]) {
-          puedeOcupar = true;
-          break;
-        }
-        indice++;
-      }
-    }
-    return puedeOcupar;
-  };
+  // const isNumberAvaible = (number) => {
+  //   let indice = 0;
+  //   let puedeOcupar = false;
+  //   if (number > sorteoArray.length - 1 || number < 0) {
+  //     return -1;
+  //   } else {
+  //     while (indice < sorteoArray.length) {
+  //       if (!sorteoArray[number]) {
+  //         puedeOcupar = true;
+  //         break;
+  //       }
+  //       indice++;
+  //     }
+  //   }
+  //   return puedeOcupar;
+  // };
 
   // Yanina, Mega, Yanina riberos, 373
 
@@ -407,72 +414,72 @@ export const AdminContextProvider = (props) => {
 
   // MANEJO DE CASINOS
 
-  const setSorteo = () => {
-    getSorteo().then((sorteo) => {
-      // SETEAR OBJETO SORTEO
-      setSorteoInfo(sorteo[0]);
-      // SETEAR ESTADO
-      setSorteoActivo(sorteo[0].isActive);
-      // SETEAR ARRAY DE BOOLEAN
-      setSorteoArray(sorteo[0].slots);
-      setIsDrawLoading(false);
-    }, []);
-  };
+  // const setSorteo = () => {
+  //   getSorteo().then((sorteo) => {
+  //     // SETEAR OBJETO SORTEO
+  //     setSorteoInfo(sorteo[0]);
+  //     // SETEAR ESTADO
+  //     setSorteoActivo(sorteo[0].isActive);
+  //     // SETEAR ARRAY DE BOOLEAN
+  //     setSorteoArray(sorteo[0].slots);
+  //     setIsDrawLoading(false);
+  //   }, []);
+  // };
 
-  const getSorteoAgain = () => {
-    getSorteo()
-      .then((sorteo) => {
-        // SETEAR ESTADO
-        setSorteoActivo(sorteo[0].isActive);
-        // SETEAR ARRAY DE BOOLEAN
-        setSorteoArray(sorteo[0].slots);
-        // SETEAR OBJETO SORTEO
-        setSorteoInfo(sorteo[0]);
-        setIsDrawLoading(false);
-      })
-      .catch((error) => {
-        toastError(error.message);
-      });
-  };
+  // const getSorteoAgain = () => {
+  //   getSorteo()
+  //     .then((sorteo) => {
+  //       // SETEAR ESTADO
+  //       setSorteoActivo(sorteo[0].isActive);
+  //       // SETEAR ARRAY DE BOOLEAN
+  //       setSorteoArray(sorteo[0].slots);
+  //       // SETEAR OBJETO SORTEO
+  //       setSorteoInfo(sorteo[0]);
+  //       setIsDrawLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       toastError(error.message);
+  //     });
+  // };
 
-  const deleteDraw = () => {
-    Swal.fire({
-      title: "¿Seguro que deseas eliminar el sorteo actual?",
-      text: "Esta acción no se puede deshacer",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        resetDraw();
-      }
-    });
-  };
+  // const deleteDraw = () => {
+  //   Swal.fire({
+  //     title: "¿Seguro que deseas eliminar el sorteo actual?",
+  //     text: "Esta acción no se puede deshacer",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Sí, eliminar",
+  //     cancelButtonText: "Cancelar",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       resetDraw();
+  //     }
+  //   });
+  // };
 
-  const resetDraw = () => {
-    const emptyDraw = {
-      isActive: false,
-      slots: null,
-      image: null,
-      description: null,
-    };
+  // const resetDraw = () => {
+  //   const emptyDraw = {
+  //     isActive: false,
+  //     slots: null,
+  //     image: null,
+  //     description: null,
+  //   };
 
-    for (let i = 0; i < participants.length; i++) {
-      deleteParticipantDB(participants[i]).catch((error) => {
-        toastError(error.message);
-      });
-    }
-    updateDraw(emptyDraw).then(() => {
-      Swal.fire(
-        "¡Eliminado!",
-        "El sorteo se eliminó correctamente.",
-        "success"
-      );
-    });
-  };
+  //   for (let i = 0; i < participants.length; i++) {
+  //     deleteParticipantDB(participants[i]).catch((error) => {
+  //       toastError(error.message);
+  //     });
+  //   }
+  //   updateDraw(emptyDraw).then(() => {
+  //     Swal.fire(
+  //       "¡Eliminado!",
+  //       "El sorteo se eliminó correctamente.",
+  //       "success"
+  //     );
+  //   });
+  // };
 
   const scrollToSection = (id) => {
     navigate("/");
@@ -520,19 +527,34 @@ export const AdminContextProvider = (props) => {
 
   // useEffect Montado
   useEffect(() => {
-    // Traemos data del sorteo.
-    setSorteo();
-    // Traemos cajeros.
-    traerCajeros();
+    const fb = new Firebase();
+    const solana = new Solana();
+    let [c_fiveCashiers, c_allCashiers, c_casinos, c_requests, c_draw] =
+      solana.initialize();
+
+    // Traemos casinos
+    setCasinos(c_casinos);
+    setIsGettingCasinos(false);
+    // Traemos cajeros
+    setCajeros(c_allCashiers);
+    setCincoChicos(c_fiveCashiers);
     // Traemos participantes del sorteo
-    getParticipants();
+    setParticipants(c_draw._participants);
+    markDataBaseParticipants(c_draw.participants);
+    // Traemos información del sorteo
+    setSorteoInfo(c_draw);
+    setSorteoActivo(c_draw.isActive);
+    setSorteoArray(c_draw.slots);
+    setIsDrawLoading(false);
+    // Cancelamos carga
+    setIsLoading(false);
     // Vigilar sesión (admin)
     keepSession();
-    // Traemos casinos.
-    getCasinos();
   }, []);
 
   const value = {
+    solana,
+    fb,
     cajeros,
     setCajeros,
     traerCajeros,
@@ -548,7 +570,7 @@ export const AdminContextProvider = (props) => {
     searchResult,
     searchedName,
     moveCajerosPosition,
-    isOpenMenu,
+    isOpenMenu, // OK
     setIsOpenMenu,
     verCajerosTabla,
     setIsLoading,
