@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { toastInfo } from "../../helpers/helpers";
 
 export const AdminBar = () => {
-  const { buscarCajero, searchedName, resetCheckerData } =
+  const { buscarCajero, searchedName, resetCheckerData, solana } =
     useContext(adminContext);
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = () => {

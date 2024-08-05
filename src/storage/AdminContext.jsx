@@ -40,7 +40,8 @@ import {
   getNovedadImg,
   postNovedadImg,
 } from "../firebase/storage/novedades";
-import { Casino, Solana } from "../classes/Solana";
+import Solana from "../classes/Solana";
+import Firebase from "../classes/Firebase";
 
 export const adminContext = createContext();
 
@@ -78,10 +79,94 @@ export const cronoAndNewsContext = createContext();
 
 export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
+  const fb = new Firebase();
+  const solana = new Solana();
+  const [main, setMain] = useState([[], [], [], [], []]);
+  const [isLoading, setIsLoading] = useState(true);
 
   /* ------ ESTADOS REVISADOS ------ */
+
   // ESTADO DE MENU ABIERTO
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  // CASINOS
+  const [casinos, setCasinos] = useState([]);
+
+  // CASHIERS
+  const [cincoChicos, setCincoChicos] = useState([]);
+  // const [cajeros, setCajeros] = useState([]);
+  const [cashiers, setCashiers] = useState([]);
+
+  // DRAW
+  const [participants, setParticipants] = useState([]);
+  const [draw, setDraw] = useState(null);
+
+  // REQUESTS
+  const [requests, setRequests] = useState(null);
+
+  // LOADERS
+  // BUSCANDO CASINO - OK
+  const [isGettingCasinos, setIsGettingCasinos] = useState(false);
+  // CARGANDO SORTEO - OK
+  const [isDrawLoading, setIsDrawLoading] = useState(false);
+
+  // MANEJO DE LOGIN
+  const adminSignIn = (email, pass) => {
+    setIsVerifingAdmin(true);
+    signInFirebase(email, pass)
+      .then(() => {
+        toastSuccess("Sesión iniciada correctamente.");
+        setIsAdmin(true);
+        setIsVerifingAdmin(false);
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
+  };
+
+  const keepSession = () => {
+    onAuthStateChanged(firebaseAuth(), (user) => {
+      if (user) {
+        setIsVerifingAdmin(false);
+        setIsAdmin(user.emailVerified);
+      }
+    });
+    // BGN66FLIYjnVnO6c13K6Ad2GXIU_oPcbz8kXvkyS5ED5A0iWaXVzhRGiOm2SBE7DIVHhwsfUhXQ34cxU73g4Z5U
+  };
+
+  const logout = () => {
+    logoutFirebase().then(() => {
+      setIsAdmin(false);
+      toastSuccess("Cerraste sesión correctamente");
+    });
+  };
+
+  // useEffect Montado
+  useEffect(() => {
+    setIsLoading(true);
+    const start = async () => {
+      try {
+        let r = await solana.initialize();
+        console.log(r[2]);
+        // Traemos cajeros
+        setCincoChicos(r[0]);
+        setCashiers(r[1]);
+        // Traemos casinos
+        setCasinos(r[2]);
+        setRequests(r[3]);
+
+        setDraw(r[4]);
+        setParticipants(r[4].participants);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error.message);
+      }
+    };
+
+    start();
+    console.log("empezado");
+  }, []);
 
   // Estado de usuario
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
@@ -93,15 +178,12 @@ export const AdminContextProvider = (props) => {
   // ESTADO  DE BUSQUEDA
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   // ESTADO DE ARRAY DE CAJEROS
-  const [cajeros, setCajeros] = useState([]);
   // ESTADO DE ADMIN
   const [isAdmin, setIsAdmin] = useState(false);
 
   // ESTADO CARGA DE CAJEROS
-  const [isLoading, setIsLoading] = useState(true);
 
   /* / / / / / CAJEROS / / / / / */
-  const [cincoChicos, setCincoChicos] = useState([]);
   // SET CAJEROS
   // async function traerCajeros() {
   //   try {
@@ -137,14 +219,10 @@ export const AdminContextProvider = (props) => {
   // ARRAY DE NUMEROS SORTEO
   const [sorteoArray, setSorteoArray] = useState([]);
   // OBJETO SORTEO
-  const [sorteoInfo, setSorteoInfo] = useState(null);
   // LOADER SORTEO
-  const [isDrawLoading, setIsDrawLoading] = useState(true);
 
   /* PARTICIPANTES DEL SORTEO */
 
-  // PARTICIPANTES DEL SORTEO
-  const [participants, setParticipants] = useState([]);
   // SE AGREGO ALGUNO?
   const [wasAdded, setWasAdded] = useState(false);
   // ULTIMO PARTICIPANTE AGREGADO
@@ -173,9 +251,7 @@ export const AdminContextProvider = (props) => {
   /* / / / / / CASINOS / / / / / */
 
   // ARRAY DE CASINOS
-  const [casinos, setCasinos] = useState([]);
-  // ESTADO DE LOADING
-  const [isGettingCasinos, setIsGettingCasinos] = useState(true);
+
   const [casinoToEdit, setCasinoToEdit] = useState({});
 
   /* FUNCIONES */
@@ -203,53 +279,55 @@ export const AdminContextProvider = (props) => {
 
   /* / / / / / FIN SORTEO / / / / / */
 
-  // AÑADIR CAJEROS
-  const addCajero = (cajeroObj) => {
-    setCajeros((cajeros) => [...cajeros, cajeroObj]);
-  };
+  // // AÑADIR CAJEROS
+  // const addCajero = (cajeroObj) => {
+  //   setCajeros((cajeros) => [...cajeros, cajeroObj]);
+  // };
 
-  // CAMBIAR POSICIÓN DE CAJEROS
-  function moveCajerosPosition(posicion, cajero, arrayCajeros) {
-    /*
-    CASOS:
-    1) Cajero no existe previamente, agregamos en la posición deseada.
-    2) Cajero ya existe, cambiamos su posición  
-    */
-    let cajeroIndex = findCheckerID(cajero, arrayCajeros);
-    if (cajeroIndex === -1) {
-      // CASO 1
-      //("AGREGADO Y CAMBIADO DE POSICIÓN");
-      arrayCajeros.splice(posicion, 0, cajero);
-      let newArray = [];
-      arrayCajeros.forEach((caj, i) => {
-        caj.pos = i;
-        newArray.push(caj);
-      });
-      return newArray;
-    } else {
-      // CASO 2
-      // ("CAMBIADO DE POSICIÓN");
-      arrayCajeros.splice(cajeroIndex, 1);
-      arrayCajeros.splice(posicion, 0, cajero);
-      let newArray = [];
-      arrayCajeros.forEach((caj, i) => {
-        caj.pos = i;
-        newArray.push(caj);
-      });
-      return newArray;
-    }
-  }
+  // // CAMBIAR POSICIÓN DE CAJEROS
+  // function moveCajerosPosition(posicion, cajero, arrayCajeros) {
+  //   /*
+  //   CASOS:
+  //   1) Cajero no existe previamente, agregamos en la posición deseada.
+  //   2) Cajero ya existe, cambiamos su posición
+  //   */
+  //   let cajeroIndex = findCheckerID(cajero, arrayCajeros);
+  //   if (cajeroIndex === -1) {
+  //     // CASO 1
+  //     //("AGREGADO Y CAMBIADO DE POSICIÓN");
+  //     arrayCajeros.splice(posicion, 0, cajero);
+  //     let newArray = [];
+  //     arrayCajeros.forEach((caj, i) => {
+  //       caj.pos = i;
+  //       newArray.push(caj);
+  //     });
+  //     return newArray;
+  //   } else {
+  //     // CASO 2
+  //     // ("CAMBIADO DE POSICIÓN");
+  //     arrayCajeros.splice(cajeroIndex, 1);
+  //     arrayCajeros.splice(posicion, 0, cajero);
+  //     let newArray = [];
+  //     arrayCajeros.forEach((caj, i) => {
+  //       caj.pos = i;
+  //       newArray.push(caj);
+  //     });
+  //     return newArray;
+  //   }
+  // }
 
-  // EDITAR CAJEROS
-  function updateCajeros(cajerosArr) {
-    setCajeros(cajerosArr);
-  }
+  // // EDITAR CAJEROS
+  // function updateCajeros(cajerosArr) {
+  //   setCajeros(cajerosArr);
+  // }
 
-  // BUSCAR CAJERO
-  const buscarCajero = (cachierName) => {
+  // BUSCAR CAJERO - OK
+  const buscarCajero = (cashierName) => {
     setIsSearchingCajero(true);
-    setSearchedName(cachierName);
-    let checkerFilterArray = cashierFilter(cachierName, cajeros);
+    setSearchedName(cashierName);
+    let checkerFilterArray = solana.getCashiersByName(
+      cashierName.toLowerCase()
+    );
     setSearchResult(checkerFilterArray);
   };
 
@@ -260,56 +338,51 @@ export const AdminContextProvider = (props) => {
     setSearchResult(null);
   };
 
-  // CONSOLE.TABLE CAJEROS
-  const verCajerosTabla = () => {
-    console.table(cajeros);
-  };
-
   // FUNCION ELIMINAR CAJEROS
-  function handleDelete(cajeroEliminado) {
-    Swal.fire({
-      title: "¿Estas seguro que quieres eliminar este cajero?",
-      text: "Los cambios no se pueden deshacer.",
-      showDenyButton: true,
-      denyButtonText: `Cancelar`,
-      confirmButtonText: "Eliminar",
-      reverseButtons: true,
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        let searchPosition = cajeros.findIndex(
-          (cajeroFind) => cajeroFind.id === cajeroEliminado.id
-        );
-        let copyCajeros = [...cajeros];
-        copyCajeros.splice(searchPosition, 1);
-        setCajeros(copyCajeros);
-        deleteCajero(cajeroEliminado);
-        toastSuccess("Cajero eliminado correctamente");
-      } else if (result.isDenied) {
-        Swal.fire("Cajero no elimnado", "", "info");
-      }
-    });
-  }
+  // function handleDelete(cajeroEliminado) {
+  //   Swal.fire({
+  //     title: "¿Estas seguro que quieres eliminar este cajero?",
+  //     text: "Los cambios no se pueden deshacer.",
+  //     showDenyButton: true,
+  //     denyButtonText: `Cancelar`,
+  //     confirmButtonText: "Eliminar",
+  //     reverseButtons: true,
+  //   }).then((result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+  //     if (result.isConfirmed) {
+  //       let searchPosition = cajeros.findIndex(
+  //         (cajeroFind) => cajeroFind.id === cajeroEliminado.id
+  //       );
+  //       let copyCajeros = [...cajeros];
+  //       copyCajeros.splice(searchPosition, 1);
+  //       setCajeros(copyCajeros);
+  //       deleteCajero(cajeroEliminado);
+  //       toastSuccess("Cajero eliminado correctamente");
+  //     } else if (result.isDenied) {
+  //       Swal.fire("Cajero no elimnado", "", "info");
+  //     }
+  //   });
+  // }
 
   // FUNCIONES PARA SORTEO
 
   // SET PARTICIPANTES
-  async function getParticipants() {
-    try {
-      const result = await getAllParticipants();
-      setParticipants(result);
-      markDataBaseParticipants(result);
-      setIsLoading(false);
-    } catch (error) {
-      toastError(error);
-    }
-  }
+  // async function getParticipants() {
+  //   try {
+  //     const result = await getAllParticipants();
+  //     setParticipants(result);
+  //     markDataBaseParticipants(result);
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     toastError(error);
+  //   }
+  // }
 
-  const markDataBaseParticipants = (arrayParticipants) => {
-    for (let participant of arrayParticipants) {
-      getNumberAndMarkOnTable(participant);
-    }
-  };
+  // const markDataBaseParticipants = (arrayParticipants) => {
+  //   for (let participant of arrayParticipants) {
+  //     getNumberAndMarkOnTable(participant);
+  //   }
+  // };
 
   const markBusySlots = (participant) => {
     let { numero } = participant;
@@ -488,79 +561,21 @@ export const AdminContextProvider = (props) => {
     }, 500);
   };
 
-  // MANEJO DE LOGIN
-  const adminSignIn = (email, pass) => {
-    setIsVerifingAdmin(true);
-    signInFirebase(email, pass)
-      .then(() => {
-        toastSuccess("Sesión iniciada correctamente.");
-        setIsAdmin(true);
-        setIsVerifingAdmin(false);
-      })
-      .catch((error) => {
-        toastError(error.message);
-      });
-  };
-
-  const keepSession = () => {
-    onAuthStateChanged(firebaseAuth(), (user) => {
-      if (user) {
-        setIsVerifingAdmin(false);
-        setIsAdmin(user.emailVerified);
-      }
-    });
-    // BGN66FLIYjnVnO6c13K6Ad2GXIU_oPcbz8kXvkyS5ED5A0iWaXVzhRGiOm2SBE7DIVHhwsfUhXQ34cxU73g4Z5U
-  };
-
-  const logout = () => {
-    logoutFirebase().then(() => {
-      setIsAdmin(false);
-      toastSuccess("Cerraste sesión correctamente");
-    });
-  };
-
   useEffect(() => {
     // CALCULA Y SETEA LOS CUPOS OCUPADOS
     if (participants?.length > 0)
       setParticipantsQuantity(participantsCounter(participants));
   }, [participants]);
 
-  // useEffect Montado
-  useEffect(() => {
-    const fb = new Firebase();
-    const solana = new Solana();
-    let [c_fiveCashiers, c_allCashiers, c_casinos, c_requests, c_draw] =
-      solana.initialize();
-
-    // Traemos casinos
-    setCasinos(c_casinos);
-    setIsGettingCasinos(false);
-    // Traemos cajeros
-    setCajeros(c_allCashiers);
-    setCincoChicos(c_fiveCashiers);
-    // Traemos participantes del sorteo
-    setParticipants(c_draw._participants);
-    markDataBaseParticipants(c_draw.participants);
-    // Traemos información del sorteo
-    setSorteoInfo(c_draw);
-    setSorteoActivo(c_draw.isActive);
-    setSorteoArray(c_draw.slots);
-    setIsDrawLoading(false);
-    // Cancelamos carga
-    setIsLoading(false);
-    // Vigilar sesión (admin)
-    keepSession();
-  }, []);
-
   const value = {
     solana,
     fb,
-    cajeros,
-    setCajeros,
-    traerCajeros,
-    handleDelete,
-    addCajero,
-    updateCajeros,
+    casinos,
+    // cajeros,
+    // setCajeros,
+    // handleDelete,
+    // addCajero,
+    // updateCajeros,
     isAdmin,
     setIsAdmin,
     resetCheckerData, // RESETEAR BUSQUEDA
@@ -569,30 +584,27 @@ export const AdminContextProvider = (props) => {
     buscarCajero,
     searchResult,
     searchedName,
-    moveCajerosPosition,
     isOpenMenu, // OK
     setIsOpenMenu,
-    verCajerosTabla,
     setIsLoading,
     isLoading,
     sorteoActivo,
     setSorteoActivo,
     participants,
-    addParticipant,
     sorteoArray,
 
-    isNumberAvaible,
-    deleteParticipant,
+    // isNumberAvaible,
+    // deleteParticipant,
     setLastParticipant,
     lastParticipant,
     wasAdded,
     setWasAdded,
     casinos,
     isGettingCasinos, // ESTADO LOADER
-    handleDeleteCasino,
-    getCasinos,
-    setPreviewDraw, //sorteo
-    setSorteo, // GET AND SET SORTEO DB
+    // handleDeleteCasino,
+    // getCasinos,
+    // setPreviewDraw, //sorteo
+    // setSorteo, // GET AND SET SORTEO DB
     previewDraw,
     setPreviewSlots,
     previewSlots,
@@ -600,16 +612,16 @@ export const AdminContextProvider = (props) => {
     previewImage,
     setPreviewDescription,
     previewDescription,
-    sorteoInfo,
-    getSorteoAgain,
-    deleteDraw, // NO SE XD TODO:
-    resetDraw, // RESET SORTEO (VUELVE VALORES A NULOS/VACIOS)
+    // sorteoInfo,
+    // getSorteoAgain,
+    // deleteDraw, // NO SE XD TODO:
+    // resetDraw, // RESET SORTEO (VUELVE VALORES A NULOS/VACIOS)
     isDrawLoading, // ESTADO DE CARGA DE SORTEO
     setIsDrawLoading, // SET ESTADO DE CARGA DE SORTEO
     markOnBooleanArray, // AGREGAR PARTICIPANTES
     participantsQuantity, // CANTIDAD DE PARTICIPANTES INSCRIPTOS
     // CAJEROS
-    uploadCheckerImage, // SUBIR IMAGEN CAJEROS
+    // uploadCheckerImage, // SUBIR IMAGEN CAJEROS
     adminSignIn, // FUNCION PARA INICIAR SESION
     logout, // CERRAR SESION
     isVerifingAdmin, // ESTADO DE VERIFIACIÓN ADMIN

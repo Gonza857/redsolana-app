@@ -10,7 +10,30 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-export class Firebase {
+export default class Firebase {
+  // REQUESTS
+  static async getRequests() {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const collectionCajeros = collection(DATABASE, "solicitudes");
+      // traemos los docs (array cajeros)
+      const response = await getDocs(collectionCajeros);
+      // devolvemos objeto con la data, y asignamos el ID
+      let solicitudes = response.docs.map((solicitud) => {
+        return {
+          ...solicitud.data(),
+          id: solicitud.id,
+        };
+      });
+      // let copyCajeros = [...solicitudes];
+      // let sortCajerosByPos = copyCajeros.sort((a, b) => a.pos - b.pos);
+      // return sortCajerosByPos;
+      return solicitudes;
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
   // CASINOS
   static async updateCasino(casino) {
     try {
@@ -20,9 +43,27 @@ export class Firebase {
       toastError("Ooops! Algo salio mal.");
     }
   }
+  static async getCasinos() {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const collectionCasinos = collection(DATABASE, "casinos");
+      // traemos los docs (array cajeros)
+      const response = await getDocs(collectionCasinos);
+      // devolvemos objeto con la data, y asignamos el ID
+      let casinos = response.docs.map((casino) => {
+        return {
+          ...casino.data(),
+          id: casino.id,
+        };
+      });
+      return casinos;
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
 
   // CASHIERS
-  static async getAllCajeros() {
+  static async getCashiers() {
     try {
       // coleccion --> referencia a la funcion base, referencia al nombre de la base
       const collectionCajeros = collection(DATABASE, "cajeros");
@@ -63,6 +104,25 @@ export class Firebase {
       toastError(error);
     }
   }
+  static async getDraw() {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const colecctionDraw = collection(DATABASE, "sorteo");
+      // traemos los docs (array cajeros)
+      const response = await getDocs(colecctionDraw);
+      // devolvemos objeto con la data, y asignamos el ID
+      let sorteo = response.docs.map((sorteo) => {
+        return {
+          ...sorteo.data(),
+          id: sorteo.id,
+        };
+      });
+      return sorteo[0];
+    } catch (error) {
+      toastError(error);
+    }
+  }
+
   // IMAGES
   static async postCasinoImage(file) {
     try {

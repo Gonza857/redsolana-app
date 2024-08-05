@@ -98,7 +98,7 @@ function AddCajerosForm({ onClose }) {
       data.pos = Number(data.pos);
       if (data.pos !== cajeros.length + 1) {
         postCajeros(data).then((result) => {
-          const orderedCajeros = moveCajerosPosition(
+          const orderedCajeros = moveCashierPosition(
             data.pos - 1,
             result,
             cajeros

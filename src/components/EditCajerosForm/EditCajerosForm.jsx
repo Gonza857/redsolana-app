@@ -102,17 +102,11 @@ export const EditCajerosForm = ({ onClose, show, cajeroData, cajeroIndex }) => {
   };
 
   useEffect(() => {
-    console.table(cajeroData.imagen);
     if (cajeroData.imagen == null) setLaQuiereBorrar(true);
   }, []);
 
-  const {
-    cajeros,
-    setCajeros,
-    moveCajerosPosition,
-    traerCajeros,
-    setIsLoading,
-  } = useContext(adminContext);
+  const { cajeros, setCajeros, traerCajeros, setIsLoading, solana } =
+    useContext(adminContext);
 
   const {
     register,
@@ -140,11 +134,12 @@ export const EditCajerosForm = ({ onClose, show, cajeroData, cajeroIndex }) => {
       .then(() => {
         if (esPosicionCambiada) {
           let copyCajeros = [...cajeros];
-          let newArray = moveCajerosPosition(data.pos, data, copyCajeros);
-          setCajeros(newArray);
+          let cashiersUpdated = solana.moveCashierPosition(data.pos, data);
+          // let newArray = moveCajerosPosition(data.pos, data, copyCajeros);
+          setCajeros(cashiersUpdated);
           setIsLoading(true);
           scrollToTop();
-          updateAllCajeros(newArray)
+          updateAllCajeros(cashiersUpdated)
             .then(() => {
               traerCajeros()
                 .then(() => {

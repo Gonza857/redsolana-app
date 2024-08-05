@@ -1,16 +1,16 @@
 import Swal from "sweetalert2";
 import { postParticipant } from "../firebase/database/sorteo";
-import { toastSuccess } from "../helpers/helpers";
-import { Firebase } from "./Firebase";
+import { toastError, toastSuccess } from "../helpers/helpers";
+import Firebase from "./Firebase";
 
-export class Draw {
-  constructor() {
-    this.id = 0;
-    this.participants = [];
-    this.slots = [];
-    this.description = "";
-    this.image = {};
-    this.isActive = false;
+export default class Draw {
+  constructor({ participants, slots, description, image, isActive }) {
+    this._id = 0;
+    this._participants = participants;
+    this._slots = slots;
+    this._description = description;
+    this._image = image;
+    this._isActive = isActive;
   }
   delete() {
     Swal.fire({
@@ -90,7 +90,13 @@ export class Draw {
   }
 
   markSlotAsTrue(participant) {
-    this.slots[participant.numero - 1] = true;
+    if (participant !== null) this._slots[participant.numero - 1] = true;
+  }
+
+  markSlotPerParticipant() {
+    for (let participant of this.participants) {
+      this.markSlotAsTrue(participant);
+    }
   }
 
   getParticipansQuantity() {
@@ -118,8 +124,8 @@ export class Draw {
     Firebase.deleteParticipant(participant)
       .then(() => {
         // toastSuccess("Participante eliminado correctamente.");
-        getParticipants();
-        let newBooleanArray = unCheckBusySlots(participant);
+        // getParticipants();
+        let newBooleanArray = this.unCheckBusySlots(participant);
         Firebase.updateDrawBooleanArray(newBooleanArray).then(() => {
           //   setSorteoArray(newBooleanArray);
         });

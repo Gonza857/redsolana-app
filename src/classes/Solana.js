@@ -1,10 +1,11 @@
 import { deleteCasino } from "../firebase/database/casinos";
 import { getSorteo } from "../firebase/database/sorteo";
 import { toastError, toastSuccess } from "../helpers/helpers";
-import { Firebase } from "./Firebase";
+import Firebase from "./Firebase";
 import Casino from "./Casino";
+import Draw from "./Draw";
 
-export class Solana {
+export default class Solana {
   constructor() {
     this._cajeros = [];
     this._solicitudes = [];
@@ -14,37 +15,58 @@ export class Solana {
 
   async initialize() {
     // traer cajeros, casinos, solicitudes
-    let [c_fiveCashiers, c_allCashiers] = await this.getCashiersFromDB();
+    let c_allCashiers = await this.getCashiersFromDB();
     this._cajeros = c_allCashiers;
+    let c_fiveCashiers = this.getTheFirstFiveCashiers();
+
     let c_casinos = await this.getCasinosFromDB();
     this._casinos = c_casinos;
+    console.log(this._casinos);
+
     let c_requests = await this.getRequestsFromDB();
     this._solicitudes = c_requests;
+
     let c_draw = await this.getDrawFromDB();
-    this._draw = c_draw[0];
-    return [c_fiveCashiers, c_allCashiers, c_casinos, c_requests, c_draw[0]];
+    this._draw = new Draw(c_draw);
+    this._draw.markSlotPerParticipant();
+
+    let result = [
+      c_fiveCashiers,
+      c_allCashiers,
+      c_casinos,
+      c_requests,
+      this.draw,
+    ];
+    console.log(result);
+    return result;
   }
 
   async getCasinosFromDB() {
-    return await getSorteo();
+    return await Firebase.getCasinos();
   }
 
-  async getRequestsFromDB() {}
+  async getRequestsFromDB() {
+    return await Firebase.getRequests();
+  }
 
-  async getDrawFromDB() {}
+  async getDrawFromDB() {
+    return await Firebase.getDraw();
+  }
 
   async getCashiersFromDB() {
-    try {
-      const c_allCashiers = await Firebase.getCashiers();
-      const c_fiveCashiers = this.getTheFirstFiveCashiers();
-      //   setCajeros(result);
-      //   setIsLoading(false);
-      return [c_fiveCashiers, c_allCashiers];
-      //   setCincoChicos(cincoCaras);
-    } catch (error) {
-      toastError(error);
-      return false;
-    }
+    // const c_fiveCashiers = this.getTheFirstFiveCashiers();
+    return await Firebase.getCashiers();
+
+    // try {
+    //   this._cashiers = await Firebase.getCashiers();
+    //   //   setCajeros(result);
+    //   //   setIsLoading(false);
+    //   return [c_fiveCashiers, c_allCashiers];
+    //   //   setCincoChicos(cincoCaras);
+    // } catch (error) {
+    //   toastError(error);
+    //   return false;
+    // }
   }
 
   // DRAW
@@ -73,6 +95,36 @@ export class Solana {
         return null;
       }
     });
+  }
+  moveCashierPosition(newPos, cashier) {
+    /*
+    CASOS:
+    1) Cajero no existe previamente, agregamos en la posición deseada.
+    2) Cajero ya existe, cambiamos su posición  
+    */
+    let cashierIndex = this.getCashierIndexById(cashier);
+    let copyOfCashiers = this._cashiers;
+    if (cashierIndex === -1) {
+      // CASO 1
+      //("AGREGADO Y CAMBIADO DE POSICIÓN");
+      copyOfCashiers.splice(newPos, 0, cashier);
+      return this.orderCashiersPos(copyOfCashiers);
+    } else {
+      // CASO 2
+      // ("CAMBIADO DE POSICIÓN");
+      copyOfCashiers.splice(cashierIndex, 1);
+      copyOfCashiers.splice(newPos, 0, cashier);
+      return this.orderCashiersPos(copyOfCashiers);
+    }
+  }
+
+  orderCashiersPos(copyOfCashiers) {
+    let newArray = [];
+    copyOfCashiers.forEach((caj, i) => {
+      caj.pos = i;
+      newArray.push(caj);
+    });
+    return newArray;
   }
 
   // CASINOS

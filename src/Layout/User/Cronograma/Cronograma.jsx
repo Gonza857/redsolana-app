@@ -9,7 +9,7 @@ import {
 export function Cronograma() {
   const { solana } = useContext(adminContext);
   const { scheduleImage } = useContext(cronoAndNewsContext);
-  let isDrawActive = solana.getDraw().isActive();
+  let isDrawActive = solana.draw.isActive;
   return (
     <Wrapper
       id="Cronograma"

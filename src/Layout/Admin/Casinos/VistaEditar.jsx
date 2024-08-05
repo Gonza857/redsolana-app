@@ -13,7 +13,7 @@ import {
   postCasinoImage,
 } from "../../../firebase/storage/casino";
 import { updateCasino } from "../../../firebase/database/casinos";
-import { Firebase } from "../../../classes/Firebase";
+import Firebase from "../../../classes/Firebase";
 
 export const EditCasinoView = () => {
   const { casinoToEdit, solana } = useContext(adminContext);

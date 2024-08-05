@@ -13,8 +13,8 @@ export const VistaCajeros = ({ limit }) => {
   const [currentURL, setCurrentURL] = useState("");
   const location = useLocation();
 
-  let cajeros = solana.getCashiers();
-  let isDrawActive = solana.getDraw().isActive;
+  let cajeros = solana.cashiers;
+  let isDrawActive = solana.draw.isActive;
 
   useEffect(() => {
     const url = location.pathname;

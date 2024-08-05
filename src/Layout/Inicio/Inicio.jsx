@@ -3,8 +3,8 @@ import { adminContext } from "../../storage/AdminContext";
 import { VistaCajeros } from "../User/VistaCajeros/VistaCajeros";
 import { Cronograma } from "../User/Cronograma/Cronograma";
 import { Divisor } from "../../components/AUser/Inicio/Divisor";
-import { Header } from "../../components/AUser/Inicio/Header";
-import { Casinos } from "../../components/AUser/Inicio/Casinos";
+import { Header } from "../../components/Header";
+import { Casinos } from "../../components/Casinos";
 
 export const Inicio = () => {
   const { isOpenMenu } = useContext(adminContext);
@@ -18,6 +18,7 @@ export const Inicio = () => {
         opacity: `${isOpenMenu ? "0.3" : "1"}`,
       }}
     >
+      {/* HEADER OK */}
       <Header />
       <Divisor>Casinos</Divisor>
       <Casinos />
