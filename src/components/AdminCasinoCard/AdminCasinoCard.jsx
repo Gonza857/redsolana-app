@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../storage/AdminContext";
-import { MainButton } from "../APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
+import { MainButton } from "../UI/MainButton";
 
 export const AdminCasinoCard = ({ card }) => {
   const { handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
@@ -25,7 +25,7 @@ export const AdminCasinoCard = ({ card }) => {
       <CardControl className="gap-2">
         <MainButton
           primary={true}
-          fn={() => {
+          fonClick={() => {
             setCasinoToEdit(card);
             navigate(`/admin/casinos/editar/${card?.id}`);
           }}
@@ -34,7 +34,7 @@ export const AdminCasinoCard = ({ card }) => {
         </MainButton>
         <MainButton
           className="btn btn-danger"
-          fn={() => handleDeleteCasino(card)}
+          onClick={() => handleDeleteCasino(card)}
         >
           <FaTrashAlt />
         </MainButton>

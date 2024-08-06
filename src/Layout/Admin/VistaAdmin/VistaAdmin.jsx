@@ -7,7 +7,6 @@ import {
   cronoAndNewsContext,
 } from "../../../storage/AdminContext";
 import { IoRadioButtonOn } from "react-icons/io5";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import {
   AiOutlineAppstoreAdd,
   AiOutlineEdit,
@@ -21,6 +20,7 @@ import {
 import { FiUsers } from "react-icons/fi";
 import { Ring } from "@uiball/loaders";
 import { Animated } from "react-animated-css";
+import { MainButton } from "../../../components/UI/MainButton";
 
 const iconStyle = { fontSize: "1.5rem" };
 
@@ -156,7 +156,7 @@ export const VistaAdmin = () => {
           <h3>Cronograma</h3>
           <div className="gap-2">
             <Link to="/admin/cronograma/editar">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
+              <MainButton onClick={() => window.scrollTo(0, 0)}>
                 {scheduleImage != null ? (
                   <>
                     <p className="m-0 d-none d-lg-block">Ver</p>
@@ -184,19 +184,19 @@ export const VistaAdmin = () => {
           <h3>Solicitudes</h3>
           <div className="gap-2">
             <Link to="/admin/solicitudes/plataformas">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
+              <MainButton onClick={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Plataformas</p>
                 <AiOutlineOrderedList style={iconStyle} />
               </MainButton>
             </Link>
             <Link to="/admin/solicitudes">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
+              <MainButton onClick={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Pendientes</p>
                 <AiOutlineEye style={iconStyle} />
               </MainButton>
             </Link>
             <Link to="/admin/solicitudes/historial">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
+              <MainButton onClick={() => window.scrollTo(0, 0)}>
                 <p className="m-0 d-none d-lg-block">Historial</p>
                 <AiOutlineHistory style={iconStyle} />
               </MainButton>
@@ -215,7 +215,7 @@ export const VistaAdmin = () => {
           <h3>Novedades</h3>
           <div className="gap-2">
             <Link to="/admin/novedades">
-              <MainButton fn={() => window.scrollTo(0, 0)}>
+              <MainButton onClick={() => window.scrollTo(0, 0)}>
                 {newsImage != null ? (
                   <>
                     <p className="m-0 d-none d-lg-block">Ver</p>

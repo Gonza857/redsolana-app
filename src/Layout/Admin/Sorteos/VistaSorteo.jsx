@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { adminContext } from "../../../storage/AdminContext";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { Link, useNavigate } from "react-router-dom";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const VistaSorteo = () => {
   const [ocupados, setOcupados] = useState(0);

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { Link } from "react-router-dom";
 import { TablaPendientes } from "../../../components/AAdmin/Solicitudes/TablaPendientes";
 import { solicitudesContext } from "../../../storage/AdminContext";
@@ -9,6 +8,7 @@ import {
   AiOutlineHistory,
   AiOutlineReload,
 } from "react-icons/ai";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const ViewSolicitudes = () => {
   const { pendientes, isLoading, actualizarEstadoSolicitud, getSolicitudes } =
@@ -38,7 +38,7 @@ export const ViewSolicitudes = () => {
         </Link>
         <MainButton
           primary={true}
-          fn={() => {
+          onClick={() => {
             getSolicitudes();
           }}
         >

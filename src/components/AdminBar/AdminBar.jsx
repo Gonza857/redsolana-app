@@ -1,47 +1,43 @@
-import React, { useContext } from "react";
-import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
+import React, { useContext, useEffect } from "react";
+import { AiOutlineSearch } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { adminContext } from "../../storage/AdminContext";
 import styled from "styled-components";
-import { MainButton } from "../APublic/MainButton/MainButton";
-import { Link } from "react-router-dom";
 import { toastInfo } from "../../helpers/helpers";
+import { NewCashierBTN } from "../Admin/SearchCashierBar/NewCashierBTN";
+import { Wrapper } from "../Admin/SearchCashierBar/Wrapper";
 
-export const AdminBar = () => {
-  const { buscarCajero, searchedName, resetCheckerData, solana } =
+export const AdminBar = ({ z }) => {
+  const { c_searchCashier, searchedName, c_resetCashierData } =
     useContext(adminContext);
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = () => {
     if (searchedName === null)
       toastInfo("Debes ingresar un nombre antes de realizar la busqueda.");
   };
-
   const handleOnChange = (e) => {
     e.preventDefault();
-    buscarCajero(e.target.value);
-    if (e.target.value == 0) resetCheckerData();
+    c_searchCashier(e.target.value); // send data to context function
+    if (e.target.value == 0) c_resetCashierData();
   };
 
+  const handleResetSearch = () => {
+    c_resetCashierData();
+    reset();
+  };
+  useEffect(() => {
+    z();
+  }, []);
+
   return (
-    <AdminBarContainer className="gap-3 gap-lg-0 flex-lg-row py-2 px-3 px-lg-0 flex-md-row">
+    <Wrapper>
       <div>
-        <Link to={"/admin/cajeros/agregar"}>
-          <MainButton>
-            Nuevo cajero
-            <AiOutlineUserAdd />
-          </MainButton>
-        </Link>
+        <NewCashierBTN />
       </div>
       <div className="col-12 col-sm-9 col-md-7 col-lg-4">
         <SearchForm onSubmit={handleSubmit(onSubmit)}>
-          <CrossContainer
-            type="button"
-            onClick={() => {
-              resetCheckerData();
-              reset();
-            }}
-          >
+          <CrossContainer type="button" onClick={() => handleResetSearch()}>
             <FaTimes />
           </CrossContainer>
           <SearchInput
@@ -56,16 +52,9 @@ export const AdminBar = () => {
           </ClearLinkBtn>
         </SearchForm>
       </div>
-    </AdminBarContainer>
+    </Wrapper>
   );
 };
-
-const AdminBarContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-`;
 
 const SearchForm = styled.form`
   height: 40px;

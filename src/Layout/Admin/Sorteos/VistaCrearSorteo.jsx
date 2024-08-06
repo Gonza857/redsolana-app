@@ -5,10 +5,10 @@ import { DrawNumbersTable } from "../../../components/DrawNumbersTable/DrawNumbe
 import { DrawPreview } from "./VistaPreviaSorteo";
 import { useNavigate } from "react-router-dom";
 import { adminContext } from "../../../storage/AdminContext";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { get } from "react-hook-form";
 import { toastError } from "../../../helpers/helpers";
 import { useEffect } from "react";
+import { MainButton } from "../../../components/UI/MainButton";
 
 const getInputData = (e) => {
   let { slots, description } = e.target;
@@ -122,7 +122,7 @@ export const VistaCrearSorteo = () => {
                     style={{ objectFit: "contain" }}
                   />
                   <div className="col-md-6 w-auto">
-                    <MainButton fn={() => setPreviewImage(null)}>
+                    <MainButton onClick={() => setPreviewImage(null)}>
                       Eliminar
                     </MainButton>
                   </div>

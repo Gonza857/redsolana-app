@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { cronoAndNewsContext } from "../../../storage/AdminContext";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import Swal from "sweetalert2";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const Novedades = () => {
   const {
@@ -45,7 +45,7 @@ export const Novedades = () => {
               <img src={newsImage} alt="Imagen de la novedad" />
             </StyledImageContainer>
             <div>
-              <MainButton fn={() => handleDelete()}>Eliminar</MainButton>
+              <MainButton onClick={() => handleDelete()}>Eliminar</MainButton>
             </div>
           </>
         ) : (
@@ -62,14 +62,14 @@ export const Novedades = () => {
                   </PreviewImage>
                   <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
                     <MainButton
-                      fn={() => handleNovedadImg()}
+                      onClick={() => handleNovedadImg()}
                       primary={true}
                       type={"button"}
                     >
                       Guardar
                     </MainButton>
                     <MainButton
-                      fn={() => setPreviewImage(null)}
+                      onClick={() => setPreviewImage(null)}
                       type={"button"}
                     >
                       Eliminar

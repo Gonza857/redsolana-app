@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { adminContext } from "../../storage/AdminContext";
-import { VistaCajeros } from "../User/VistaCajeros/VistaCajeros";
-import { Cronograma } from "../User/Cronograma/Cronograma";
-import { Divisor } from "../../components/AUser/Inicio/Divisor";
-import { Header } from "../../components/Header";
-import { Casinos } from "../../components/Casinos";
+import { adminContext } from "../storage/AdminContext";
+import { VistaCajeros } from "./VistaCajeros";
+import { Cronograma } from "../components/Cronograma";
+import { Divisor } from "../components/AUser/Inicio/Divisor";
+import { Header } from "../components/Header";
+import { Casinos } from "../components/Casinos";
 
 export const Inicio = () => {
   const { isOpenMenu } = useContext(adminContext);

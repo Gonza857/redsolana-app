@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { solicitudesContext } from "../../../storage/AdminContext";
 import styled from "styled-components";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Animated } from "react-animated-css";
 import { postPlataforma } from "../../../firebase/database/plataformas";
 import { toastSuccess } from "../../../helpers/helpers";
 import { TablaPlataformas } from "../../../components/Solicitudes/TablaPlataformas/TablaPlataformas";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const VistaEditarPlataformas = () => {
   const { platforms, setPlatforms, isLoading, deletePlatform, handleUpdate } =
@@ -55,7 +55,7 @@ export const VistaEditarPlataformas = () => {
         ) : (
           <>
             <Animated animationIn="fadeIn" animationOut="fadeOut">
-              <MainButton fn={() => setWantsToAdd(true)}>
+              <MainButton onClick={() => setWantsToAdd(true)}>
                 Agregar plataforma
               </MainButton>
             </Animated>

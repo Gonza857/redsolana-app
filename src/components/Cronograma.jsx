@@ -1,15 +1,12 @@
 import React from "react";
 import { useContext } from "react";
 import styled from "styled-components";
-import {
-  adminContext,
-  cronoAndNewsContext,
-} from "../../../storage/AdminContext";
+import { adminContext, cronoAndNewsContext } from "../storage/AdminContext";
 
 export function Cronograma() {
   const { solana } = useContext(adminContext);
   const { scheduleImage } = useContext(cronoAndNewsContext);
-  let isDrawActive = solana.draw.isActive;
+  let isDrawActive = solana?.draw?.isActive;
   return (
     <Wrapper
       id="Cronograma"

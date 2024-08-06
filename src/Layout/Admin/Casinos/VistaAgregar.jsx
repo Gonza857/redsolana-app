@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { AiFillDelete } from "react-icons/ai";
 import { PreviewCard } from "../../../components/PreviewCard/PreviewCard";
 import { toastSuccess } from "../../../helpers/helpers";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { getAllCasinos, postCasino } from "../../../firebase/database/casinos";
 import { postCasinoImage } from "../../../firebase/storage/casino";
 import { adminContext } from "../../../storage/AdminContext";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const AddCasinoView = () => {
   const [casinoPreview, setCasinoPreview] = useState(null);
@@ -134,7 +134,7 @@ export const AddCasinoView = () => {
               uploadCasino={uploadCasino}
               casinoName={casinoName}
             />
-            <MainButton primary={true} fn={uploadCasino}>
+            <MainButton primary={true} onClick={() => uploadCasino()}>
               Añadir
             </MainButton>
           </div>

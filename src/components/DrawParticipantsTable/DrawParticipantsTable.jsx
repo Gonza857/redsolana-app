@@ -9,12 +9,12 @@ import {
 import { adminContext } from "../../storage/AdminContext";
 import { useContext } from "react";
 import Swal from "sweetalert2";
-import { MainButton } from "../APublic/MainButton/MainButton";
 import { Link } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { useState } from "react";
 import { ParticipantTr } from "../ParticipantTr/ParticipantTr";
 import { ModalParticipant } from "../ModalParticipant/ModalParticipant";
+import { MainButton } from "../UI/MainButton";
 
 const iconStyle = { fontSize: "1.5rem" };
 

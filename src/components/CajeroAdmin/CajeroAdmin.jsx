@@ -7,11 +7,11 @@ import "animate.css";
 import { ModalViewInfo } from "../ModalViewInfo/ModalViewInfo";
 import "./cajeroAdmin.css";
 import { BsCircleFill } from "react-icons/bs";
-import { MainButton } from "../APublic/MainButton/MainButton";
 import styled from "styled-components";
+import { MainButton } from "../UI/MainButton";
 
 function CajeroAdmin({ cajero }) {
-  const { handleDelete, cajeros } = useContext(adminContext);
+  const { c_deleteCashier, cajeros } = useContext(adminContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -33,10 +33,6 @@ function CajeroAdmin({ cajero }) {
     }
   }, [cajeros, cajero]);
 
-  const iconStyle = {
-    fontSize: "",
-  };
-
   return (
     <>
       <tr className="animate__animated animate__fadeIn">
@@ -44,9 +40,6 @@ function CajeroAdmin({ cajero }) {
         <StyledTd>{cajero.red}</StyledTd>
         <StyledTd>{cajero.nombre}</StyledTd>
         <td className="d-none d-md-table-cell">{cajero.numero}</td>
-        {/* <td className="d-none d-lg-table-cell">
-          {cajero.genero === "M" ? "M" : "F"}
-        </td> */}
         <td className="d-none d-md-table-cell">
           {cajero.estado === "desconectado" ? (
             <BsCircleFill style={{ color: "red" }} />
@@ -58,33 +51,33 @@ function CajeroAdmin({ cajero }) {
           <MainButton
             circle={true}
             primary={true}
-            fn={() => {
+            onClick={() => {
               handleShowInfo(cajero);
             }}
           >
-            <FaEye style={iconStyle} />
+            <FaEye />
           </MainButton>
         </td>
 
         <td className="">
           <MainButton
             circle={true}
-            fn={() => {
+            onClick={() => {
               handleShowEdit(cajero);
             }}
           >
-            <FaPen style={iconStyle} />
+            <FaPen />
           </MainButton>
         </td>
         <td>
           <MainButton
             circle={true}
             red={true}
-            fn={() => {
-              handleDelete(cajero);
+            onClick={() => {
+              c_deleteCashier(cajero);
             }}
           >
-            <FaTrash style={iconStyle} />
+            <FaTrash />
           </MainButton>
         </td>
       </tr>

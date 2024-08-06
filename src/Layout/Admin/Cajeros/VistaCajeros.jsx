@@ -1,21 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { adminContext } from "../../../storage/AdminContext.jsx";
 import CajeroAdmin from "../../../components/CajeroAdmin/CajeroAdmin.jsx";
 import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
 import { AdminBar } from "../../../components/AdminBar/AdminBar.jsx";
-import { Metronome } from "@uiball/loaders";
-import {
-  AiFillInfoCircle,
-  AiOutlineOrderedList,
-  AiOutlineUserDelete,
-} from "react-icons/ai";
-import { FaUserEdit } from "react-icons/fa";
 import styled from "styled-components";
+import { CashiersTableHead } from "../../../components/Admin/CashiersTableHead.jsx";
+import { Loader } from "../../../components/UI/Loader.jsx";
 
 export function AdminCajeros() {
   const {
-    cajeros,
+    solana,
     isAdmin,
     isSearchingCajero,
     searchResult,
@@ -23,117 +18,80 @@ export function AdminCajeros() {
     isLoading,
   } = useContext(adminContext);
   const navigate = useNavigate();
+  const avisarBusquedad = () => console.log("Llamado de hijo a padre");
+  if (!isAdmin) navigate("/");
 
   return (
-    <>
-      {isAdmin ? (
-        <AdminCajerosContainer className="col-12 py-2">
-          <Wrapper className="col-12 col-sm-10 col-lg-9 col-xl-8">
-            <AdminBar busquedad={searchResult.lenght !== 0 || false} />
-            {isSearchingCajero ? (
-              <>
-                {searchResult.length === 0 ? (
-                  <>
-                    <p className="m-0 py-2 text-white">
-                      No se encontraron resultados con la busquedad de: "
-                      <strong>{searchedName}</strong>"
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    {searchedName && (
-                      <p className="m-0 py-2 text-white">
-                        Se muestran resultados de la busquedad de: "
-                        <strong>{searchedName}</strong>"
-                      </p>
-                    )}
-                  </>
-                )}
-              </>
+    <AdminCajerosContainer className="col-12 py-2">
+      <Wrapper className="col-12 col-sm-10 col-lg-9 col-xl-8">
+        <AdminBar z={avisarBusquedad} />
+        {isSearchingCajero ? (
+          <>
+            {searchResult.length === 0 ? (
+              <ResultText searchedName={searchedName}>
+                No se encontraron resultados con la busquedad de: "
+              </ResultText>
             ) : (
-              <AllCajerosText className="py-3">
-                Estas visualizando todos los cajeros verificados
-              </AllCajerosText>
+              <ResultText searchedName={searchedName}>
+                Se muestran resultados de la busquedad de: "
+              </ResultText>
             )}
-            <Table
-              striped
-              bordered
-              hover
-              responsive
-              variant="dark"
-              className="align-middle"
-            >
-              <thead className="animate__animated animate__fadeIn">
-                <tr className="align-middle">
-                  <th className="d-none d-md-table-cell">Pos</th>
-                  <th className="d-md-none" style={{ width: "5%" }}>
-                    <AiOutlineOrderedList
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th>
-                  <th className="p-0">Red</th>
-                  <StyledTh className="p-0">Nombre</StyledTh>
-                  <th className="d-none d-md-table-cell p-0">Numero</th>
-                  {/* <th className="d-none d-lg-table-cell p-0">Genero</th> */}
-                  <th className="d-none d-md-table-cell">Estado</th>
-                  {/* <th className="d-md-none">
-                    <HiStatusOnline
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th> */}
-
-                  <th className="d-none d-md-table-cell">Ver</th>
-                  <th className="d-md-none">
-                    <AiFillInfoCircle
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th>
-                  <th className="d-none d-md-table-cell">Editar</th>
-                  <th className="d-md-none">
-                    <FaUserEdit style={{ color: "fff", fontSize: "20px" }} />
-                  </th>
-                  <th className="d-none d-md-table-cell">Eliminar</th>
-                  <th className="d-md-none">
-                    <AiOutlineUserDelete
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {isSearchingCajero ? (
-                  <>
-                    {searchResult.map((cajero) => {
-                      return <CajeroAdmin cajero={cajero} key={cajero.id} />;
-                    })}
-                  </>
-                ) : (
-                  <>
-                    {!isLoading &&
-                      cajeros.map((cajero) => {
-                        return <CajeroAdmin cajero={cajero} key={cajero.id} />;
-                      })}
-                  </>
-                )}
-              </tbody>
-            </Table>
-            {isLoading && (
-              <div className="m-auto">
-                <Metronome size={40} speed={1.6} color="#fff" />
-              </div>
-            )}
-          </Wrapper>
-        </AdminCajerosContainer>
-      ) : (
-        navigate("/admin")
-      )}
-    </>
+          </>
+        ) : (
+          <AllCajerosText className="py-3">
+            Estas visualizando todos los cajeros verificados
+          </AllCajerosText>
+        )}
+        <TableLayout>
+          {isSearchingCajero ? (
+            <>
+              {searchResult.map((cajero) => {
+                return <CajeroAdmin cajero={cajero} key={cajero.id} />;
+              })}
+            </>
+          ) : (
+            <>
+              {!isLoading &&
+                solana.cajeros.map((cajero) => {
+                  return <CajeroAdmin cajero={cajero} key={cajero.id} />;
+                })}
+            </>
+          )}
+        </TableLayout>
+        {isLoading && (
+          <div className="m-auto">
+            <Loader />
+          </div>
+        )}
+      </Wrapper>
+    </AdminCajerosContainer>
   );
 }
 
-const StyledTh = styled.th`
-  width: 20%;
-`;
+const TableLayout = ({ children }) => {
+  return (
+    <Table
+      striped
+      bordered
+      hover
+      responsive
+      variant="dark"
+      className="align-middle"
+    >
+      <CashiersTableHead />
+      <tbody>{children}</tbody>
+    </Table>
+  );
+};
+
+const ResultText = ({ children, searchedName }) => {
+  return (
+    <AllCajerosText className="py-3">
+      {children}
+      <strong>{searchedName}</strong>"
+    </AllCajerosText>
+  );
+};
 
 const AdminCajerosContainer = styled.div`
   @media (min-width: 320px) {

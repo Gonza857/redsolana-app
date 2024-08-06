@@ -49,6 +49,15 @@ export const solicitudesContext = createContext();
 
 export const cronoAndNewsContext = createContext();
 
+const askForDeleteCashier = {
+  title: "¿Estas seguro que quieres eliminar este cajero?",
+  text: "Los cambios no se pueden deshacer.",
+  showDenyButton: true,
+  denyButtonText: `Cancelar`,
+  confirmButtonText: "Eliminar",
+  reverseButtons: true,
+};
+
 // /**
 //  * Buscar cajeros por nombre
 //  * @param cashierName - Nombre del cajero
@@ -77,11 +86,13 @@ export const cronoAndNewsContext = createContext();
 //   return Casino.getCashierIndexById(cashier);
 // };
 
+export const solana = new Solana();
+
 export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
   const fb = new Firebase();
-  const solana = new Solana();
-  const [main, setMain] = useState([[], [], [], [], []]);
+
+  const [isAdmin, setIsAdmin] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   /* ------ ESTADOS REVISADOS ------ */
@@ -94,8 +105,8 @@ export const AdminContextProvider = (props) => {
 
   // CASHIERS
   const [cincoChicos, setCincoChicos] = useState([]);
-  // const [cajeros, setCajeros] = useState([]);
   const [cashiers, setCashiers] = useState([]);
+  const [searchedName, setSearchedName] = useState(null);
 
   // DRAW
   const [participants, setParticipants] = useState([]);
@@ -109,6 +120,8 @@ export const AdminContextProvider = (props) => {
   const [isGettingCasinos, setIsGettingCasinos] = useState(false);
   // CARGANDO SORTEO - OK
   const [isDrawLoading, setIsDrawLoading] = useState(false);
+  // BUSCANDO CAJERO - OK
+  const [isSearchingCajero, setIsSearchingCajero] = useState(false);
 
   // MANEJO DE LOGIN
   const adminSignIn = (email, pass) => {
@@ -141,32 +154,96 @@ export const AdminContextProvider = (props) => {
     });
   };
 
-  // useEffect Montado
   useEffect(() => {
-    setIsLoading(true);
-    const start = async () => {
+    const abrir = async () => {
       try {
+        console.log(solana.state);
         let r = await solana.initialize();
-        console.log(r[2]);
-        // Traemos cajeros
-        setCincoChicos(r[0]);
-        setCashiers(r[1]);
-        // Traemos casinos
-        setCasinos(r[2]);
-        setRequests(r[3]);
-
-        setDraw(r[4]);
-        setParticipants(r[4].participants);
-        setIsLoading(false);
+        if (solana.state) {
+          //Traemos cajeros
+          setCincoChicos(r[0]);
+          setCashiers(r[1]);
+          // Traemos casinos
+          setCasinos(r[2]);
+          setRequests(r[3]);
+          setDraw(r[4]);
+          setParticipants(r[4].participants);
+          setIsLoading(false);
+        }
       } catch (error) {
-        setIsLoading(false);
-        console.error(error.message);
+        console.error(error);
       }
     };
 
-    start();
-    console.log("empezado");
+    abrir();
   }, []);
+
+  const c_deleteCashier = (cashier) => {
+    console.log("Eliminando a: " + cashier.nombre);
+    Swal.fire(askForDeleteCashier).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        let cashierIndex = solana.getCashierIndexById(cashier.id);
+        let copyCashiers = solana.cajeros;
+        copyCashiers.splice(cashierIndex, 1);
+        Firebase.deleteCashier(cashier);
+        c_reGetCashiers();
+        toastSuccess("Cajero eliminado correctamente");
+      } else if (result.isDenied) {
+        Swal.fire("Cajero no elimnado", "", "info");
+      }
+    });
+  };
+
+  const c_reGetCashiers = () => {
+    Firebase.getCashiers().then((r) => {
+      solana.cajeros = r;
+      setCashiers(r);
+    });
+  };
+
+  // CASHIER - search cashiers including the param
+  const c_searchCashier = (cashierName) => {
+    setIsSearchingCajero(true);
+    setSearchedName(cashierName);
+    let checkerFilterArray = solana.getCashiersByName(
+      cashierName.toLowerCase()
+    );
+    setSearchResult(checkerFilterArray);
+  };
+
+  // RESET DATOS DEL CAJERO BUSCADO
+  const c_resetCashierData = () => {
+    setIsSearchingCajero(false);
+    setSearchedName(null);
+    setSearchResult(null);
+  };
+
+  // //    FUNCION ELIMINAR CAJEROS
+  // function handleDelete(cajeroEliminado) {
+  //   Swal.fire({
+  //     title: "¿Estas seguro que quieres eliminar este cajero?",
+  //     text: "Los cambios no se pueden deshacer.",
+  //     showDenyButton: true,
+  //     denyButtonText: `Cancelar`,
+  //     confirmButtonText: "Eliminar",
+  //     reverseButtons: true,
+  //   }).then((result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+  //     if (result.isConfirmed) {
+  //       let searchPosition = cajeros.findIndex(
+  //         (cajeroFind) => cajeroFind.id === cajeroEliminado.id
+  //       );
+  //       let copyCajeros = [...cajeros];
+  //       copyCajeros.splice(searchPosition, 1);
+  //       setCajeros(copyCajeros);
+  //       deleteCajero(cajeroEliminado);
+  //       toastSuccess("Cajero eliminado correctamente");
+  //     } else if (result.isDenied) {
+  //       Swal.fire("Cajero no elimnado", "", "info");
+  //     }
+  //   });
+  // }
 
   // Estado de usuario
   const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
@@ -174,12 +251,9 @@ export const AdminContextProvider = (props) => {
   // ESTADO DE RESULTADO DE BUSQUEDA
   const [searchResult, setSearchResult] = useState([]);
   // ESTADO DE NOMBRE DE BUSQUEDA
-  const [searchedName, setSearchedName] = useState(null);
   // ESTADO  DE BUSQUEDA
-  const [isSearchingCajero, setIsSearchingCajero] = useState(false);
   // ESTADO DE ARRAY DE CAJEROS
   // ESTADO DE ADMIN
-  const [isAdmin, setIsAdmin] = useState(false);
 
   // ESTADO CARGA DE CAJEROS
 
@@ -320,23 +394,6 @@ export const AdminContextProvider = (props) => {
   // function updateCajeros(cajerosArr) {
   //   setCajeros(cajerosArr);
   // }
-
-  // BUSCAR CAJERO - OK
-  const buscarCajero = (cashierName) => {
-    setIsSearchingCajero(true);
-    setSearchedName(cashierName);
-    let checkerFilterArray = solana.getCashiersByName(
-      cashierName.toLowerCase()
-    );
-    setSearchResult(checkerFilterArray);
-  };
-
-  // RESET DATOS DEL CAJERO BUSCADO
-  const resetCheckerData = () => {
-    setIsSearchingCajero(false);
-    setSearchedName(null);
-    setSearchResult(null);
-  };
 
   // FUNCION ELIMINAR CAJEROS
   // function handleDelete(cajeroEliminado) {
@@ -571,6 +628,13 @@ export const AdminContextProvider = (props) => {
     solana,
     fb,
     casinos,
+    cashiers,
+    // CAJEROS
+    searchedName, // nombre del buscado
+    c_searchCashier, // funcion de contexto
+    c_resetCashierData, // funcion de contexto
+    c_reGetCashiers,
+    c_deleteCashier,
     // cajeros,
     // setCajeros,
     // handleDelete,
@@ -578,10 +642,10 @@ export const AdminContextProvider = (props) => {
     // updateCajeros,
     isAdmin,
     setIsAdmin,
-    resetCheckerData, // RESETEAR BUSQUEDA
+    // resetCheckerData, // RESETEAR BUSQUEDA
     setIsSearchingCajero,
     isSearchingCajero,
-    buscarCajero,
+    // buscarCajero,
     searchResult,
     searchedName,
     isOpenMenu, // OK

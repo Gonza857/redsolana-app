@@ -1,13 +1,13 @@
 import React, { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import ReCAPTCHA from "react-google-recaptcha";
-import { toastError, toastSuccess } from "../../../helpers/helpers";
-import { postSolicitud } from "../../../firebase/database/solicitudes";
+import { toastError, toastSuccess } from "../helpers/helpers";
+import { postSolicitud } from "../firebase/database/solicitudes";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { solicitudesContext } from "../../../storage/AdminContext";
+import { solicitudesContext } from "../storage/AdminContext";
+import { MainButton } from "../components/UI/MainButton";
 
 export const RequestUser = () => {
   const { platforms } = useContext(solicitudesContext);

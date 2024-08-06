@@ -11,9 +11,19 @@ export default class Solana {
     this._solicitudes = [];
     this._casinos = [];
     this._draw = {};
+    this._state = false;
+  }
+
+  reset() {
+    this._cajeros = [];
+    this._solicitudes = [];
+    this._casinos = [];
+    this._draw = {};
+    this._state = false;
   }
 
   async initialize() {
+    console.log("Initializing started");
     // traer cajeros, casinos, solicitudes
     let c_allCashiers = await this.getCashiersFromDB();
     this._cajeros = c_allCashiers;
@@ -21,7 +31,6 @@ export default class Solana {
 
     let c_casinos = await this.getCasinosFromDB();
     this._casinos = c_casinos;
-    console.log(this._casinos);
 
     let c_requests = await this.getRequestsFromDB();
     this._solicitudes = c_requests;
@@ -37,7 +46,8 @@ export default class Solana {
       c_requests,
       this.draw,
     ];
-    console.log(result);
+    this._state = true;
+    console.log("Initializing finished");
     return result;
   }
 
@@ -126,6 +136,9 @@ export default class Solana {
     });
     return newArray;
   }
+  addCashier(data) {
+    Firebase.postCashier(data).then((r) => this.cajeros.push(r));
+  }
 
   // CASINOS
   removeCasinoFromDB(casinoObject) {
@@ -148,11 +161,11 @@ export default class Solana {
 
   // OWN SETTERS AND GETTERS
   // CASHIERS
-  get cashiers() {
-    return this._cashiers;
+  get cajeros() {
+    return this._cajeros;
   }
-  set cashiers(value) {
-    this._cashiers = value;
+  set cajeros(value) {
+    this._cajeros = value;
   }
   // CASINOS
   get casinos() {
@@ -174,5 +187,12 @@ export default class Solana {
   }
   set draw(value) {
     this._draw = value;
+  }
+  // STATE
+  get state() {
+    return this._state;
+  }
+  set state(value) {
+    this._state = value;
   }
 }

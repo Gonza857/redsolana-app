@@ -2,10 +2,10 @@ import React, { useState, useContext } from "react";
 import { adminContext } from "../../../storage/AdminContext";
 import styled from "styled-components";
 import { toastSuccess } from "../../../helpers/helpers";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { postSorteoImage } from "../../../firebase/storage/sorteo";
 import { updateDraw } from "../../../firebase/database/sorteo";
+import { MainButton } from "../../../components/UI/MainButton";
 
 const getInputData = (e) => {
   let { description } = e.target;
@@ -120,7 +120,7 @@ export const VistaEditarSorteo = () => {
                     </div>
                     <MainButton
                       type="button"
-                      fn={() => {
+                      onClick={() => {
                         setPreviewImage("");
                         setWantsToDeleteImage(true);
                         toastSuccess("Imagen elimnada");
@@ -149,7 +149,7 @@ export const VistaEditarSorteo = () => {
                 <div className="col-12 col-lg-5 col-xl-5 d-flex justify-content-center">
                   <MainButton
                     type="button"
-                    fn={() => {
+                    onClick={() => {
                       setWantsToDeleteImage(true);
                       toastSuccess("Imagen eliminada");
                     }}

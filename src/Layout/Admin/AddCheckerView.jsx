@@ -1,26 +1,36 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext, forwardRef } from "react";
 import styled from "styled-components";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
-import { adminContext } from "../../../storage/AdminContext";
-import { toastError, toastSuccess } from "../../../helpers/helpers";
+import { adminContext } from "../../storage/AdminContext";
+import { toastSuccess } from "../../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { Ring } from "@uiball/loaders";
-import { postCajeros } from "../../../firebase/database/cajeros";
+
 import { useForm } from "react-hook-form";
+import { MainButton } from "../../components/UI/MainButton";
+import Firebase from "../../classes/Firebase";
+import { Image } from "../../classes/Image";
 
 export const AddCheckerView = () => {
-  const { uploadCheckerImage, cajeros, lastCheckerPos, traerCajeros } =
-    useContext(adminContext);
-  const [lastPos, setLastPos] = useState(0);
+  const { c_reGetCashiers, solana } = useContext(adminContext);
   const [previewImage, setPreviewImage] = useState("");
-  const navigate = useNavigate();
   const [isSending, setIsSending] = useState(false);
   const {
     register,
-    formState: { errors },
+
     handleSubmit,
-    reset,
   } = useForm();
+  const navigate = useNavigate();
+
+  const successNavigation = () => {
+    navigate("/admin/cajeros");
+    toastSuccess("Agregado correctamente");
+  };
+
+  const endProcess = () => {
+    c_reGetCashiers();
+    setIsSending(false);
+    successNavigation();
+  };
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -37,35 +47,22 @@ export const AddCheckerView = () => {
   const onSubmit = (data) => {
     data.pos = Number(data.pos);
     data.numero = Number(data.numero);
-    data.pos = cajeros?.length;
+    data.pos = solana.cajeros.length;
     setIsSending(true);
     if (previewImage !== "") {
-      uploadCheckerImage(previewImage).then(({ randomId, url }) => {
-        data.imagen = {
-          url,
-          randomId,
-        };
-        postCajeros(data).then(() => {
-          traerCajeros();
-          setIsSending(false);
-          navigate("/admin/cajeros");
-          toastSuccess("Agregado correctamente");
-        });
+      console.log("Con img");
+      Firebase.uploadCheckerImageDB(previewImage).then(({ randomId, url }) => {
+        data.imagen = new Image(randomId, url);
+        solana.addCashier(data);
+        endProcess();
       });
     } else {
+      console.log("Sin img");
       data.imagen = null;
-      postCajeros(data).then(() => {
-        traerCajeros();
-        setIsSending(false);
-        navigate("/admin/cajeros");
-        toastSuccess("Agregado correctamente");
-      });
+      solana.addCashier(data);
+      endProcess();
     }
   };
-
-  useEffect(() => {
-    setLastPos(cajeros.length);
-  }, [cajeros]);
 
   return (
     <StyledView className="py-3">
@@ -75,19 +72,8 @@ export const AddCheckerView = () => {
       >
         <h3>Agregar cajero</h3>
         <div className="col-12 d-flex flex-wrap gap-3 gap-xl-1 justify-content-sm-between">
-          <StyledInputContainer className="col-12 col-sm-6">
-            <label htmlFor="red">Red</label>
-            <StyledInput required type="text" name="red" {...register("red")} />
-          </StyledInputContainer>
-          <StyledInputContainer className="col-12 col-sm-5">
-            <label htmlFor="nombre">Nombre</label>
-            <StyledInput
-              required
-              type="text"
-              name="nombre"
-              {...register("nombre")}
-            />
-          </StyledInputContainer>
+          <Network {...register("red")} />
+          <Name {...register("nombre")} />
         </div>
         <InputContainer2>
           {/* GENERO*/}
@@ -151,38 +137,10 @@ export const AddCheckerView = () => {
         </InputContainer2>
         <div className="col-12 d-flex flex-wrap gap-3 gap-xl-1 justify-content-sm-between">
           {/* NUMERO */}
-          <StyledInputContainer className="col-6">
-            <label htmlFor="numero">Número</label>
-            <StyledInput
-              required
-              type="number"
-              name="numero"
-              {...register("numero")}
-            />
-          </StyledInputContainer>
-          <StyledInputContainer className="col-5">
-            {/* POSICION */}
-            <label htmlFor="pos">Posición</label>
-            <StyledInput
-              required
-              type="number"
-              name="pos"
-              value={cajeros?.length + 1}
-              readOnly
-              {...register("pos")}
-            />
-          </StyledInputContainer>
+          <Phone {...register("numero")} />
+          <Position {...register("pos")} value={solana.cajeros.length + 1} />
         </div>
-
-        <StyledInputContainer className="col-12">
-          <label htmlFor="enlace">Enlace de Contacto</label>
-          <StyledInput
-            required
-            type="text"
-            name="enlace"
-            {...register("enlace")}
-          />
-        </StyledInputContainer>
+        <Link {...register("enlace")} />
         {previewImage !== "" ? (
           <>
             <div className="d-flex col-12">
@@ -224,6 +182,66 @@ export const AddCheckerView = () => {
         </div>
       </Form>
     </StyledView>
+  );
+};
+
+const Position = forwardRef((props, ref) => {
+  return (
+    <StyledInputContainer className="col-5">
+      <label htmlFor="pos">Posición</label>
+      <StyledInput
+        required
+        type="number"
+        name="pos"
+        value={props.value}
+        readOnly
+        ref={ref}
+        {...props}
+      />
+    </StyledInputContainer>
+  );
+});
+
+const Phone = forwardRef((props, ref) => {
+  return (
+    <StyledInputContainer className="col-6">
+      <label htmlFor="numero">Número</label>
+      <StyledInput required type="number" name="numero" {...props} ref={ref} />
+    </StyledInputContainer>
+  );
+});
+
+const Link = forwardRef((props, ref) => {
+  return (
+    <StyledInputContainer className="col-12">
+      <label htmlFor="enlace">Enlace de Contacto</label>
+      <StyledInput required type="text" name="enlace" {...props} ref={ref} />
+    </StyledInputContainer>
+  );
+});
+
+const Name = forwardRef((props, ref) => {
+  return (
+    <StyledInputContainer className="col-12 col-sm-5">
+      <label htmlFor="nombre">Nombre</label>
+      <StyledInput required type="text" name="nombre" {...props} ref={ref} />
+    </StyledInputContainer>
+  );
+});
+
+const Network = forwardRef((props, ref) => {
+  return (
+    <InputBox>
+      <label htmlFor="red">Red</label>
+      <StyledInput required type="text" name="red" {...props} ref={ref} />
+    </InputBox>
+  );
+});
+const InputBox = ({ children }) => {
+  return (
+    <StyledInputContainer className="col-12 col-sm-6">
+      {children}
+    </StyledInputContainer>
   );
 };
 

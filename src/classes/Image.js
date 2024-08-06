@@ -1,7 +1,7 @@
 export class Image {
-  constructor() {
-    this._id = null;
-    this._url = null;
+  constructor(id, url) {
+    this._id = id;
+    this._url = url;
   }
 
   get id() {
@@ -13,7 +13,7 @@ export class Image {
   }
 
   get url() {
-    return this_url;
+    return this._url;
   }
 
   set url(value) {

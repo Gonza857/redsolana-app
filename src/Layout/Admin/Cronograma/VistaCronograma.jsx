@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
+
 import Swal from "sweetalert2";
 import { useContext } from "react";
 import { cronoAndNewsContext } from "../../../storage/AdminContext";
 import { LoadingModal } from "../../../components/OK-Components/LoadingModal/LoadingModal";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const VistaCronograma = () => {
   const {
@@ -63,7 +64,7 @@ export const VistaCronograma = () => {
                   </PreviewImage>
                   <ButtonsContainer className="d-flex gap-2 justify-content-center align-items-center py-1">
                     <MainButton
-                      fn={() => handleCronogramaImg()}
+                      onClick={() => handleCronogramaImg()}
                       primary={true}
                       type={"button"}
                     >

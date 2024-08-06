@@ -2,36 +2,35 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Metronome } from "@uiball/loaders";
 import { BsCircleFill } from "react-icons/bs";
-import { adminContext } from "../../../storage/AdminContext";
-import CajeroCard from "../../../components/CajeroCard/CajeroCard";
+import { adminContext } from "../storage/AdminContext";
+import CajeroCard from "../components/CajeroCard/CajeroCard";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { Divisor } from "../../../components/AUser/Inicio/Divisor";
+import { Divisor } from "../components/AUser/Inicio/Divisor";
 
 export const VistaCajeros = ({ limit }) => {
-  const { solana, isOpenMenu, cincoChicos } = useContext(adminContext);
+  const { isOpenMenu, solana } = useContext(adminContext);
   const [isLoading, setIsLoading] = useState(false);
   const [currentURL, setCurrentURL] = useState("");
   const location = useLocation();
 
-  let cajeros = solana.cashiers;
-  let isDrawActive = solana.draw.isActive;
-
   useEffect(() => {
     const url = location.pathname;
     setCurrentURL(url);
-    if (cincoChicos.length === 0) {
+    if (solana.getTheFirstFiveCashiers().length === 0) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [cincoChicos]);
+  }, [solana.getTheFirstFiveCashiers()]);
 
   return (
     <CajerosMainContainer
       className="col-12 m-0 gap-4 py-4"
       id="Cajeros"
       style={{
-        minHeight: isDrawActive ? "calc(100vh - 90px)" : "calc(77vh - 60px)",
+        minHeight: solana.draw.isActive
+          ? "calc(100vh - 90px)"
+          : "calc(77vh - 60px)",
         filter: isOpenMenu ? "brightness(50%)" : "unset",
       }}
     >
@@ -62,14 +61,14 @@ export const VistaCajeros = ({ limit }) => {
           <>
             {limit ? (
               <>
-                {cincoChicos.map((cajero) => {
+                {solana.getTheFirstFiveCashiers().map((cajero) => {
                   return <CajeroCard key={cajero.id} cajero={cajero} />;
                 })}
               </>
             ) : (
               <>
-                {cajeros.map((cajero) => {
-                  return <CajeroCard key={cajero.id} cajero={cajero} />;
+                {solana.cajeros.map((c) => {
+                  return <CajeroCard key={c.id} cajero={c} />;
                 })}
               </>
             )}

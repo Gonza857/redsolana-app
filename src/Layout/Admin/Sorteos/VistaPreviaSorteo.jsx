@@ -2,11 +2,11 @@ import React, { useEffect, useContext } from "react";
 import { DrawNumbersTable } from "../../../components/DrawNumbersTable/DrawNumbersTable";
 import styled from "styled-components";
 import { adminContext } from "../../../storage/AdminContext";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../../../helpers/helpers";
 import { postSorteoImage } from "../../../firebase/storage/sorteo";
 import { updateDraw } from "../../../firebase/database/sorteo";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const VistaPreviaSorteo = () => {
   const { previewDraw, setSorteoActivo, setSorteo } = useContext(adminContext);
@@ -51,7 +51,7 @@ export const VistaPreviaSorteo = () => {
       </div> */}
       <div className="col-12 py-3 d-flex flex-column gap-4 align-items-center justify-content-center flex-md-row gap-md-4">
         <MainButton
-          fn={() => {
+          onClick={() => {
             setSorteoActivo(false);
             navigate(-1);
           }}
@@ -59,7 +59,7 @@ export const VistaPreviaSorteo = () => {
           Editar
         </MainButton>
         <MainButton
-          fn={() => {
+          onClick={() => {
             setSorteoActivo(false);
             postSorteoImage(previewDraw.image).then((result) => {
               let { url, randomId } = result;

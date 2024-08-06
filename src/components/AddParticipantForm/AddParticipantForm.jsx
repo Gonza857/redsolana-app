@@ -5,8 +5,8 @@ import { adminContext } from "../../storage/AdminContext";
 import { postParticipant } from "../../firebase/firebase";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import styled from "styled-components";
-import { MainButton } from "../APublic/MainButton/MainButton";
 import { useNavigate } from "react-router-dom";
+import { MainButton } from "../UI/MainButton";
 
 export const AddParticipantForm = ({
   lastParticipant,
@@ -127,7 +127,10 @@ export const AddParticipantForm = ({
         <MainButton primary={true} className="col-3 m-auto my-2" type="submit">
           Enviar
         </MainButton>
-        <MainButton className="col-3 m-auto my-2" onClick={limpiarFormulario}>
+        <MainButton
+          className="col-3 m-auto my-2"
+          onClick={() => limpiarFormulario()}
+        >
           Limpiar
         </MainButton>
         {wasAdded && (
@@ -135,7 +138,7 @@ export const AddParticipantForm = ({
             <MainButton
               primary={true}
               type="button"
-              fn={wantToUseLastParticipant}
+              onClick={wantToUseLastParticipant}
             >
               Usar participante anterior
             </MainButton>

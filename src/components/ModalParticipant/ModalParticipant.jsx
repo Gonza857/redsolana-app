@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { MainButton } from "../APublic/MainButton/MainButton";
+import { MainButton } from "../UI/MainButton";
 
 export const ModalParticipant = ({ handleClose, show, participant }) => {
   return (
@@ -28,7 +28,7 @@ export const ModalParticipant = ({ handleClose, show, participant }) => {
           </p>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-center">
-          <MainButton fn={handleClose}>Cerrar</MainButton>
+          <MainButton onClick={handleClose}>Cerrar</MainButton>
         </Modal.Footer>
       </Modal>
     </>

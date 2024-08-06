@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { cronoAndNewsContext } from "../../../storage/AdminContext";
+import { cronoAndNewsContext } from "../storage/AdminContext";
 
 import styled from "styled-components";
 

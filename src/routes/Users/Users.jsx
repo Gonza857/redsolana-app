@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { ErrorPage, Inicio, Login } from "../../Layout";
-import { VistaCajeros } from "../../Layout/User/VistaCajeros/VistaCajeros";
+import { VistaCajeros } from "../../Layout/VistaCajeros";
 import { Sorteo } from "../../Layout/User/Sorteo/Sorteo";
-import { RequestUser } from "../../Layout/User/Solicitud/RequestUser";
-import { Novedades } from "../../Layout/User/Novedades/Novedades";
+import { RequestUser } from "../../Layout/RequestUser";
+import { Novedades } from "../../Layout/Novedades";
 
 export const Users = () => {
   return (

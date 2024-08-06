@@ -4,7 +4,6 @@ import { AddParticipantForm } from "../../../components/AddParticipantForm/AddPa
 import { useContext } from "react";
 import { adminContext } from "../../../storage/AdminContext";
 import { useState } from "react";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 
 export const VistaAgregarParticipante = ({}) => {
   const [wantToUseTheLast, setWantToUseTheLast] = useState(false);

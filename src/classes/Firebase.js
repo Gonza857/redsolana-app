@@ -1,8 +1,14 @@
 import { v4 } from "uuid";
 import { DATABASE, storage } from "../firebase/firebase";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
 import { toastError, toastSuccess } from "../helpers/helpers";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -83,6 +89,39 @@ export default class Firebase {
       toastError(error.message);
     }
   }
+  static async uploadCheckerImageDB(file) {
+    const randomId = v4();
+    const storageRef = ref(storage, randomId);
+    try {
+      await uploadString(storageRef, file, "data_url");
+      const url = await getDownloadURL(storageRef);
+      toastSuccess("Imagen subida correctamente");
+      return { url, randomId };
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+  static async postCashier(cajero) {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const collectionRef = collection(DATABASE, "cajeros");
+      // promesa para añadir documento
+      const docRef = await addDoc(collectionRef, cajero);
+      return {
+        ...cajero,
+        id: docRef.id,
+      };
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
+  static async deleteCashier(cashier) {
+    await deleteDoc(doc(DATABASE, "cajeros", cashier.id));
+    if (cashier.imagen !== null) {
+      this.deleteImg(cashier.imagen.randomId);
+    }
+  }
 
   // DRAW
   static async updateDraw(sorteoData) {
@@ -146,5 +185,13 @@ export default class Firebase {
     } catch (error) {
       toastError(error.message);
     }
+  }
+  static async deleteImg(imgId) {
+    let aux = false;
+    const desertRef = ref(storage, imgId);
+    deleteObject(desertRef).then(() => {
+      aux = true;
+    });
+    return aux;
   }
 }

@@ -4,7 +4,7 @@ import { FaEye, FaTrash } from "react-icons/fa";
 import { useContext } from "react";
 import { adminContext } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
-import { MainButton } from "../APublic/MainButton/MainButton";
+import { MainButton } from "../UI/MainButton";
 
 export const ParticipantTr = ({
   participant,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
-import { MainButton } from "../../APublic/MainButton/MainButton";
+import { MainButton } from "../../UI/MainButton";
 
 export const ModalViewHistorialData = ({ onClose, show, solicitud }) => {
   return (
@@ -36,7 +36,7 @@ export const ModalViewHistorialData = ({ onClose, show, solicitud }) => {
           {solicitud.solved == null ? "No resuelto" : solicitud.solved}
         </p>
         <SubmitContainer>
-          <MainButton fn={() => onClose()}>Cerrar</MainButton>
+          <MainButton onClick={() => onClose()}>Cerrar</MainButton>
         </SubmitContainer>
       </Modal.Body>
     </Modal>

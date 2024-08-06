@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { adminContext } from "../../../storage/AdminContext";
 import styled from "styled-components";
-import { MainButton } from "../../../components/APublic/MainButton/MainButton";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../helpers/helpers";
@@ -14,6 +13,7 @@ import {
 } from "../../../firebase/storage/casino";
 import { updateCasino } from "../../../firebase/database/casinos";
 import Firebase from "../../../classes/Firebase";
+import { MainButton } from "../../../components/UI/MainButton";
 
 export const EditCasinoView = () => {
   const { casinoToEdit, solana } = useContext(adminContext);
@@ -180,7 +180,7 @@ export const EditCasinoView = () => {
                   <StyledImage>
                     <img src={actualImage} />
                   </StyledImage>
-                  <MainButton fn={deleteActualImage}>
+                  <MainButton onClick={() => deleteActualImage()}>
                     <BsTrash />
                   </MainButton>
                 </div>
@@ -191,7 +191,7 @@ export const EditCasinoView = () => {
                       <StyledImage>
                         <img src={previewImageUrl} />
                       </StyledImage>
-                      <MainButton fn={deletePreviewImage}>
+                      <MainButton onClick={() => deletePreviewImage()}>
                         <BsTrash />
                       </MainButton>
                     </div>

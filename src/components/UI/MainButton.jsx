@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const MainButton = ({ children, fn, primary, type, circle, red }) => {
+export const MainButton = ({ children, primary, circle, red, ...args }) => {
   const style = {
     backgroundColor: primary ? "#3745d4" : red ? "#ab0000" : "#d4af37",
     color: primary ? "#fff" : "#000",
@@ -9,16 +9,11 @@ export const MainButton = ({ children, fn, primary, type, circle, red }) => {
   return (
     <>
       {circle ? (
-        <CircleBtn
-          onClick={fn}
-          style={style}
-          type={type}
-          className="p-1 p-sm-2"
-        >
+        <CircleBtn style={style} className="p-1 p-sm-2" {...args}>
           {children}
         </CircleBtn>
       ) : (
-        <StyledBtn onClick={fn} style={style} type={type}>
+        <StyledBtn style={style} {...args}>
           {children}
         </StyledBtn>
       )}
