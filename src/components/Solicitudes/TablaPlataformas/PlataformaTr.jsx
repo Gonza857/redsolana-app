@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form } from "react-bootstrap";
 import {
   AiOutlineDelete,
@@ -6,21 +6,40 @@ import {
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 import styled from "styled-components";
+import { solicitudesContext } from "../../../storage/AdminContext";
+import { Loader } from "../../UI/Loader";
+import { useState } from "react";
 
-export const PlataformaTr = ({ platform, handleUpdate, deletePlatform }) => {
+export const PlataformaTr = ({ platform, deletePlatform }) => {
+  const { handleUpdate } = useContext(solicitudesContext);
+
+  const [isUpdating, setisUpdating] = useState(false);
+
+  const handleAction = (e, platform) => {
+    setisUpdating(true);
+    handleUpdate(e, platform).then((r) => {
+      if (r) setisUpdating(false);
+    });
+  };
   return (
     <tr>
-      <td>{platform.name}</td>
+      <td>{platform._name}</td>
       <td>
-        {platform.visible ? (
-          <>
-            <AiOutlineEye style={{ fontSize: "1.5rem" }} />
-          </>
+        {isUpdating ? (
+          <Loader />
         ) : (
           <>
-            <AiOutlineEyeInvisible
-              style={{ fontSize: "1.5rem", color: "grey" }}
-            />
+            {platform._isVisible ? (
+              <>
+                <AiOutlineEye style={{ fontSize: "1.5rem" }} />
+              </>
+            ) : (
+              <>
+                <AiOutlineEyeInvisible
+                  style={{ fontSize: "1.5rem", color: "grey" }}
+                />
+              </>
+            )}
           </>
         )}
       </td>
@@ -29,8 +48,8 @@ export const PlataformaTr = ({ platform, handleUpdate, deletePlatform }) => {
           <Form.Check
             type="switch"
             id="custom-switch"
-            defaultChecked={platform.visible}
-            onChange={(e) => handleUpdate(e, platform)}
+            defaultChecked={platform._isVisible}
+            onChange={(e) => handleAction(e, platform)}
           />
         </Form>
       </td>

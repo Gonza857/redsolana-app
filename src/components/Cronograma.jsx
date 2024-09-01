@@ -9,8 +9,8 @@ export function Cronograma() {
   let isDrawActive = solana?.draw?.isActive;
   return (
     <Wrapper
-      id="Cronograma"
-      className="d-flex justify-content-center align-items-center mb-5 p-3"
+      id="cronograma"
+      className="d-flex justify-content-center align-items-center mb-5 p-3 bor2"
       style={{
         maxHeight: isDrawActive ? "calc(100vh - 90px)" : "calc(100vh - 60px)",
       }}

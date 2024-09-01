@@ -45,16 +45,3 @@ export const getTodasLasSolicitudes = async () => {
     toastError(error.message);
   }
 };
-
-export const updateSolicitud = async (solicitudId, solicitud) => {
-  const docRef = doc(DATABASE, "solicitudes", solicitudId);
-  try {
-    await updateDoc(docRef, solicitud);
-  } catch (error) {
-    toastError(error);
-  }
-};
-
-export const deleteSolicitud = async (solicitud) => {
-  await deleteDoc(doc(DATABASE, "solicitudes", solicitud.id));
-};

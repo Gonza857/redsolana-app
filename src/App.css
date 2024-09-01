@@ -6,6 +6,11 @@
     text-decoration: none;
 }
 
+:root {
+    --primaryBlue: #3745d4;
+    --secondaryYellow: #d4b237;
+}
+
 .blockButton {
     pointer-events: none !important;
     cursor: not-allowed !important; 
@@ -76,7 +81,7 @@
 }
 
 .numberBox {
-    border: 1px solid rgb(255, 213, 0);
+    border: 1px solid var(--secondaryYellow);
     width: 40px;
     height: 40px;
     display: flex;
@@ -85,12 +90,12 @@
   }
 
   .marcado {
-    background-color: rgb(147, 0, 0);
+    background-color: var(--primaryBlue);
     color: #ffffff;
   }
   
   .noMarcado {
-    background-color: rgb(0, 105, 16);
+    background-color: rgba(0, 0, 0, 0);
     color: #ffffff;
   
   }
@@ -134,17 +139,56 @@ th, tr {
 }
 
 .primary {
-    background-color: #d4af37;
-    color: #000;
+    background-color: #3745d4;
+    color: #fff;
+    transition: all .3s;
 
 }
 
 .secondary {
-    background-color: #7037d4;
-    color: #fff;
+    background-color: #d4af37;
+    color: #000;
+}
+
+.primary:hover {
+    background-color: #2c37ac;
+}
+.secondary:hover {
+    background-color: #a38729;
+}
+
+.redBtn {
+    background-color: #ab0000;
 }
 
 /* 18/02/24 */
 .styledTitle {
     font-size: 2rem;
 }
+
+.rounded {
+    border-radius: 1rem;
+}
+
+.toast-box {
+    width: 10rem;
+    height: 10rem;
+    border: 1px solid #d4af37;
+}
+
+.header-btn {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 1.6rem !important;
+    padding: 8px 15px;
+    transition: all 0.3s;
+}
+.header-btn:hover {
+    transform: scale(1.1);
+}
+
+@media screen and (min-width: 720px) {
+    .header-btn {
+        font-size: 1.8rem;
+        padding: 10px 30px;
+    }
+  }

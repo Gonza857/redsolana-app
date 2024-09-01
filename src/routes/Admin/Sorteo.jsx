@@ -1,20 +1,17 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { DrawNumbersTable } from "../../components/DrawNumbersTable/DrawNumbersTable";
+import { DrawNumbersTable } from "../../Layout/Admin/Draw/DrawNumbersTable";
 import { ErrorPage } from "../../Layout";
-import { DrawParticipantsTable } from "../../components/DrawParticipantsTable/DrawParticipantsTable";
+import { DrawParticipantsTable } from "../../Layout/Admin/Draw/DrawParticipantsTable";
+import { CreateDraw } from "../../Layout/Admin/Draw/CreateDraw";
 import {
-  CreateDraw,
-  VistaCrearSorteo,
-} from "../../Layout/Admin/Sorteos/VistaCrearSorteo";
-import {
-  VistaAgregarParticipante,
-  VistaEditarSorteo,
-  VistaPreviaSorteo,
-  VistaSorteo,
-} from "../../Layout/Admin/Sorteos/index";
+  AddDrawParticipant,
+  Draw as DrawView,
+  DrawPreview,
+  EditDraw,
+} from "../../Layout/Admin/Draw/index";
 
-export const Sorteo = () => {
+export const Draw = () => {
   return (
     <Routes>
       {/* VISTA ADMIN, TABLA NUMEROS */}
@@ -26,13 +23,13 @@ export const Sorteo = () => {
       {/* VISTA ADMIN, INFO SORTEO */}
       <Route
         path="/informacion"
-        element={<VistaSorteo />}
+        element={<DrawView />}
         errorElement={<ErrorPage />}
       />
       {/* VISTA ADMIN, EDITAR SORTEO */}
       <Route
         path="/editar"
-        element={<VistaEditarSorteo />}
+        element={<EditDraw />}
         errorElement={<ErrorPage />}
       />
       {/* VISTA ADMIN, TABLA PARTICIPANTES */}
@@ -44,19 +41,19 @@ export const Sorteo = () => {
       {/* CREAR SORTEO */}
       <Route
         path="/crear"
-        element={<VistaCrearSorteo />}
+        element={<CreateDraw />}
         errorElement={<ErrorPage />}
       />
       {/* PREVIEW DE COMO SE SUBIRÁ */}
       <Route
         path="/preview"
-        element={<VistaPreviaSorteo />}
+        element={<DrawPreview />}
         errorElement={<ErrorPage />}
       />
       {/* AGREGAR PARTICIPANTE */}
       <Route
         path="/agregar"
-        element={<VistaAgregarParticipante />}
+        element={<AddDrawParticipant />}
         errorElement={<ErrorPage />}
       />
       <Route path="/*" element={<ErrorPage />} />

@@ -12,6 +12,7 @@ export default class Solana {
     this._casinos = [];
     this._draw = {};
     this._state = false;
+    this._platforms = [];
   }
 
   reset() {
@@ -26,7 +27,7 @@ export default class Solana {
     console.log("Initializing started");
     // traer cajeros, casinos, solicitudes
     let c_allCashiers = await this.getCashiersFromDB();
-    this._cajeros = c_allCashiers;
+    this._cajeros = this.orderCashiersPos(c_allCashiers);
     let c_fiveCashiers = this.getTheFirstFiveCashiers();
 
     let c_casinos = await this.getCasinosFromDB();
@@ -37,18 +38,38 @@ export default class Solana {
 
     let c_draw = await this.getDrawFromDB();
     this._draw = new Draw(c_draw);
+    this._draw.participants = await this.getParticipantsFromDB();
     this._draw.markSlotPerParticipant();
+
+    let c_platforms = await this.getPlatformsFromDB();
+    this._platforms = c_platforms;
+    if (c_allCashiers.length < 5) c_fiveCashiers = [];
+
+    console.log(c_allCashiers);
 
     let result = [
       c_fiveCashiers,
       c_allCashiers,
       c_casinos,
       c_requests,
-      this.draw,
+      this._draw,
+      c_platforms,
     ];
     this._state = true;
+
     console.log("Initializing finished");
     return result;
+  }
+
+  async getDrawAgain() {
+    let c_draw = await this.getDrawFromDB();
+    this._draw = new Draw(c_draw);
+    this._draw.participants = await this.getParticipantsFromDB();
+    this._draw.markSlotPerParticipant();
+  }
+
+  async getPlatformsFromDB() {
+    return await Firebase.getPlatforms();
   }
 
   async getCasinosFromDB() {
@@ -61,6 +82,10 @@ export default class Solana {
 
   async getDrawFromDB() {
     return await Firebase.getDraw();
+  }
+
+  async getParticipantsFromDB() {
+    return await Firebase.getParticipants();
   }
 
   async getCashiersFromDB() {
@@ -88,18 +113,19 @@ export default class Solana {
   getTheFirstFiveCashiers() {
     let actual = 0;
     let result = [];
-    while (actual < 6) {
+    while (actual < 6 && actual < this._cajeros.length) {
       result.push(this._cajeros[actual]);
       actual++;
     }
     return result;
   }
   getCashierIndexById(cashier) {
-    return this._cajeros.findIndex((c) => c.id === cashier.id);
+    console.log(cashier);
+    return this._cajeros.findIndex((c) => c._id === cashier._id);
   }
   getCashiersByName(cashierName) {
     return this._cajeros.filter((cajero) => {
-      if (cajero.nombre.toLowerCase().includes(cashierName)) {
+      if (cajero._name.toLowerCase().includes(cashierName)) {
         return cajero;
       } else {
         return null;
@@ -112,16 +138,15 @@ export default class Solana {
     1) Cajero no existe previamente, agregamos en la posición deseada.
     2) Cajero ya existe, cambiamos su posición  
     */
+    console.log(`tengo que poner a ${cashier._name} en la posicion ${newPos}`);
     let cashierIndex = this.getCashierIndexById(cashier);
-    let copyOfCashiers = this._cashiers;
+    let copyOfCashiers = [...this._cajeros];
     if (cashierIndex === -1) {
       // CASO 1
-      //("AGREGADO Y CAMBIADO DE POSICIÓN");
       copyOfCashiers.splice(newPos, 0, cashier);
       return this.orderCashiersPos(copyOfCashiers);
     } else {
       // CASO 2
-      // ("CAMBIADO DE POSICIÓN");
       copyOfCashiers.splice(cashierIndex, 1);
       copyOfCashiers.splice(newPos, 0, cashier);
       return this.orderCashiersPos(copyOfCashiers);
@@ -131,13 +156,26 @@ export default class Solana {
   orderCashiersPos(copyOfCashiers) {
     let newArray = [];
     copyOfCashiers.forEach((caj, i) => {
-      caj.pos = i;
+      caj._position = i;
       newArray.push(caj);
     });
     return newArray;
   }
+
   addCashier(data) {
     Firebase.postCashier(data).then((r) => this.cajeros.push(r));
+  }
+
+  getCashiersQuantityByState(state) {
+    let counter = 0;
+    this._cajeros.forEach((c) => {
+      if (state) {
+        if (c._state == "conectado") counter++;
+      } else {
+        if (c._state == "desconectado") counter++;
+      }
+    });
+    return counter;
   }
 
   // CASINOS
@@ -153,13 +191,52 @@ export default class Solana {
     return new Casino();
   }
   createCasino(object) {
-    return new Casino(object.image, object.name, object.link);
+    return new Casino(object._image, object._name, object._link);
   }
   getCasinoById(id) {
-    return this._casinos.find((c) => c.id === id);
+    return this._casinos.find((c) => c._id === id);
+  }
+
+  // REQUESTS
+  getUnresolvedRequests() {
+    return this._solicitudes.filter((s) => s._state !== true);
+  }
+  getResolvedRequests() {
+    return this._solicitudes.filter((s) => s._state !== false);
+  }
+
+  orderResolvedRequestByRecentTime() {
+    return [...this.getResolvedRequests()].sort((a, b) => {
+      const dateA = new Date(`${a._date} ${a._time}`);
+      const dateB = new Date(`${b._date} ${b._time}`);
+      return dateA - dateB;
+      // return dateB - dateA;
+    });
+  }
+  orderUnresolvedRequestByRecentTime() {
+    return [...this.getUnresolvedRequests()].sort((a, b) => {
+      const dateA = new Date(`${a._date} ${a._time}`);
+      const dateB = new Date(`${b._date} ${b._time}`);
+      return dateA - dateB;
+      // return dateB - dateA;
+    });
+  }
+
+  getNumberOfResolvedRequests() {
+    return this.getResolvedRequests().length;
+  }
+  getNumberOfUnresolvedRequests() {
+    return this.getUnresolvedRequests().length;
   }
 
   // OWN SETTERS AND GETTERS
+  // PLATFORMS5
+  get platforms() {
+    return this._platforms;
+  }
+  set platforms(value) {
+    this._platforms = value;
+  }
   // CASHIERS
   get cajeros() {
     return this._cajeros;
@@ -175,11 +252,11 @@ export default class Solana {
     this._casinos = value;
   }
   // REQUESTS
-  get requests() {
-    return this._requests;
+  get solicitudes() {
+    return this._solicitudes;
   }
-  set requests(value) {
-    this._requests = value;
+  set solicitudes(value) {
+    this._solicitudes = value;
   }
   // DRAW
   get draw() {

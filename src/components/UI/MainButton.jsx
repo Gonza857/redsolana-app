@@ -1,21 +1,31 @@
 import React from "react";
 import styled from "styled-components";
 
-export const MainButton = ({ children, primary, circle, red, ...args }) => {
-  const style = {
-    backgroundColor: primary ? "#3745d4" : red ? "#ab0000" : "#d4af37",
-    color: primary ? "#fff" : "#000",
-  };
+export const MainButton = ({
+  children,
+  primary,
+  circle,
+  red,
+  big,
+  ...args
+}) => {
   return (
     <>
       {circle ? (
-        <CircleBtn style={style} className="p-1 p-sm-2" {...args}>
+        <CircleBtn className="p-1 p-sm-2 primary" {...args}>
           {children}
         </CircleBtn>
       ) : (
-        <StyledBtn style={style} {...args}>
-          {children}
-        </StyledBtn>
+        <>
+          <StyledBtn
+            className={`d-flex justify-content-center ${big && "header-btn"} ${
+              primary ? "primary " : "secondary "
+            } ${red && "redBtn "}`}
+            {...args}
+          >
+            {children}
+          </StyledBtn>
+        </>
       )}
     </>
   );
@@ -25,10 +35,10 @@ const StyledBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 20px;
   border: 0;
-  border-radius: 0.4em;
-  color: #fff;
+  padding: 8px 15px;
+  border-radius: 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
   transition: all 0.3s;
   &:active {
@@ -36,6 +46,10 @@ const StyledBtn = styled.button`
   }
   a {
     color: inherit;
+  }
+  @media screen and (min-width: 500px) {
+    padding: 10px 20px;
+    font-size: 1rem;
   }
 `;
 

@@ -23,15 +23,15 @@ export const HistorialRow = ({ solicitud }) => {
   return (
     <>
       <tr className="animate__animated animate__fadeIn" key={solicitud.id}>
-        <td>{solicitud.date}</td>
-        <td>{solicitud.fullname}</td>
-        <td className="d-none d-lg-table-cell">{solicitud.email}</td>
-        <td className="d-none d-md-table-cell">{solicitud.phone}</td>
-        <td className="d-none d-sm-table-cell">{solicitud.platform}</td>
+        <td>{solicitud._date}</td>
+        <td>{solicitud._fullname}</td>
+        <td className="d-none d-lg-table-cell">{solicitud._email}</td>
+        <td className="d-none d-md-table-cell">{solicitud._phone}</td>
+        <td className="d-none d-sm-table-cell">{solicitud._platform}</td>
         <td>
           <StyledWspBtn className="m-auto">
             <a
-              href={`https://wa.me/549${solicitud.phone}`}
+              href={`https://wa.me/549${solicitud._phone}`}
               target="_BLANK"
               rel="noreferrer"
             >
@@ -40,7 +40,7 @@ export const HistorialRow = ({ solicitud }) => {
           </StyledWspBtn>
         </td>
         <td className="d-none d-lg-table-cell">
-          {solicitud.solved != null ? solicitud.solved : "Sin datos"}
+          {solicitud._solved != null ? solicitud._solved : "Sin datos"}
         </td>
         <td>
           <StyledDesmarkBtn

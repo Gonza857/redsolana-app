@@ -28,7 +28,17 @@ export const TablaPlataformas = ({
         </tr>
       </thead>
       <tbody>
-        {!isLoading && (
+        {platforms.map((platform) => {
+          return (
+            <PlataformaTr
+              platform={platform}
+              handleUpdate={handleUpdate}
+              deletePlatform={deletePlatform}
+              key={platform._id}
+            />
+          );
+        })}
+        {/* {!isLoading && (
           <>
             {platforms.map((platform) => {
               return (
@@ -40,7 +50,7 @@ export const TablaPlataformas = ({
               );
             })}
           </>
-        )}
+        )} */}
       </tbody>
     </Table>
   );

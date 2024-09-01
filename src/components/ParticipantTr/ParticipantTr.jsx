@@ -2,7 +2,7 @@ import React from "react";
 import { ModalParticipant } from "../ModalParticipant/ModalParticipant";
 import { FaEye, FaTrash } from "react-icons/fa";
 import { useContext } from "react";
-import { adminContext } from "../../storage/AdminContext";
+import { adminContext, solana } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
 import { MainButton } from "../UI/MainButton";
 
@@ -25,7 +25,7 @@ export const ParticipantTr = ({
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteParticipant(participant);
+        solana.draw.deleteParticipant(participant);
       }
     });
   };

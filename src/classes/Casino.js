@@ -1,9 +1,10 @@
 export default class Casino {
-  constructor() {
-    this._image = new Image(); // objeto
-    this._name = null;
-    this._link = null;
-    this._id = null;
+  constructor(image, name, link) {
+    this._image = image;
+    // this._image = new Image(); // objeto
+    this._name = name;
+    this._link = link;
+    this._id = 0;
   }
 
   // Getter y Setter para image

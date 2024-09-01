@@ -35,6 +35,20 @@ const errorOnAdd = (errorMsg) => {
   });
 };
 
+const buildCashierObject = (data) => {
+  data.pos--;
+  return {
+    _link: data.enlace,
+    _state: data.estado,
+    _genre: data.genero,
+    _image: data.imagen,
+    _name: data.nombre,
+    _number: String(data.numero),
+    _position: Number(data.pos),
+    _network: data.red,
+  };
+};
+
 function AddCajerosForm({ onClose }) {
   const { addCajero, cajeros, setCajeros, moveCajerosPosition } =
     useContext(adminContext);
@@ -61,6 +75,7 @@ function AddCajerosForm({ onClose }) {
   // };
 
   const onSubmit = async (data) => {
+    let buildedCashier = buildCashierObject(data);
     if (data.imagen[0] === undefined) {
       // SE ENVIA SIN IMAGEN
       data.imagen = null;
@@ -122,7 +137,7 @@ function AddCajerosForm({ onClose }) {
   };
 
   return (
-    <AddForm className="gap-3" onSubmit={handleSubmit(onSubmit)}>
+    <AddForm className="gap-3 bor2" onSubmit={handleSubmit(onSubmit)}>
       {/* NOMBRE, GENERO, RED Y NUMERO */}
       <Wrapper className="gap-2">
         <InputContainer1 className="col-12">

@@ -1,30 +1,26 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { AddCasinoView } from "../../Layout/Admin/Casinos/VistaAgregar";
+import { AddCasino } from "../../Layout/Admin/Casinos/AddCasino";
+import { Casinos as CasinosView } from "../../Layout/Admin/Casinos/Casinos";
+import { EditCasino } from "../../Layout/Admin/Casinos/EditCasino";
 import { ErrorPage } from "../../Layout";
-import { AdminCasinosView } from "../../Layout/Admin/Casinos/VerCasinos";
-import { EditCasinoView } from "../../Layout/Admin/Casinos/VistaEditar";
 
 export const Casinos = () => {
   return (
     <Routes>
       {/* VIEW CASINOS */}
-      <Route
-        path="/"
-        element={<AdminCasinosView />}
-        errorElement={<ErrorPage />}
-      />
+      <Route path="/" element={<CasinosView />} errorElement={<ErrorPage />} />
       {/* ADD */}
       <Route
         path="/agregar"
-        element={<AddCasinoView />}
+        element={<AddCasino />}
         errorElement={<ErrorPage />}
       />
 
       {/* EDIT */}
       <Route
         path="/editar/:id"
-        element={<EditCasinoView />}
+        element={<EditCasino />}
         errorElement={<ErrorPage />}
       />
       <Route path="/*" element={<ErrorPage />} />

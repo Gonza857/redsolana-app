@@ -18,28 +18,26 @@ export const PendienteRow = ({ solicitud }) => {
   return (
     <>
       <tr className="animate__animated animate__fadeIn" key={solicitud.id}>
-        <td>{solicitud.date}</td>
-        <td>{solicitud.fullname}</td>
-        <td className="d-none d-lg-table-cell">{solicitud.email}</td>
-        <td className="d-none d-md-table-cell">{solicitud.phone}</td>
-        <td className="d-none d-sm-table-cell">{solicitud.platform}</td>
-        <td>
+        <td className="p-0">
+          {solicitud._date} - {solicitud._time}
+        </td>
+        <td className="p-0">{solicitud._fullname}</td>
+        <td className="p-0 d-none d-lg-table-cell">{solicitud._email}</td>
+        <td className="p-0 d-none d-md-table-cell">{solicitud._phone}</td>
+        <td className="p-0 d-none d-sm-table-cell">{solicitud._platform}</td>
+        <td className="p-1 d-flex">
           <StyledWspBtn>
             <a
-              href={`https://wa.me/549${solicitud.phone}`}
+              href={`https://wa.me/549${solicitud._phone}`}
               target="_BLANK"
               rel="noreferrer"
             >
               <AiOutlineWhatsApp />
             </a>
           </StyledWspBtn>
-        </td>
-        <td>
           <StyledCheckBtn onClick={() => actualizarEstadoSolicitud(solicitud)}>
             <AiOutlineCheck />
           </StyledCheckBtn>
-        </td>
-        <td className="d-lg-none">
           <StyledViewBtn onClick={() => handleShowInfo()}>
             <FaEye />
           </StyledViewBtn>

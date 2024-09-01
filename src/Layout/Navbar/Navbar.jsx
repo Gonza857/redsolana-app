@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { adminContext } from "../../storage/AdminContext";
+import {
+  adminContext,
+  cronoAndNewsContext,
+  solana,
+} from "../../storage/AdminContext";
 import { ToastContainer } from "react-toastify";
 import styled, { keyframes } from "styled-components";
 
@@ -9,11 +13,13 @@ const navbarLinks = [
   { to: "/cajeros", slug: "Cajeros" },
   { to: "/jugar", slug: "Jugar" },
   { to: "/novedades", slug: "Novedades" },
+  { to: "#cronograma", slug: "Cronograma" },
 ];
 
 export const Navbar = () => {
-  const { isAdmin, isOpenMenu, setIsOpenMenu, sorteoActivo, logout } =
+  const { isAdmin, isOpenMenu, setIsOpenMenu, logout } =
     useContext(adminContext);
+  const { scheduleImage, newsImage } = useContext(cronoAndNewsContext);
 
   window.addEventListener("resize", function () {
     if (this.window.innerWidth > 968) setIsOpenMenu(false);
@@ -21,9 +27,17 @@ export const Navbar = () => {
 
   return (
     <>
-      <NavbarContainer>
+      <NavbarContainer
+        style={{ height: solana.draw.isActive ? "80px" : "60px" }}
+      >
         <ToastContainer />
-        <Wrapper className="flex-lg-row justify-content-lg-between">
+        <Wrapper
+          className="flex-lg-row justify-content-lg-between"
+          style={{
+            height:
+              solana.draw.isActive && window.innerWidth > 500 ? "70%" : "100%",
+          }}
+        >
           <LogoContainer className="col-12 col-md-11 col-lg-auto py-1">
             <Link to="/" className="d-flex align-items-center brand-text">
               <BrandLogo
@@ -48,21 +62,31 @@ export const Navbar = () => {
           {/* MENU DESKTOP */}
           <div className="d-none d-lg-flex align-items-center gap-xl-2">
             <ul className="d-flex flex-wrap gap-0 p-0 m-0 h-100">
-              {navbarLinks.map((link) => (
-                <MenuItem key={link.to}>
-                  <Link
-                    to={link.to}
-                    onClick={() => {
-                      if (window.scrollY !== 0) {
-                        // Si ya estás en la parte superior, desplázate automáticamente hacia arriba
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }
-                    }}
-                  >
-                    {link.slug}
-                  </Link>
-                </MenuItem>
-              ))}
+              {navbarLinks.map((link) => {
+                if (link.slug == "Cronograma" && scheduleImage == null) return;
+                if (link.slug == "Novedades" && newsImage == null) return;
+                return (
+                  <MenuItem key={link.to}>
+                    {link.slug == "Cronograma" ? (
+                      <a href="#cronograma">{link.slug}</a>
+                    ) : (
+                      <>
+                        <Link
+                          to={link.to}
+                          onClick={() => {
+                            if (window.scrollY !== 0) {
+                              // Si ya estás en la parte superior, desplázate automáticamente hacia arriba
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }
+                          }}
+                        >
+                          {link.slug}
+                        </Link>
+                      </>
+                    )}
+                  </MenuItem>
+                );
+              })}
             </ul>
             {isAdmin && (
               <AdminMenu className="d-flex flex-wrap gap-0 p-0 m-0 h-100">
@@ -92,20 +116,23 @@ export const Navbar = () => {
             )}
           </div>
         </Wrapper>
-
         {/* MENU MOBILE */}
         <MobileNav
           className={`d-lg-none ${isOpenMenu ? "showMenu" : "closeMenu"}`}
         >
           <div>
             <ul className="d-flex flex-column align-items-center p-0 m-0">
-              {navbarLinks.map((link) => (
-                <MenuItem key={link.to}>
-                  <Link onClick={() => setIsOpenMenu(false)} to={link.to}>
-                    {link.slug}
-                  </Link>
-                </MenuItem>
-              ))}
+              {navbarLinks.map((link) => {
+                if (link.slug == "Cronograma" && scheduleImage == null) return;
+                if (link.slug == "Novedades" && newsImage == null) return;
+                return (
+                  <MenuItem key={link.to}>
+                    <Link onClick={() => setIsOpenMenu(false)} to={link.to}>
+                      {link.slug}
+                    </Link>
+                  </MenuItem>
+                );
+              })}
             </ul>
             {isAdmin && (
               <AdminMenu className="m-auto h-100">
@@ -135,40 +162,38 @@ export const Navbar = () => {
             )}
           </div>
         </MobileNav>
+        {solana.draw.isActive && (
+          <StyledTextCarrousel
+            className="text-white col-12"
+            style={{
+              filter: isOpenMenu ? "brightness(50%)" : "unset",
+            }}
+          >
+            <LinksContainer>
+              <Link to={"/sorteo"}>
+                {Array(10).fill(<p className="ms-4">¡Sorteo activo!</p>)}
+              </Link>
+            </LinksContainer>
+          </StyledTextCarrousel>
+        )}
       </NavbarContainer>
-      <StyledTextCarrousel
-        className="text-white col-12"
-        style={{
-          display: !sorteoActivo ? "none" : "block",
-          filter: isOpenMenu ? "brightness(50%)" : "unset",
-        }}
-      >
-        <div className="gap-5">
-          <p className="gap-1 ms-4">
-            ¡Sorteo activo! Participa haciendo click
-            <Link to="/sorteo">aquí.</Link>
-          </p>
-          <p className="gap-1 ms-4">
-            ¡Sorteo activo! Participa haciendo click
-            <Link to="/sorteo">aquí.</Link>
-          </p>
-          <p className="gap-1 ms-4">
-            ¡Sorteo activo! Participa haciendo click
-            <Link to="/sorteo">aquí.</Link>
-          </p>
-          <p className="gap-1 ms-4">
-            ¡Sorteo activo! Participa haciendo click
-            <Link to="/sorteo">aquí.</Link>
-          </p>
-        </div>
-      </StyledTextCarrousel>
     </>
   );
 };
 
+const LinksContainer = styled.div`
+  display: flex;
+  a {
+    display: flex;
+    gap: 10rem;
+    color: #000;
+    cursor: pointer;
+  }
+`;
+
 const NavbarContainer = styled.nav`
   width: 100%;
-  height: 60px;
+  min-height: 70px;
   background-color: #3745d4;
   border-bottom: 1px solid #fff;
   position: fixed;
@@ -191,25 +216,24 @@ const Wrapper = styled.div`
 
 const CarrouselTextAnimation = keyframes`
   from {
-      transform: translateX(100%);
+      transform: translateX(0%);
     }
   to{
-      transform: translateX(-100%);
+      transform: translateX(-50%);
     }
 `;
 
 const StyledTextCarrousel = styled.div`
+  height: 30%;
   transition: all 0.6s;
   z-index: 150;
   background-color: #d4af37;
-  position: fixed;
-  top: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   div {
     white-space: nowrap;
-    animation: ${CarrouselTextAnimation} 40s linear infinite;
+    animation: ${CarrouselTextAnimation} 20s linear infinite;
     transition: all 0.5s;
     height: 30px;
     color: #000;

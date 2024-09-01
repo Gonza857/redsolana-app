@@ -1,19 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { toastError, toastSuccess } from "../helpers/helpers";
+import { askForDeleteDraw, toastError, toastSuccess } from "../helpers/helpers";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { deleteCajero, getAllCajeros } from "../firebase/database/cajeros";
-import { uploadCheckerImageDB } from "../firebase/storage/cajeros";
-import { deleteCasino, getAllCasinos } from "../firebase/database/casinos";
-import {
-  deleteParticipantDB,
-  getAllParticipants,
-  getSorteo,
-  postParticipant,
-  updateBooleanArray,
-  updateDraw,
-} from "../firebase/database/sorteo";
+
 import {
   logoutFirebase,
   signInFirebase,
@@ -23,18 +13,9 @@ import {
   postScheduleImage,
 } from "../firebase/storage/cronograma";
 import { getScheduleImage } from "../firebase/storage/cronograma";
-import { firebaseAuth, messaging } from "../firebase/firebase";
-import {
-  deleteSolicitud,
-  getTodasLasSolicitudes,
-  updateSolicitud,
-} from "../firebase/database/solicitudes";
+import { firebaseAuth } from "../firebase/firebase";
 import moment from "moment";
-import {
-  deletePlataforma,
-  getTodasLasPlataformas,
-  updatePlataforma,
-} from "../firebase/database/plataformas";
+
 import {
   deleteNovedadImg,
   getNovedadImg,
@@ -58,35 +39,23 @@ const askForDeleteCashier = {
   reverseButtons: true,
 };
 
-// /**
-//  * Buscar cajeros por nombre
-//  * @param cashierName - Nombre del cajero
-//  * @returns Array de coincidencias
-//  */
-// const cashierFilter = (cashierName, Casino) => {
-//   return Casino.getCashiersByName(cashierName.toLowerCase());
-
-//   // let busquedad = arrayCajeros.filter((cajero) => {
-//   //   if (cajero.nombre.toLowerCase().includes(param)) {
-//   //     return cajero;
-//   //   } else {
-//   //     return null;
-//   //   }
-//   // });
-
-//   // return busquedad;
-// };
-
-/**
-//  * Busca cajero con la misma ID
-//  * @param Cajero - (object)
-//  * @returns Index del cajero buscado
-//  */
-// const findCheckerID = (cashier, Casino) => {
-//   return Casino.getCashierIndexById(cashier);
-// };
-
 export const solana = new Solana();
+
+const deleteAllDrawParticipantsFromDB = () => {
+  let couldDelete = false;
+  let eliminados = 0;
+  for (let i = 0; i < solana.draw.participants.length; i++) {
+    Firebase.deleteParticipant(solana.draw.participants[i])
+      .then(() => {
+        eliminados++;
+      })
+      .catch((error) => {
+        toastError(error.message);
+      });
+  }
+  if (eliminados === solana.draw.participants.length) couldDelete = true;
+  return couldDelete;
+};
 
 export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
@@ -94,6 +63,9 @@ export const AdminContextProvider = (props) => {
 
   const [isAdmin, setIsAdmin] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdminAction, setIsAdminAction] = useState(false);
+  const [successState, setSuccessState] = useState(false);
+  const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
 
   /* ------ ESTADOS REVISADOS ------ */
 
@@ -102,15 +74,18 @@ export const AdminContextProvider = (props) => {
 
   // CASINOS
   const [casinos, setCasinos] = useState([]);
+  const [casinoToEdit, setCasinoToEdit] = useState({});
 
   // CASHIERS
   const [cincoChicos, setCincoChicos] = useState([]);
   const [cashiers, setCashiers] = useState([]);
   const [searchedName, setSearchedName] = useState(null);
+  const [searchResult, setSearchResult] = useState([]);
 
   // DRAW
   const [participants, setParticipants] = useState([]);
   const [draw, setDraw] = useState(null);
+  const [sorteoActivo, setSorteoActivo] = useState(false);
 
   // REQUESTS
   const [requests, setRequests] = useState(null);
@@ -119,7 +94,7 @@ export const AdminContextProvider = (props) => {
   // BUSCANDO CASINO - OK
   const [isGettingCasinos, setIsGettingCasinos] = useState(false);
   // CARGANDO SORTEO - OK
-  const [isDrawLoading, setIsDrawLoading] = useState(false);
+  const [isDrawLoading, setIsDrawLoading] = useState(true);
   // BUSCANDO CAJERO - OK
   const [isSearchingCajero, setIsSearchingCajero] = useState(false);
 
@@ -154,51 +129,53 @@ export const AdminContextProvider = (props) => {
     });
   };
 
-  useEffect(() => {
-    const abrir = async () => {
-      try {
-        console.log(solana.state);
-        let r = await solana.initialize();
-        if (solana.state) {
-          //Traemos cajeros
-          setCincoChicos(r[0]);
-          setCashiers(r[1]);
-          // Traemos casinos
-          setCasinos(r[2]);
-          setRequests(r[3]);
-          setDraw(r[4]);
-          setParticipants(r[4].participants);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
+  const abrir = async () => {
+    try {
+      let r = await solana.initialize();
+      if (solana.state) {
+        //Traemos cajeros
+        setCincoChicos(r[0]);
+        setCashiers(r[1]);
+        // Traemos casinos
+        setCasinos(r[2]);
+        setRequests(r[3]);
+        setDraw(r[4]);
+        setParticipants(r[4].participants);
+        // Loaders
+        setIsLoading(false);
+        setIsDrawLoading(false);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     abrir();
   }, []);
 
   const c_deleteCashier = (cashier) => {
-    console.log("Eliminando a: " + cashier.nombre);
     Swal.fire(askForDeleteCashier).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        let cashierIndex = solana.getCashierIndexById(cashier.id);
-        let copyCashiers = solana.cajeros;
+        setIsLoading(true);
+        let cashierIndex = solana.getCashierIndexById(cashier._id);
+        let copyCashiers = [...solana.cajeros];
         copyCashiers.splice(cashierIndex, 1);
-        Firebase.deleteCashier(cashier);
-        c_reGetCashiers();
-        toastSuccess("Cajero eliminado correctamente");
+        Firebase.deleteCashier(cashier._id).then(() => {
+          c_getCashiers();
+          toastSuccess("Cajero eliminado correctamente");
+        });
       } else if (result.isDenied) {
         Swal.fire("Cajero no elimnado", "", "info");
       }
     });
   };
 
-  const c_reGetCashiers = () => {
+  const c_getCashiers = () => {
     Firebase.getCashiers().then((r) => {
-      solana.cajeros = r;
-      setCashiers(r);
+      solana.cajeros = solana.orderCashiersPos(r);
+      setCashiers(solana.cajeros);
+      setIsLoading(false);
     });
   };
 
@@ -219,77 +196,85 @@ export const AdminContextProvider = (props) => {
     setSearchResult(null);
   };
 
-  // //    FUNCION ELIMINAR CAJEROS
-  // function handleDelete(cajeroEliminado) {
-  //   Swal.fire({
-  //     title: "¿Estas seguro que quieres eliminar este cajero?",
-  //     text: "Los cambios no se pueden deshacer.",
-  //     showDenyButton: true,
-  //     denyButtonText: `Cancelar`,
-  //     confirmButtonText: "Eliminar",
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     /* Read more about isConfirmed, isDenied below */
-  //     if (result.isConfirmed) {
-  //       let searchPosition = cajeros.findIndex(
-  //         (cajeroFind) => cajeroFind.id === cajeroEliminado.id
-  //       );
-  //       let copyCajeros = [...cajeros];
-  //       copyCajeros.splice(searchPosition, 1);
-  //       setCajeros(copyCajeros);
-  //       deleteCajero(cajeroEliminado);
-  //       toastSuccess("Cajero eliminado correctamente");
-  //     } else if (result.isDenied) {
-  //       Swal.fire("Cajero no elimnado", "", "info");
-  //     }
-  //   });
-  // }
+  // DRAW
+  const c_postDrawImg = async (img) => {
+    return await solana.draw.postImage(img);
+  };
+  const c_updateDraw = async (drawData) => {
+    let result = await solana.draw.updateDraw(drawData);
+    solana.getDrawAgain().then(() => {
+      setDraw(solana.draw);
+    });
+    return result;
+  };
+  const c_deleteDraw = () => {
+    askForDeleteDraw().then((r) => {
+      if (r) {
+        resetDraw();
+        // navigate("/admin")
+      }
+    });
+  };
 
-  // Estado de usuario
-  const [isVerifingAdmin, setIsVerifingAdmin] = useState(false);
+  const resetDraw = async () => {
+    let emptyDraw = {
+      _slots: null,
+      _description: null,
+      _image: null,
+      _isActive: false,
+    };
 
-  // ESTADO DE RESULTADO DE BUSQUEDA
-  const [searchResult, setSearchResult] = useState([]);
-  // ESTADO DE NOMBRE DE BUSQUEDA
-  // ESTADO  DE BUSQUEDA
-  // ESTADO DE ARRAY DE CAJEROS
-  // ESTADO DE ADMIN
+    // Elimina participante por participante - Boolean
+    let isResultOk = deleteAllDrawParticipantsFromDB();
 
-  // ESTADO CARGA DE CAJEROS
+    // Actualiza objeto sorteo
+    isResultOk = solana.draw.updateDraw(emptyDraw);
 
-  /* / / / / / CAJEROS / / / / / */
-  // SET CAJEROS
-  // async function traerCajeros() {
-  //   try {
-  //     let cincoCaras = [...cincoChicos];
-  //     const result = await getAllCajeros();
-  //     setCajeros(result);
-  //     setIsLoading(false);
-  //     let limit = 6;
-  //     let actual = 0;
-  //     while (actual < limit) {
-  //       cincoCaras.push(result[actual]);
-  //       actual++;
-  //     }
-  //     setCincoChicos(cincoCaras);
-  //   } catch (error) {
-  //     toastError(error);
-  //   }
-  // }
+    if (isResultOk && solana.draw.image !== null) {
+      // Elimina imagen
+      isResultOk = await solana.draw.deleteImage(solana.draw.image.randomId);
+    }
 
-  // // SUBIR IMAGEN DE CAJERO A DB
-  // const uploadCheckerImage = (file) => {
-  //   return uploadCheckerImageDB(file);
-  // };
+    if (isResultOk) {
+      solana.getDrawAgain().then(() => {
+        setDraw(solana.draw);
+      });
+    }
+  };
 
-  /* / / / / / FIN CAJEROS / / / / / */
+  const c_addCasino = async (casino, previewImage) => {
+    const result = await Firebase.postCasinoImage(previewImage);
+    if (result != undefined) {
+      let { url, id } = result;
+      casino._image = { url, id };
+      Firebase.postCasino({ ...casino })
+        .then((c) => {
+          window.scrollTo(0, 0);
+          toastSuccess("Casino cargado correctamente");
+          navigate("/admin/casinos");
+          abrir();
+        })
+        .catch((error) => toastError(error.message));
+    }
+  };
 
-  /* / / / / / SORTEO / / / / / */
+  const c_handleDeleteCasino = (casino) => {
+    Firebase.deleteCasino({ ...casino })
+      .then(() => {
+        toastSuccess("Eliminado correctamente");
+        navigate("/admin/casinos");
+        abrir();
+      })
+      .catch((error) => toastError(error.message));
+  };
 
-  /* INFORMACION GENERAL DEL SORTEO */
+  const c_getCasinoToEdit = (id) => {
+    let c = solana.getCasinoById(id);
+    if (c) {
+      setCasinoToEdit(c);
+    }
+  };
 
-  // ESTADO SORTEO BOOLEAN
-  const [sorteoActivo, setSorteoActivo] = useState(false);
   // ARRAY DE NUMEROS SORTEO
   const [sorteoArray, setSorteoArray] = useState([]);
   // OBJETO SORTEO
@@ -320,302 +305,22 @@ export const AdminContextProvider = (props) => {
     return counter;
   };
 
-  /* / / / / / FIN SORTEO / / / / / */
-
-  /* / / / / / CASINOS / / / / / */
-
-  // ARRAY DE CASINOS
-
-  const [casinoToEdit, setCasinoToEdit] = useState({});
-
-  /* FUNCIONES */
-
-  // GET CASINOS
-  // async function getCasinos() {
-  //   let result = [];
-  //   try {
-  //     const result = await getAllCasinos();
-  //     setCasinos(result);
-  //     setIsGettingCasinos(false);
-  //   } catch (error) {
-  //     toastError(error);
-  //   }
-  //   return result;
-  // }
-
-  // ELIMINAR CASINO - PASADA al OBJETO
-  // const handleDeleteCasino = (casino) => {
-  //   deleteCasino(casino).then(() => {
-  //     toastSuccess("Eliminado correctamente");
-  //     getCasinos();
-  //   });
-  // };
-
-  /* / / / / / FIN SORTEO / / / / / */
-
-  // // AÑADIR CAJEROS
-  // const addCajero = (cajeroObj) => {
-  //   setCajeros((cajeros) => [...cajeros, cajeroObj]);
-  // };
-
-  // // CAMBIAR POSICIÓN DE CAJEROS
-  // function moveCajerosPosition(posicion, cajero, arrayCajeros) {
-  //   /*
-  //   CASOS:
-  //   1) Cajero no existe previamente, agregamos en la posición deseada.
-  //   2) Cajero ya existe, cambiamos su posición
-  //   */
-  //   let cajeroIndex = findCheckerID(cajero, arrayCajeros);
-  //   if (cajeroIndex === -1) {
-  //     // CASO 1
-  //     //("AGREGADO Y CAMBIADO DE POSICIÓN");
-  //     arrayCajeros.splice(posicion, 0, cajero);
-  //     let newArray = [];
-  //     arrayCajeros.forEach((caj, i) => {
-  //       caj.pos = i;
-  //       newArray.push(caj);
-  //     });
-  //     return newArray;
-  //   } else {
-  //     // CASO 2
-  //     // ("CAMBIADO DE POSICIÓN");
-  //     arrayCajeros.splice(cajeroIndex, 1);
-  //     arrayCajeros.splice(posicion, 0, cajero);
-  //     let newArray = [];
-  //     arrayCajeros.forEach((caj, i) => {
-  //       caj.pos = i;
-  //       newArray.push(caj);
-  //     });
-  //     return newArray;
-  //   }
-  // }
-
-  // // EDITAR CAJEROS
-  // function updateCajeros(cajerosArr) {
-  //   setCajeros(cajerosArr);
-  // }
-
-  // FUNCION ELIMINAR CAJEROS
-  // function handleDelete(cajeroEliminado) {
-  //   Swal.fire({
-  //     title: "¿Estas seguro que quieres eliminar este cajero?",
-  //     text: "Los cambios no se pueden deshacer.",
-  //     showDenyButton: true,
-  //     denyButtonText: `Cancelar`,
-  //     confirmButtonText: "Eliminar",
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     /* Read more about isConfirmed, isDenied below */
-  //     if (result.isConfirmed) {
-  //       let searchPosition = cajeros.findIndex(
-  //         (cajeroFind) => cajeroFind.id === cajeroEliminado.id
-  //       );
-  //       let copyCajeros = [...cajeros];
-  //       copyCajeros.splice(searchPosition, 1);
-  //       setCajeros(copyCajeros);
-  //       deleteCajero(cajeroEliminado);
-  //       toastSuccess("Cajero eliminado correctamente");
-  //     } else if (result.isDenied) {
-  //       Swal.fire("Cajero no elimnado", "", "info");
-  //     }
-  //   });
-  // }
-
-  // FUNCIONES PARA SORTEO
-
-  // SET PARTICIPANTES
-  // async function getParticipants() {
-  //   try {
-  //     const result = await getAllParticipants();
-  //     setParticipants(result);
-  //     markDataBaseParticipants(result);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     toastError(error);
-  //   }
-  // }
-
-  // const markDataBaseParticipants = (arrayParticipants) => {
-  //   for (let participant of arrayParticipants) {
-  //     getNumberAndMarkOnTable(participant);
-  //   }
-  // };
-
-  const markBusySlots = (participant) => {
-    let { numero } = participant;
-    const copyOfBooleanArray = [...sorteoArray];
-    let indice = 0;
-    let ocupado = false;
-    while (indice < copyOfBooleanArray.length && !ocupado) {
-      if (!copyOfBooleanArray[numero]) {
-        copyOfBooleanArray[numero] = true;
-        ocupado = true;
-      }
-      indice++;
-    }
-    return copyOfBooleanArray;
-  };
-
-  // const unCheckBusySlots = (participant) => {
-  //   let { numero } = participant;
-  //   const copyOfBooleanArray = [...sorteoArray];
-  //   let indice = 0;
-  //   let unCheck = false;
-  //   while (indice < copyOfBooleanArray.length && !unCheck) {
-  //     if (copyOfBooleanArray[numero]) {
-  //       copyOfBooleanArray[numero] = false;
-  //       unCheck = true;
-  //     }
-  //     indice++;
-  //   }
-  //   return copyOfBooleanArray;
-  // };
-
-  // const addParticipant = (participant) => {
-  //   // postParticipant(participant)
-  //   //   .then(() => {
-  //   //     toastSuccess("Participante añadido correctamente.");
-  //   //     getParticipants();
-  //   //     let newBooleanArray = markBusySlots(participant);
-  //   //     updateBooleanArray(newBooleanArray).then(() => {
-  //   //       setSorteoArray(newBooleanArray);
-  //   //     });
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     toastError(error.message);
-  //   //   });
-  //   Casino.addDrawParticipant(participant);
-  // };
-
-  /** Función para eliminar participantes de Firebase
-   * @param participant Object
-  //  */
-  // const deleteParticipant = (participant) => {
-  //   deleteParticipantDB(participant)
-  //     .then(() => {
-  //       toastSuccess("Participante eliminado correctamente.");
-  //       getParticipants();
-  //       let newBooleanArray = unCheckBusySlots(participant);
-  //       updateBooleanArray(newBooleanArray).then(() => {
-  //         setSorteoArray(newBooleanArray);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       toastError(error.message);
-  //     });
-  // };
-
-  // const getNumberAndMarkOnTable = (participant) => {
-  //   let { numero } = participant;
-  //   sorteoArray[numero - 1] = true;
-  // };
-
-  /** Función para controlar si se escribe un número fuera de los admitidos
-   * en la tabla de numeros del sorteo
-   * @param number
-   * @returns boolean si es posible ocupar ese espacio
-   */
-  // const isNumberAvaible = (number) => {
-  //   let indice = 0;
-  //   let puedeOcupar = false;
-  //   if (number > sorteoArray.length - 1 || number < 0) {
-  //     return -1;
-  //   } else {
-  //     while (indice < sorteoArray.length) {
-  //       if (!sorteoArray[number]) {
-  //         puedeOcupar = true;
-  //         break;
-  //       }
-  //       indice++;
-  //     }
-  //   }
-  //   return puedeOcupar;
-  // };
-
-  // Yanina, Mega, Yanina riberos, 373
-
-  const markOnBooleanArray = (participant) => {
-    let { numero } = participant;
-    let copyOfBooleanArray = [...sorteoArray];
-    copyOfBooleanArray[numero] = true;
-    setSorteoArray(copyOfBooleanArray);
-    updateBooleanArray(copyOfBooleanArray);
-  };
-
-  // MANEJO DE CASINOS
-
-  // const setSorteo = () => {
-  //   getSorteo().then((sorteo) => {
-  //     // SETEAR OBJETO SORTEO
-  //     setSorteoInfo(sorteo[0]);
-  //     // SETEAR ESTADO
-  //     setSorteoActivo(sorteo[0].isActive);
-  //     // SETEAR ARRAY DE BOOLEAN
-  //     setSorteoArray(sorteo[0].slots);
-  //     setIsDrawLoading(false);
-  //   }, []);
-  // };
-
-  // const getSorteoAgain = () => {
-  //   getSorteo()
-  //     .then((sorteo) => {
-  //       // SETEAR ESTADO
-  //       setSorteoActivo(sorteo[0].isActive);
-  //       // SETEAR ARRAY DE BOOLEAN
-  //       setSorteoArray(sorteo[0].slots);
-  //       // SETEAR OBJETO SORTEO
-  //       setSorteoInfo(sorteo[0]);
-  //       setIsDrawLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       toastError(error.message);
-  //     });
-  // };
-
-  // const deleteDraw = () => {
-  //   Swal.fire({
-  //     title: "¿Seguro que deseas eliminar el sorteo actual?",
-  //     text: "Esta acción no se puede deshacer",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Sí, eliminar",
-  //     cancelButtonText: "Cancelar",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       resetDraw();
-  //     }
-  //   });
-  // };
-
-  // const resetDraw = () => {
-  //   const emptyDraw = {
-  //     isActive: false,
-  //     slots: null,
-  //     image: null,
-  //     description: null,
-  //   };
-
-  //   for (let i = 0; i < participants.length; i++) {
-  //     deleteParticipantDB(participants[i]).catch((error) => {
-  //       toastError(error.message);
-  //     });
-  //   }
-  //   updateDraw(emptyDraw).then(() => {
-  //     Swal.fire(
-  //       "¡Eliminado!",
-  //       "El sorteo se eliminó correctamente.",
-  //       "success"
-  //     );
-  //   });
-  // };
-
   const scrollToSection = (id) => {
     navigate("/");
     setTimeout(() => {
       navigate(`/#${id}`);
     }, 500);
+  };
+
+  const setLoader = (state) => {
+    if (state === "EMPEZANDO") {
+      setIsAdminAction(true);
+    } else if (state === "TERMINANDO") {
+      setSuccessState(true);
+      setTimeout(() => {
+        setIsAdminAction(false);
+      }, 2500);
+    }
   };
 
   useEffect(() => {
@@ -625,16 +330,43 @@ export const AdminContextProvider = (props) => {
   }, [participants]);
 
   const value = {
+    setLoader,
     solana,
     fb,
+    // ESTADOS
     casinos,
     cashiers,
+    cincoChicos,
+    isLoading,
+    isDrawLoading,
+    isAdminAction,
+    successState,
+    // SETTERS ESTADOS
+    setIsLoading,
+    setCashiers,
+    setIsDrawLoading,
+    setIsAdminAction,
+    setSuccessState,
     // CAJEROS
     searchedName, // nombre del buscado
     c_searchCashier, // funcion de contexto
     c_resetCashierData, // funcion de contexto
-    c_reGetCashiers,
+    c_getCashiers,
     c_deleteCashier,
+
+    // DRAW
+    c_postDrawImg,
+    c_updateDraw,
+    c_deleteDraw,
+    // --- ACTIVADOS PARA HACER FUNCIONAR -> LUEGO OPTIMIZAR
+    setPreviewDraw, // pre-vista del sorteo
+    setPreviewImage,
+    setDraw,
+    draw,
+    // casinos
+    c_addCasino,
+    c_handleDeleteCasino,
+    c_getCasinoToEdit,
     // cajeros,
     // setCajeros,
     // handleDelete,
@@ -647,11 +379,8 @@ export const AdminContextProvider = (props) => {
     isSearchingCajero,
     // buscarCajero,
     searchResult,
-    searchedName,
     isOpenMenu, // OK
     setIsOpenMenu,
-    setIsLoading,
-    isLoading,
     sorteoActivo,
     setSorteoActivo,
     participants,
@@ -663,26 +392,16 @@ export const AdminContextProvider = (props) => {
     lastParticipant,
     wasAdded,
     setWasAdded,
-    casinos,
     isGettingCasinos, // ESTADO LOADER
     // handleDeleteCasino,
     // getCasinos,
-    // setPreviewDraw, //sorteo
     // setSorteo, // GET AND SET SORTEO DB
     previewDraw,
     setPreviewSlots,
     previewSlots,
-    setPreviewImage,
     previewImage,
     setPreviewDescription,
     previewDescription,
-    // sorteoInfo,
-    // getSorteoAgain,
-    // deleteDraw, // NO SE XD TODO:
-    // resetDraw, // RESET SORTEO (VUELVE VALORES A NULOS/VACIOS)
-    isDrawLoading, // ESTADO DE CARGA DE SORTEO
-    setIsDrawLoading, // SET ESTADO DE CARGA DE SORTEO
-    markOnBooleanArray, // AGREGAR PARTICIPANTES
     participantsQuantity, // CANTIDAD DE PARTICIPANTES INSCRIPTOS
     // CAJEROS
     // uploadCheckerImage, // SUBIR IMAGEN CAJEROS
@@ -693,7 +412,6 @@ export const AdminContextProvider = (props) => {
     setCasinoToEdit, // SETTER CASINO PARA EDITAR
     casinoToEdit, // INFO CASINO PARA EDITAR
     scrollToSection,
-    cincoChicos,
   };
 
   return (
@@ -705,46 +423,50 @@ export const AdminContextProvider = (props) => {
 
 export const SolicitudesContextProvider = (props) => {
   const [pendientes, setPendientes] = useState([]);
+  const [requests, setRequests] = useState(null);
   const [historial, setHistorial] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [platforms, setPlatforms] = useState([]);
 
-  useEffect(() => {
-    getSolicitudes();
-    getPlataformas();
-  }, []);
-
-  const getPlataformas = () => {
-    setIsLoading(true);
-    getTodasLasPlataformas().then((result) => {
-      setPlatforms(result);
-      setIsLoading(false);
-    });
+  const c_getRequests = () => {
+    setHistorial(solana.orderResolvedRequestByRecentTime());
+    setPendientes(solana.orderUnresolvedRequestByRecentTime());
+    setRequests([
+      ...solana.orderResolvedRequestByRecentTime(),
+      ...solana.orderUnresolvedRequestByRecentTime(),
+    ]);
   };
 
-  const getSolicitudes = () => {
-    setIsLoading(true);
-    getTodasLasSolicitudes().then((pedidos) => {
-      let noRes = [];
-      let res = [];
-      pedidos.forEach((pedido) => {
-        if (!pedido.state) {
-          noRes.push(pedido);
-        } else {
-          res.push(pedido);
+  useEffect(() => {
+    const abrir = async () => {
+      let r = await solana.initialize();
+      try {
+        if (solana.state) {
+          setPlatforms(r[5]);
+          c_getRequests();
+          setIsLoading(false);
         }
-      });
-      setHistorial(res);
-      setPendientes(noRes);
-      setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    abrir();
+  }, []);
+
+  const c_handlePostPlatform = async (platform) => {
+    return await Firebase.postPlatform(platform).then((addedPlatform) => {
+      toastSuccess("¡Plataforma agregada correctamante!");
+      setPlatforms([...platforms, addedPlatform]);
     });
   };
 
   const enviarPendienteHaciaHistorial = (solicitud) => {
-    let { id } = solicitud;
+    let { _id } = solicitud;
     let copyOfPendientes = [...pendientes];
     let indiceParaMover = copyOfPendientes.findIndex(
-      (pendiente) => pendiente.id === id
+      (pendiente) => pendiente._id === _id
     );
     let eliminado = copyOfPendientes[indiceParaMover];
     copyOfPendientes.splice(indiceParaMover, 1);
@@ -769,23 +491,22 @@ export const SolicitudesContextProvider = (props) => {
   };
 
   const actualizarEstadoSolicitud = (solicitud) => {
-    solicitud.state = true;
-    solicitud.solved = `${moment().format("LTS")} - ${moment().format("L")}`;
-    enviarPendienteHaciaHistorial(solicitud);
-
-    updateSolicitud(solicitud.id, solicitud).then(() => {
+    solicitud._state = true;
+    solicitud._solved = `${moment().format("LTS")} - ${moment().format("L")}`;
+    Firebase.updateRequest(solicitud._id, solicitud).then(() => {
       toastSuccess("Actualizada correctamente.");
+      enviarPendienteHaciaHistorial(solicitud);
     });
   };
 
   const deleteThisSolicitud = (solicitud) => {
     let copyOfHistorial = [...historial];
     let indiceBuscado = copyOfHistorial.findIndex(
-      (thisSolicitud) => (thisSolicitud.id = solicitud.id)
+      (thisSolicitud) => (thisSolicitud._id = solicitud._id)
     );
     copyOfHistorial.splice(indiceBuscado, 1);
     setHistorial(copyOfHistorial);
-    deleteSolicitud(solicitud)
+    Firebase.deleteRequest(solicitud)
       .then(() => {
         toastSuccess("Solicitud eliminada correctamente");
       })
@@ -795,51 +516,59 @@ export const SolicitudesContextProvider = (props) => {
   };
 
   const devolverHistorialHaciaPendiente = (solicitud) => {
-    solicitud.state = false;
-    solicitud.solved = null;
+    solicitud._state = false;
+    solicitud._solved = null;
     enviarHistorialHaciaPendiente(solicitud);
 
-    updateSolicitud(solicitud.id, solicitud).then(() => {
+    Firebase.updateRequest(solicitud._id, solicitud).then(() => {
       toastSuccess("Actualizada correctamente.");
     });
   };
 
   const changePlatformVisibility = (platform) => {
     let copyOfPlatforms = [...platforms];
-    let buscado = copyOfPlatforms.findIndex((p) => p.id === platform.id);
+    let buscado = copyOfPlatforms.findIndex((p) => p._id === platform._id);
     copyOfPlatforms[buscado] = platform;
     setPlatforms(copyOfPlatforms);
   };
 
   const deletePlatform = (platform) => {
-    deletePlataforma(platform).then(() => {
+    Firebase.deletePlataform(platform).then(() => {
       toastSuccess("Eliminada correctamente.");
       let copyOfPlatforms = [...platforms];
-      let buscado = copyOfPlatforms.findIndex((p) => p.id === platform.id);
+      let buscado = copyOfPlatforms.findIndex((p) => p._id === platform._id);
       copyOfPlatforms.splice(buscado, 1);
       setPlatforms(copyOfPlatforms);
     });
   };
 
-  const handleUpdate = (e, platform) => {
-    updatePlataforma(platform).then(() => {
-      changePlatformVisibility(platform);
-      platform.visible = e.target.checked;
-    });
+  const handleUpdate = async (e, platform) => {
+    platform._isVisible = e.target.checked;
+    await Firebase.updatePlatform(platform);
+    changePlatformVisibility(platform);
+    toastSuccess("Visibilidad actualizada correctamente");
+    return true;
   };
 
   const value = {
+    // news
+    c_handlePostPlatform,
+    // old - revisar
     enviarPendienteHaciaHistorial,
     enviarHistorialHaciaPendiente,
     actualizarEstadoSolicitud,
     devolverHistorialHaciaPendiente,
     deleteThisSolicitud,
-    getSolicitudes,
+    // VERIF
+    c_getRequests,
+    pendientes,
+    solana,
+    requests,
+    // SAS
     setPlatforms,
     changePlatformVisibility,
     deletePlatform,
     handleUpdate,
-    pendientes,
     historial,
     isLoading,
     platforms,

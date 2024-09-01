@@ -4,6 +4,7 @@ import {
   deleteObject,
   getDownloadURL,
   ref,
+  uploadBytes,
   uploadString,
 } from "firebase/storage";
 import { toastError, toastSuccess } from "../helpers/helpers";
@@ -16,25 +17,90 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+const PLATFORMS_COLLECTION_PATH = "solicitudes-plataformas";
+
 export default class Firebase {
+  // PLATFORMS
+  static async getPlatforms() {
+    try {
+      const platforms = collection(DATABASE, PLATFORMS_COLLECTION_PATH);
+      const response = await getDocs(platforms);
+      let plataformas = response.docs.map((plataforma) => {
+        return {
+          ...plataforma.data(),
+          _id: plataforma.id,
+        };
+      });
+      return plataformas;
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
+  static async postPlatform(plataform) {
+    try {
+      const collectionRef = collection(DATABASE, PLATFORMS_COLLECTION_PATH);
+      const docRef = await addDoc(collectionRef, plataform);
+      return {
+        ...plataform,
+        _id: docRef.id,
+      };
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
+  static async updatePlatform(platforma) {
+    const docRef = doc(DATABASE, PLATFORMS_COLLECTION_PATH, platforma._id);
+    try {
+      await updateDoc(docRef, platforma);
+    } catch (error) {
+      toastError(error);
+    }
+  }
+
+  static async deletePlataform(plataforma) {
+    await deleteDoc(doc(DATABASE, PLATFORMS_COLLECTION_PATH, plataforma._id));
+  }
+
   // REQUESTS
   static async getRequests() {
     try {
-      // coleccion --> referencia a la funcion base, referencia al nombre de la base
       const collectionCajeros = collection(DATABASE, "solicitudes");
-      // traemos los docs (array cajeros)
       const response = await getDocs(collectionCajeros);
-      // devolvemos objeto con la data, y asignamos el ID
       let solicitudes = response.docs.map((solicitud) => {
         return {
           ...solicitud.data(),
-          id: solicitud.id,
+          _id: solicitud.id,
         };
       });
-      // let copyCajeros = [...solicitudes];
-      // let sortCajerosByPos = copyCajeros.sort((a, b) => a.pos - b.pos);
-      // return sortCajerosByPos;
       return solicitudes;
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+  static async updateRequest(solicitudId, solicitud) {
+    const docRef = doc(DATABASE, "solicitudes", solicitudId);
+    try {
+      await updateDoc(docRef, solicitud);
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
+  static async deleteRequest(solicitud) {
+    await deleteDoc(doc(DATABASE, "solicitudes", solicitud._id));
+  }
+  static async postRequest(solicitud) {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const collectionRef = collection(DATABASE, "solicitudes");
+      // promesa para añadir documento
+      const docRef = await addDoc(collectionRef, solicitud);
+      return {
+        ...solicitud,
+        _id: docRef.id,
+      };
     } catch (error) {
       toastError(error.message);
     }
@@ -59,7 +125,7 @@ export default class Firebase {
       let casinos = response.docs.map((casino) => {
         return {
           ...casino.data(),
-          id: casino.id,
+          _id: casino.id,
         };
       });
       return casinos;
@@ -68,38 +134,69 @@ export default class Firebase {
     }
   }
 
+  static async postCasino(casino) {
+    try {
+      // coleccion --> referencia a la funcion base, referencia al nombre de la base
+      const collectionRef = collection(DATABASE, "casinos");
+      // promesa para añadir documento
+      const docRef = await addDoc(collectionRef, casino);
+      return {
+        ...casino,
+        _id: docRef.id,
+      };
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
+  static async deleteCasino(casino) {
+    try {
+      await deleteDoc(doc(DATABASE, "casinos", casino._id));
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+
   // CASHIERS
   static async getCashiers() {
     try {
-      // coleccion --> referencia a la funcion base, referencia al nombre de la base
       const collectionCajeros = collection(DATABASE, "cajeros");
-      // traemos los docs (array cajeros)
       const response = await getDocs(collectionCajeros);
-      // devolvemos objeto con la data, y asignamos el ID
       let cajeros = response.docs.map((cajero) => {
         return {
           ...cajero.data(),
-          id: cajero.id,
+          _id: cajero.id,
         };
       });
       let copyCajeros = [...cajeros];
-      let sortCajerosByPos = copyCajeros.sort((a, b) => a.pos - b.pos);
+      let sortCajerosByPos = copyCajeros.sort(
+        (a, b) => a._position - b._position
+      );
       return sortCajerosByPos;
     } catch (error) {
       toastError(error.message);
     }
   }
-  static async uploadCheckerImageDB(file) {
+  static async uploadCashierImageDB(file) {
     const randomId = v4();
-    const storageRef = ref(storage, randomId);
     try {
-      await uploadString(storageRef, file, "data_url");
-      const url = await getDownloadURL(storageRef);
+      const storageRef = ref(storage, `cajeros/${randomId}`);
+      const fileSnapshot = await uploadBytes(storageRef, file, "data_url");
+      const url = await getDownloadURL(fileSnapshot.ref);
       toastSuccess("Imagen subida correctamente");
       return { url, randomId };
     } catch (error) {
-      toastError(error.message);
+      console.error(error.message);
     }
+  }
+
+  static async deleteCashierImg(imgId) {
+    let aux = false;
+    const desertRef = ref(storage, `cajeros/${imgId}`);
+    deleteObject(desertRef).then(() => {
+      aux = true;
+    });
+    return aux;
   }
   static async postCashier(cajero) {
     try {
@@ -109,36 +206,63 @@ export default class Firebase {
       const docRef = await addDoc(collectionRef, cajero);
       return {
         ...cajero,
-        id: docRef.id,
+        _id: docRef.id,
       };
     } catch (error) {
       toastError(error.message);
     }
   }
 
-  static async deleteCashier(cashier) {
-    await deleteDoc(doc(DATABASE, "cajeros", cashier.id));
-    if (cashier.imagen !== null) {
-      this.deleteImg(cashier.imagen.randomId);
+  static async deleteCashierAndImage(cashier) {
+    await deleteDoc(doc(DATABASE, "cajeros", cashier._id));
+    if (cashier._image !== null) {
+      await this.deleteImg(cashier._image.randomId);
+    }
+  }
+
+  static async deleteCashier(oldCashierId) {
+    await deleteDoc(doc(DATABASE, "cajeros", oldCashierId));
+  }
+
+  static async updateCashierInfo(cashierId, newCashier) {
+    const docRef = doc(DATABASE, "cajeros", cashierId);
+    try {
+      await updateDoc(docRef, newCashier);
+    } catch (error) {
+      toastError(error);
     }
   }
 
   // DRAW
   static async updateDraw(sorteoData) {
-    const docRef = doc(DATABASE, "sorteo", "sorteo1");
+    const docRef = doc(DATABASE, "sorteo", "0");
     try {
-      await updateDoc(docRef, sorteoData);
+      await updateDoc(docRef, { ...sorteoData });
+      return true;
+    } catch (e) {
+      toastError(e.message);
+    }
+  }
+  static async postParticipant(participant) {
+    try {
+      const collectionRef = collection(DATABASE, "participantes");
+      const docRef = await addDoc(collectionRef, participant);
+      return {
+        ...participant,
+        id: docRef.id,
+      };
     } catch (error) {
-      toastError(error);
+      toastError(error.message);
     }
   }
   static async deleteParticipant(participant) {
     await deleteDoc(doc(DATABASE, "participantes", participant.id));
   }
   static async updateDrawBooleanArray(newBooleanArray) {
-    const docRef = doc(DATABASE, "sorteo", "sorteo1");
+    const docRef = doc(DATABASE, "sorteo", "0");
     try {
       await updateDoc(docRef, { slots: newBooleanArray });
+      return true;
     } catch (error) {
       toastError(error);
     }
@@ -153,12 +277,53 @@ export default class Firebase {
       let sorteo = response.docs.map((sorteo) => {
         return {
           ...sorteo.data(),
-          id: sorteo.id,
+          _id: sorteo.id,
         };
       });
+
       return sorteo[0];
     } catch (error) {
       toastError(error);
+    }
+  }
+  static async getParticipants() {
+    try {
+      const col = collection(DATABASE, "participantes");
+      const response = await getDocs(col);
+      let participantes = response.docs.map((participante) => {
+        return {
+          ...participante.data(),
+          id: participante.id,
+        };
+      });
+      let copiaParticipantes = [...participantes];
+      let ordenarParticipantes = copiaParticipantes.sort(
+        (a, b) => a.numero - b.numero
+      );
+      return ordenarParticipantes;
+    } catch (error) {
+      toastError(error.message);
+    }
+  }
+  static async deleteDrawImage(id) {
+    try {
+      const desertRef = ref(storage, `sorteo/${id}`);
+      await deleteObject(desertRef);
+      toastSuccess("Imagén eliminada correctamente");
+      return true;
+    } catch (e) {
+      toastError(e.message);
+    }
+  }
+  static async postDrawImage(file) {
+    try {
+      const randomId = v4();
+      const storageRef = ref(storage, `sorteo/${randomId}`);
+      await uploadString(storageRef, file, "data_url");
+      const url = await getDownloadURL(storageRef);
+      return { url, randomId };
+    } catch (error) {
+      toastError(error.message);
     }
   }
 
@@ -174,24 +339,30 @@ export default class Firebase {
       toastError("Ooops! Algo salio mal.");
     }
   }
-  static async uploadCheckerImageDB(file) {
-    const randomId = v4();
-    const storageRef = ref(storage, randomId);
+
+  static async deleteCasinoImage(imageId) {
     try {
-      await uploadString(storageRef, file, "data_url");
-      const url = await getDownloadURL(storageRef);
-      toastSuccess("Imagen subida correctamente");
-      return { url, randomId };
+      const desertRef = ref(storage, `casinos/${imageId}`);
+      await deleteObject(desertRef);
     } catch (error) {
       toastError(error.message);
     }
   }
+
   static async deleteImg(imgId) {
     let aux = false;
-    const desertRef = ref(storage, imgId);
+    const desertRef = ref(storage, `cajeros/${imgId}`);
     deleteObject(desertRef).then(() => {
       aux = true;
     });
     return aux;
+  }
+
+  static async updateAllCajeros(arrayCajeros) {
+    for (let cajero of arrayCajeros) {
+      // const docRef = doc(DATABASE, "cajeros", cajero.id);
+      // updateDoc(docRef, cajero);
+      await updateDoc(doc(DATABASE, "cajeros", cajero._id), cajero);
+    }
   }
 }

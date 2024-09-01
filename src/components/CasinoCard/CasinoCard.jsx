@@ -3,7 +3,7 @@ import { Animated } from "react-animated-css";
 import styled from "styled-components";
 import { Ring } from "@uiball/loaders";
 
-export const CasinoCard = ({ casinoImage, casinoName, link, loadFake }) => {
+export const CasinoCard = ({ _image, _name, _link, loadFake }) => {
   return (
     <Animated animationIn="fadeIn" animationOut="fedeOut" isVisible={true}>
       <CardContainer>
@@ -14,14 +14,14 @@ export const CasinoCard = ({ casinoImage, casinoName, link, loadFake }) => {
         ) : (
           <>
             <ImgContainer>
-              <a href={link} target="_blank" rel="noreferrer">
-                <img src={casinoImage.url} alt={casinoName} />
+              <a href={_link} target="_blank" rel="noreferrer">
+                <img src={_image.url} alt={_name} />
               </a>
             </ImgContainer>
             <TextContainer>
               <p>
-                <a href={link} target="_blank" rel="noreferrer">
-                  {casinoName}
+                <a href={_link} target="_blank" rel="noreferrer">
+                  {_name}
                 </a>
               </p>
             </TextContainer>

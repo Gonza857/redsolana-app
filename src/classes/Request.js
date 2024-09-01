@@ -1,10 +1,9 @@
 class Request {
-    constructor() {
-        this.date = "";
-        this.email = "";
-        this.fullname = "";
-        this.platform = "";
-        this.state = false;
-    }
-
+  constructor() {
+    this._date = "";
+    this._email = "";
+    this._fullname = "";
+    this._platform = "";
+    this._state = false;
+  }
 }

@@ -17,23 +17,23 @@ export const ModalViewHistorialData = ({ onClose, show, solicitud }) => {
       </Modal.Header>
       <Modal.Body>
         <p>
-          <strong>Fecha:</strong> {solicitud.date}
+          <strong>Fecha:</strong> {solicitud._date}
         </p>
         <p>
-          <strong>Nombre completo:</strong> {solicitud.fullname}
+          <strong>Nombre completo:</strong> {solicitud._fullname}
         </p>
         <p>
-          <strong>E-Mail:</strong> {solicitud.email}
+          <strong>E-Mail:</strong> {solicitud._email}
         </p>
         <p>
-          <strong>Celular:</strong> {solicitud.phone}
+          <strong>Celular:</strong> {solicitud._phone}
         </p>
         <p>
-          <strong>Plataforma:</strong> {solicitud.platform}
+          <strong>Plataforma:</strong> {solicitud._platform}
         </p>
         <p>
-          <strong>Resuelto:</strong>
-          {solicitud.solved == null ? "No resuelto" : solicitud.solved}
+          <strong>Resuelto: </strong>
+          {solicitud._solved == null ? "No resuelto" : solicitud._solved}
         </p>
         <SubmitContainer>
           <MainButton onClick={() => onClose()}>Cerrar</MainButton>

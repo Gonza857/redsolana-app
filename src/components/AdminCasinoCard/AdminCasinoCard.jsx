@@ -7,34 +7,30 @@ import { FaTrashAlt } from "react-icons/fa";
 import { MainButton } from "../UI/MainButton";
 
 export const AdminCasinoCard = ({ card }) => {
-  const { handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
+  const { c_handleDeleteCasino, setCasinoToEdit } = useContext(adminContext);
   const navigate = useNavigate();
 
   return (
     <StyledCard className="d-flex flex-column align-items-center p-2">
       <ImageContainer className="p-2">
-        <img
-          src={card?.casinoImage.url}
-          alt={card?.casinoName}
-          loading="lazy"
-        />
+        <img src={card._image.url} alt={card._name} loading="lazy" />
       </ImageContainer>
       <CardInfo className="d-flex justify-content-center align-items-center">
-        <p className="m-0 py-1">{card?.casinoName}</p>
+        <p className="m-0 py-1">{card._name}</p>
       </CardInfo>
       <CardControl className="gap-2">
         <MainButton
           primary={true}
-          fonClick={() => {
+          onClick={() => {
             setCasinoToEdit(card);
-            navigate(`/admin/casinos/editar/${card?.id}`);
+            navigate(`/admin/casinos/editar/${card._id}`);
           }}
         >
           <AiFillEdit />
         </MainButton>
         <MainButton
           className="btn btn-danger"
-          onClick={() => handleDeleteCasino(card)}
+          onClick={() => c_handleDeleteCasino(card)}
         >
           <FaTrashAlt />
         </MainButton>

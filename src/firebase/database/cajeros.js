@@ -46,15 +46,7 @@ export const postCajeros = async (cajero) => {
   }
 };
 
-// ACTUALIZAR CAJERO
-export const updateCajeroInfo = async (cajeroId, newCajero) => {
-  const docRef = doc(DATABASE, "cajeros", cajeroId);
-  try {
-    await updateDoc(docRef, newCajero);
-  } catch (error) {
-    toastError(error);
-  }
-};
+
 
 export const updateAllCajeros = async (arrayCajeros) => {
   for (let cajero of arrayCajeros) {

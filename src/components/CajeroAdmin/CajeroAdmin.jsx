@@ -26,28 +26,28 @@ function CajeroAdmin({ cajero }) {
   };
 
   useEffect(() => {
-    if (cajero.nombre.length > 15) {
-      let cambio = cajero.nombre.substring(12, -1);
+    if (cajero?._name?.length > 15) {
+      let cambio = cajero._name.substring(12, -1);
       let nameUpdate = cambio.concat("...");
-      cajero.nombre = nameUpdate;
+      cajero._name = nameUpdate;
     }
   }, [cajeros, cajero]);
 
   return (
     <>
       <tr className="animate__animated animate__fadeIn">
-        <StyledTd>{cajero.pos + 1}</StyledTd>
-        <StyledTd>{cajero.red}</StyledTd>
-        <StyledTd>{cajero.nombre}</StyledTd>
-        <td className="d-none d-md-table-cell">{cajero.numero}</td>
+        <StyledTd>{cajero._position + 1}</StyledTd>
+        <StyledTd>{cajero._network}</StyledTd>
+        <StyledTd>{cajero._name}</StyledTd>
+        <td className="d-none d-md-table-cell">{cajero._phone}</td>
         <td className="d-none d-md-table-cell">
-          {cajero.estado === "desconectado" ? (
+          {cajero._state === "desconectado" ? (
             <BsCircleFill style={{ color: "red" }} />
           ) : (
             <BsCircleFill style={{ color: "green" }} />
           )}
         </td>
-        <td className="">
+        <td className="d-flex gap-1">
           <MainButton
             circle={true}
             primary={true}
@@ -57,9 +57,6 @@ function CajeroAdmin({ cajero }) {
           >
             <FaEye />
           </MainButton>
-        </td>
-
-        <td className="">
           <MainButton
             circle={true}
             onClick={() => {
@@ -68,8 +65,6 @@ function CajeroAdmin({ cajero }) {
           >
             <FaPen />
           </MainButton>
-        </td>
-        <td>
           <MainButton
             circle={true}
             red={true}
@@ -85,13 +80,13 @@ function CajeroAdmin({ cajero }) {
         onClose={handleCloseEdit}
         show={showEdit}
         cajeroData={cajero}
-        cajeroIndex={cajero.pos + 1}
+        cajeroIndex={cajero._position + 1}
       />
       <ModalViewInfo
         onClose={handleCloseInfo}
         show={showInfo}
         cajeroData={cajero}
-        cajeroIndex={cajero.pos + 1}
+        cajeroIndex={cajero._position + 1}
       />
     </>
   );

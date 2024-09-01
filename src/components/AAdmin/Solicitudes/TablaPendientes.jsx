@@ -6,66 +6,33 @@ import { PendienteRow } from "./PendienteRow";
 import { Metronome } from "@uiball/loaders";
 import { Subtitles } from "../../Comprobados/Subtitles";
 
-export const TablaPendientes = ({
-  isLoading,
-  noResueltas,
-  actualizarEstadoSolicitud,
-}) => {
+export const TablaPendientes = ({ pendientes }) => {
   return (
     <>
-      {isLoading ? (
-        <>
-          <Subtitles>Cargando solicitudes</Subtitles>
-        </>
-      ) : (
-        <>
-          {noResueltas.length == 0 ? (
-            <>
-              <Subtitles>No hay solicitudes</Subtitles>
-            </>
-          ) : (
-            <>
-              <Table
-                striped
-                bordered
-                hover
-                responsive
-                variant="dark"
-                className="align-middle"
-              >
-                <thead className="animate__animated animate__fadeIn">
-                  <tr className="align-middle">
-                    <StyledTh className="">Fecha</StyledTh>
-                    <StyledTh className="">Nombre completo</StyledTh>
-                    <th className="col-2 d-none d-lg-table-cell">E-Mail</th>
-                    <th className="col-2 d-none d-md-table-cell">Celular</th>
-                    <th className="d-none d-sm-table-cell">Plataforma</th>
-                    <StyledTh>
-                      <AiOutlineWhatsApp />
-                    </StyledTh>
-                    <StyledTh className="">Resolver</StyledTh>
-                    <StyledTh className="d-lg-none">Ver</StyledTh>
-                  </tr>
-                </thead>
-                <tbody>
-                  {!isLoading && (
-                    <>
-                      {noResueltas.map((solicitud) => {
-                        return <PendienteRow solicitud={solicitud} />;
-                      })}
-                    </>
-                  )}
-                </tbody>
-              </Table>
-            </>
-          )}
-        </>
-      )}
-      {isLoading && (
-        <div className="m-auto">
-          <Metronome size={40} speed={1.6} color="#fff" />
-        </div>
-      )}
+      <Table
+        striped
+        bordered
+        hover
+        responsive
+        variant="dark"
+        className="align-middle"
+      >
+        <thead className="animate__animated animate__fadeIn">
+          <tr className="align-middle">
+            <StyledTh className="col-2">Fecha</StyledTh>
+            <StyledTh className="col-2">Nombre completo</StyledTh>
+            <th className="col-3 d-none d-lg-table-cell">E-Mail</th>
+            <th className="col-1 d-none d-md-table-cell">Celular</th>
+            <th className="col-1 d-none d-sm-table-cell">Plataforma</th>
+            <StyledTh className="col-2">Acción</StyledTh>
+          </tr>
+        </thead>
+        <tbody>
+          {pendientes.map((solicitud) => {
+            return <PendienteRow solicitud={solicitud} key={solicitud.id} />;
+          })}
+        </tbody>
+      </Table>
     </>
   );
 };

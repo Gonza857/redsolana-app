@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Casinos } from "./Casinos";
-import { Cajeros } from "./Cajeros";
 import { VerificarAdmin } from "../../Layout/Admin/VerificarAdmin/VerificarAdmin";
 import { ErrorPage } from "../../Layout";
 import { Route, Routes } from "react-router-dom";
-import { Sorteo } from "./Sorteo";
-import { Cronograma } from "./Cronograma";
-import { Solicitudes } from "./Solicitudes";
-import { Novedades } from "../../Layout/Admin/Novedades/Novedades";
+import { Draw } from "./Sorteo";
+import { Timeline } from "./Timeline";
+import { News } from "../../Layout/Admin/Novedades/News";
+import { Checkers } from "./Checkers";
+import { Requests } from "./Requests";
+import { adminContext } from "../../storage/AdminContext";
+import { Loader } from "../../components/UI/Loader";
+import styled from "styled-components";
 
 export const Admin = () => {
+  const { isLoading } = useContext(adminContext);
   return (
     <Routes>
       <Route
@@ -18,13 +22,14 @@ export const Admin = () => {
         errorElement={<ErrorPage />}
       />
       <Route path={"/casinos/*"} element={<Casinos />} />
-      <Route path={"/cajeros/*"} element={<Cajeros />} />
-      <Route path={"/sorteo/*"} element={<Sorteo />} />
-      <Route path={"/cronograma/*"} element={<Cronograma />} />
-      <Route path={"/solicitudes/*"} element={<Solicitudes />} />
-      <Route path={"/novedades/*"} element={<Novedades />} />
+      <Route path={"/cajeros/*"} element={<Checkers />} />
+      <Route path={"/sorteo/*"} element={<Draw />} />
+      <Route path={"/cronograma/*"} element={<Timeline />} />
+      <Route path={"/solicitudes/*"} element={<Requests />} />
+      <Route path={"/novedades/*"} element={<News />} />
 
       <Route path="/*" element={<ErrorPage />} />
     </Routes>
   );
 };
+

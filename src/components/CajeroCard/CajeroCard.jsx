@@ -9,10 +9,10 @@ function CajeroCard({ cajero }) {
   const { cajeros } = useContext(adminContext);
 
   useEffect(() => {
-    if (cajero.nombre.length > 15) {
-      let cambio = cajero.nombre.substring(12, -1);
+    if (cajero._name.length > 15) {
+      let cambio = cajero._name.substring(12, -1);
       let nameUpdate = cambio.concat("...");
-      cajero.nombre = nameUpdate;
+      cajero._name = nameUpdate;
     }
   }, [cajeros, cajero]);
 
@@ -23,12 +23,12 @@ function CajeroCard({ cajero }) {
           <CajeroEstadoIcon
             style={{
               backgroundColor: `${
-                cajero.estado === "conectado" ? "#00d60b" : "red"
+                cajero._state === "conectado" ? "#00d60b" : "red"
               }`,
             }}
           ></CajeroEstadoIcon>
-          {cajero.imagen === null ? (
-            cajero.genero === "M" ? (
+          {cajero._image === null ? (
+            cajero._genre === "M" ? (
               <img
                 src="./assets/images/hombre.png"
                 alt="Imagen de cajero anonimo"
@@ -42,22 +42,22 @@ function CajeroCard({ cajero }) {
           ) : (
             <img
               loading="lazy"
-              src={cajero.imagen.url}
+              src={cajero._image.url}
               alt="Imagen de cajero/a personalizada"
             />
           )}
         </CajeroImgContainer>
         <CajeroName>
-          <p className="">{cajero.nombre}</p>
+          <p className="">{cajero._name}</p>
         </CajeroName>
 
         <CajeroNumberContainer>
           <BotonPrincipal>
             {cajero.enlace === "" ? (
-              <p className="m-0">{cajero.numero}</p>
+              <p className="m-0">{cajero._phone}</p>
             ) : (
               <a
-                href={`https://${cajero.enlace}`}
+                href={`https://${cajero._link}`}
                 target="_blank"
                 rel="noreferrer"
               >

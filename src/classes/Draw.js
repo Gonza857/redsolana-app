@@ -2,16 +2,27 @@ import Swal from "sweetalert2";
 import { postParticipant } from "../firebase/database/sorteo";
 import { toastError, toastSuccess } from "../helpers/helpers";
 import Firebase from "./Firebase";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { DATABASE, storage } from "../firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 export default class Draw {
-  constructor({ participants, slots, description, image, isActive }) {
-    this._id = 0;
-    this._participants = participants;
-    this._slots = slots;
-    this._description = description;
-    this._image = image;
-    this._isActive = isActive;
+  constructor({
+    _description = null,
+    _id = 0,
+    _image = null,
+    _isActive = false,
+    _slots = null,
+  }) {
+    this._id = _id;
+    this._participants = [];
+    this._slots = _slots;
+    this._description = _description;
+    this._image = _image;
+    this._isActive = _isActive;
   }
+
   delete() {
     Swal.fire({
       title: "¿Seguro que deseas eliminar el sorteo actual?",
@@ -31,10 +42,12 @@ export default class Draw {
   reset() {
     // llamar a firebase
     // resetar en cliente
-    for (const p of this.participants) {
-      Firebase.deleteParticipant(p).catch((error) => toastError(error.message));
-    }
-    Firebase.updateDraw(new Draw()).then(() =>
+
+    // for (const p of this.participants) {
+    //   Firebase.deleteParticipant(p).catch((error) => toastError(error.message));
+    // }
+
+    Firebase.updateDraw(new Draw(null, null, null, null, null)).then(() =>
       toastSuccess("El sorteo se eliminó correctamente")
     );
 
@@ -59,7 +72,7 @@ export default class Draw {
   }
   unCheckBusySlots(participant) {
     let { numero } = participant;
-    const copyOfBooleanArray = this.slots;
+    const copyOfBooleanArray = this._slots;
     let indice = 0;
     let unCheck = false;
     while (indice < copyOfBooleanArray.length && !unCheck) {
@@ -73,28 +86,33 @@ export default class Draw {
   }
 
   isSlotAvailable(number) {
+    // 0 - NUMBER OK
+    // 1 - NUMBER IS OUTSIDE THE LIMITS 0 - SLOTS.LENGTH
+    // 2 - NUMBER IS BUSY
+    if (number < 0) return 1;
+    if (number >= this._slots.length) return 1;
     let indice = 0;
-    let puedeOcupar = false;
-    if (number > this.slots.length - 1 || number < 0) {
-      return -1;
-    } else {
-      while (indice < this.slots.length) {
-        if (!this.slots[number]) {
-          puedeOcupar = true;
-          break;
-        }
-        indice++;
+    let puedeOcupar = 2;
+    while (indice < this._slots.length) {
+      if (!this._slots[number]) {
+        puedeOcupar = 0;
+        break;
       }
+      indice++;
     }
     return puedeOcupar;
   }
 
   markSlotAsTrue(participant) {
-    if (participant !== null) this._slots[participant.numero - 1] = true;
+    if (participant !== null) {
+      this._slots[participant.numero] = true;
+      return true;
+    }
+    return false;
   }
 
   markSlotPerParticipant() {
-    for (let participant of this.participants) {
+    for (let participant of this._participants) {
       this.markSlotAsTrue(participant);
     }
   }
@@ -103,36 +121,52 @@ export default class Draw {
     return this.participants.length;
   }
 
+  getAvailableSlots() {
+    let counter = 0;
+    this._slots.forEach((slot) => {
+      if (!slot) counter++;
+    });
+    return Number(counter);
+  }
+
+  updateSlotsToDB() {
+    return Firebase.updateDrawBooleanArray(this._slots);
+  }
+
   async addParticipant(participant) {
-    postParticipant(participant)
-      .then(() => {
-        toastSuccess("Participante añadido correctamente.");
-        return true;
-        // getParticipants();
-        // let newBooleanArray = markBusySlots(participant);
-        // updateBooleanArray(newBooleanArray).then(() => {
-        //   setSorteoArray(newBooleanArray);
-        // });
-      })
-      .catch((error) => {
-        toastError(error.message);
-        return false;
-      });
+    // usar objeto FIREBASE
+    let isOk = false;
+    let result = await Firebase.postParticipant(participant);
+    if (result !== null) {
+      this._participants.push(result);
+      isOk = this.markSlotAsTrue(result);
+      isOk = this.updateSlotsToDB();
+    }
+    if (isOk) toastSuccess("Participante añadido, Tabla actualizada.");
   }
 
   async deleteParticipant(participant) {
-    Firebase.deleteParticipant(participant)
-      .then(() => {
-        // toastSuccess("Participante eliminado correctamente.");
-        // getParticipants();
-        let newBooleanArray = this.unCheckBusySlots(participant);
-        Firebase.updateDrawBooleanArray(newBooleanArray).then(() => {
-          //   setSorteoArray(newBooleanArray);
-        });
-      })
-      .catch((error) => {
-        toastError(error.message);
-      });
+    try {
+      await Firebase.deleteParticipant(participant);
+      let newBooleanArray = this.unCheckBusySlots(participant);
+      await Firebase.updateDrawBooleanArray(newBooleanArray);
+      toastSuccess("Participante eliminado correctamente.");
+    } catch (e) {
+      toastError(encodeURI.message);
+    }
+  }
+
+  async updateDraw(sorteoData) {
+    delete sorteoData._participants;
+    return await Firebase.updateDraw(sorteoData);
+  }
+
+  async deleteImage(id) {
+    return await Firebase.deleteDrawImage(id);
+  }
+
+  async postImage(file) {
+    return await Firebase.postDrawImage(file);
   }
 
   // GETTERS Y SETTERS
@@ -147,6 +181,30 @@ export default class Draw {
   }
   set isActive(value) {
     this._isActive = value;
+  }
+  get slots() {
+    return this._slots;
+  }
+  set slots(value) {
+    this._slots = value;
+  }
+  get description() {
+    return this._description;
+  }
+  set description(value) {
+    this._description = value;
+  }
+  get image() {
+    return this._image;
+  }
+  set image(value) {
+    this._image = value;
+  }
+  get slots() {
+    return this._slots;
+  }
+  set slots(value) {
+    this._slots = value;
   }
 }
 

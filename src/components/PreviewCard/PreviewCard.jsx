@@ -11,9 +11,9 @@ export const PreviewCard = ({ casinoPreview, previewImageUrl, casinoName }) => {
       </ImgContainer>
       <TextContainer>
         <p>
-          Haz click
+          Haz click{" "}
           <a href={casinoPreview?.link} target="_blank" rel="noreferrer">
-            aqui
+            aqui{" "}
           </a>
           para ir a {casinoName}
         </p>

@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export const toastError = (errorMsg) => {
   toast.error(errorMsg, {
@@ -37,5 +38,22 @@ export const toastInfo = (infoMsg) => {
     draggable: true,
     progress: undefined,
     theme: "colored",
+  });
+};
+
+export const sleep = async (time) => {
+  setTimeout(() => {}, time);
+};
+
+export const askForDeleteDraw = () => {
+  return Swal.fire({
+    title: "¿Seguro que deseas eliminar el sorteo actual?",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
   });
 };
