@@ -86,7 +86,6 @@ export default class Draw {
   }
 
   isSlotAvailable(number) {
-    console.log("revisando", number);
     --number;
     // 0 - NUMBER OK
     // 1 - NUMBER IS OUTSIDE THE LIMITS 0 - SLOTS.LENGTH

@@ -121,7 +121,6 @@ export default class Solana {
     return result;
   }
   getCashierIndexById(cashier) {
-    console.log(cashier);
     return this._cajeros.findIndex((c) => c._id === cashier._id);
   }
   getCashiersByName(cashierName) {
@@ -139,7 +138,6 @@ export default class Solana {
     1) Cajero no existe previamente, agregamos en la posición deseada.
     2) Cajero ya existe, cambiamos su posición  
     */
-    console.log(`tengo que poner a ${cashier._name} en la posicion ${newPos}`);
     let cashierIndex = this.getCashierIndexById(cashier);
     let copyOfCashiers = [...this._cajeros];
     if (cashierIndex === -1) {

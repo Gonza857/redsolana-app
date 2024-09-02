@@ -191,7 +191,6 @@ export const EditCajerosForm = ({ onClose, show, cajeroData, cajeroIndex }) => {
         }
       })
       .catch((error) => {
-        console.log("error en updateFormData()");
         toastError(error.message);
       });
   };
