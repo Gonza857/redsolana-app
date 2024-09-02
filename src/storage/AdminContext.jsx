@@ -353,6 +353,7 @@ export const AdminContextProvider = (props) => {
     isDrawLoading,
     isAdminAction,
     successState,
+    participants,
     // SETTERS ESTADOS
     setIsLoading,
     setCashiers,
@@ -371,6 +372,7 @@ export const AdminContextProvider = (props) => {
     c_updateDraw,
     c_deleteDraw,
     c_getDrawParticipants,
+
     // --- ACTIVADOS PARA HACER FUNCIONAR -> LUEGO OPTIMIZAR
     setPreviewDraw, // pre-vista del sorteo
     setPreviewImage,
@@ -396,7 +398,6 @@ export const AdminContextProvider = (props) => {
     setIsOpenMenu,
     sorteoActivo,
     setSorteoActivo,
-    participants,
     sorteoArray,
 
     // isNumberAvaible,

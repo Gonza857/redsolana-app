@@ -40,13 +40,13 @@ export const ParticipantTr = ({ participant, openModal }) => {
       </td>
       <td className="p-1 text-center">
         <div className="d-flex gap-2">
-          <MainButton circle={true}>
-            <FaEye
-              style={{ fontSize: "1rem" }}
-              onClick={() => {
-                openModal(participant);
-              }}
-            />
+          <MainButton
+            circle={true}
+            onClick={() => {
+              openModal(participant);
+            }}
+          >
+            <FaEye style={{ fontSize: "1rem" }} />
           </MainButton>
           <MainButton circle={true} red={true}>
             <FaTrash

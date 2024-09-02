@@ -40,7 +40,6 @@ export default class Solana {
     let { _description, _id, _slots, _isActive, _image } = c_draw;
     this._draw = new Draw(_description, _id, _image, _isActive, _slots);
     this._draw.participants = await this.getParticipantsFromDB();
-    console.table(this._draw.participants);
     this._draw.markSlotPerParticipant();
 
     let c_platforms = await this.getPlatformsFromDB();

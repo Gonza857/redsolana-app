@@ -49,16 +49,10 @@ export const DrawParticipantsTable = () => {
     });
   };
 
-  const deleteThisParticipant = (participant) => {
-    confirmDelete(participant);
-  };
-
-  const openModal = (participant) => {
+  const openModal = (p) => {
     setShow(true);
-    setParticipant(participant);
+    setParticipant(p);
   };
-
-  const obtainParticipant = () => {};
 
   return (
     <div className="col-12 d-flex flex-column align-items-center py-3 gap-3">
@@ -67,7 +61,7 @@ export const DrawParticipantsTable = () => {
         show={show}
         participant={participant}
       />
-      {participants?.length == 0 ? (
+      {participants.length == 0 ? (
         <>
           <h3 className="text-white">No hay participantes registrados.</h3>
           <Link to="/admin/sorteo/agregar">
@@ -137,15 +131,15 @@ export const DrawParticipantsTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {participants.map((participant) => {
-                      if (participant !== null) {
+                    {participants.map((p) => {
+                      if (p !== null) {
                         return (
                           <ParticipantTr
                             handleClose={handleClose}
                             show={show}
                             openModal={openModal}
-                            participant={participant}
-                            key={participant._id}
+                            participant={p}
+                            key={p._id}
                           />
                         );
                       }

@@ -12,19 +12,19 @@ export const ModalParticipant = ({ handleClose, show, participant }) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Número: <strong>{participant?.numero}</strong>
+            Número: <strong>{participant?._number}</strong>
           </p>
           <p>
-            Usuario: <strong>{participant?.usuario}</strong>
+            Usuario: <strong>{participant?._user}</strong>
           </p>
           <p>
-            Plataforma: <strong>{participant?.plataforma}</strong>
+            Plataforma: <strong>{participant?._platform}</strong>
           </p>
           <p>
-            Nombre y apellido: <strong>{participant?.nombre_apellido}</strong>
+            Nombre y apellido: <strong>{participant?._fullname}</strong>
           </p>
           <p>
-            Últimos 3 DNI: <strong>{participant?.dni_ultimos}</strong>
+            Últimos 3 DNI: <strong>{participant?._lastDni}</strong>
           </p>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-center">
