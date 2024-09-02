@@ -8,19 +8,19 @@ import { DATABASE, storage } from "../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 
 export default class Draw {
-  constructor({
-    _description = null,
-    _id = 0,
-    _image = null,
-    _isActive = false,
-    _slots = null,
-  }) {
-    this._id = _id;
+  constructor(
+    description = null,
+    id = 0,
+    image = null,
+    isActive = false,
+    slots = null
+  ) {
+    this._id = id;
     this._participants = [];
-    this._slots = _slots;
-    this._description = _description;
-    this._image = _image;
-    this._isActive = _isActive;
+    this._slots = slots;
+    this._description = description;
+    this._image = image;
+    this._isActive = isActive;
   }
 
   delete() {
@@ -71,13 +71,13 @@ export default class Draw {
     // });
   }
   unCheckBusySlots(participant) {
-    let { numero } = participant;
-    const copyOfBooleanArray = this._slots;
+    let { _number } = participant;
+    const copyOfBooleanArray = [...this._slots];
     let indice = 0;
     let unCheck = false;
     while (indice < copyOfBooleanArray.length && !unCheck) {
-      if (copyOfBooleanArray[numero]) {
-        copyOfBooleanArray[numero] = false;
+      if (copyOfBooleanArray[_number]) {
+        copyOfBooleanArray[_number] = false;
         unCheck = true;
       }
       indice++;
@@ -86,6 +86,8 @@ export default class Draw {
   }
 
   isSlotAvailable(number) {
+    console.log("revisando", number);
+    --number;
     // 0 - NUMBER OK
     // 1 - NUMBER IS OUTSIDE THE LIMITS 0 - SLOTS.LENGTH
     // 2 - NUMBER IS BUSY
@@ -103,17 +105,13 @@ export default class Draw {
     return puedeOcupar;
   }
 
-  markSlotAsTrue(participant) {
-    if (participant !== null) {
-      this._slots[participant.numero] = true;
-      return true;
-    }
-    return false;
+  markSlotAsTrue(number) {
+    this._slots[number] = true;
   }
 
   markSlotPerParticipant() {
-    for (let participant of this._participants) {
-      this.markSlotAsTrue(participant);
+    for (const participant of this._participants) {
+      this.markSlotAsTrue(Number(participant._number - 1));
     }
   }
 
@@ -152,7 +150,7 @@ export default class Draw {
       await Firebase.updateDrawBooleanArray(newBooleanArray);
       toastSuccess("Participante eliminado correctamente.");
     } catch (e) {
-      toastError(encodeURI.message);
+      toastError(e.message);
     }
   }
 

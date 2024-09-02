@@ -8,6 +8,16 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { MainButton } from "../UI/MainButton";
 
+const buildParticipantObject = (formData) => {
+  return {
+    _lastDni: formData.dni_ultimos,
+    _fullname: formData.nombre_apellido,
+    _number: formData.numero,
+    _platform: formData.plataforma,
+    _user: formData.usuario,
+  };
+};
+
 export const AddParticipantForm = ({
   lastParticipant,
   wantToUseTheLast,
@@ -23,21 +33,24 @@ export const AddParticipantForm = ({
     setLastParticipant,
     sorteoArray,
     wasAdded,
+    c_getDrawParticipants,
   } = useContext(adminContext);
 
   const onSubmit = (data) => {
     // Convertir en Number
     data.numero = Number(data.numero);
     data.dni_ultimos = Number(data.dni_ultimos);
+    let participantObject = buildParticipantObject(data);
     let result = solana.draw.isSlotAvailable(data.numero);
     switch (result) {
       case 0:
         setWasAdded(true);
-        setLastParticipant(data);
-        solana.draw.addParticipant(data);
+        setLastParticipant(participantObject);
+        solana.draw.addParticipant(participantObject);
         window.scrollTo(0, 0);
         reset();
         navigate("/admin/sorteo/participantes");
+        c_getDrawParticipants();
         break;
       case 1:
         toastError(
@@ -83,7 +96,7 @@ export const AddParticipantForm = ({
         </label>
         <StyledNumberInput
           type="number"
-          defaultValue={wantToUseTheLast ? lastParticipant?.dni_ultimos : 0}
+          defaultValue={wantToUseTheLast ? lastParticipant._lastDni : 0}
           name="dni_ultimos"
           {...register("dni_ultimos", {
             required: true,
@@ -96,7 +109,7 @@ export const AddParticipantForm = ({
         </label>
         <input
           type="text"
-          defaultValue={wantToUseTheLast ? lastParticipant?.usuario : ""}
+          defaultValue={wantToUseTheLast ? lastParticipant._user : ""}
           name="usuario"
           {...register("usuario", {
             required: true,
@@ -109,7 +122,7 @@ export const AddParticipantForm = ({
         </label>
         <input
           type="text"
-          defaultValue={wantToUseTheLast ? lastParticipant?.plataforma : ""}
+          defaultValue={wantToUseTheLast ? lastParticipant._platform : ""}
           name="plataforma"
           {...register("plataforma", {
             required: true,
@@ -122,9 +135,7 @@ export const AddParticipantForm = ({
         </label>
         <input
           type="text"
-          defaultValue={
-            wantToUseTheLast ? lastParticipant?.nombre_apellido : ""
-          }
+          defaultValue={wantToUseTheLast ? lastParticipant._fullname : ""}
           name="nombre_apellido"
           {...register("nombre_apellido", {
             required: true,

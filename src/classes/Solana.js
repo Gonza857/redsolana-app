@@ -37,15 +37,15 @@ export default class Solana {
     this._solicitudes = c_requests;
 
     let c_draw = await this.getDrawFromDB();
-    this._draw = new Draw(c_draw);
+    let { _description, _id, _slots, _isActive, _image } = c_draw;
+    this._draw = new Draw(_description, _id, _image, _isActive, _slots);
     this._draw.participants = await this.getParticipantsFromDB();
+    console.table(this._draw.participants);
     this._draw.markSlotPerParticipant();
 
     let c_platforms = await this.getPlatformsFromDB();
     this._platforms = c_platforms;
     if (c_allCashiers.length < 5) c_fiveCashiers = [];
-
-    console.log(c_allCashiers);
 
     let result = [
       c_fiveCashiers,
@@ -63,7 +63,8 @@ export default class Solana {
 
   async getDrawAgain() {
     let c_draw = await this.getDrawFromDB();
-    this._draw = new Draw(c_draw);
+    let { _description, _id, _slots, _isActive, _image } = c_draw;
+    this._draw = new Draw(_description, _id, _image, _isActive, _slots);
     this._draw.participants = await this.getParticipantsFromDB();
     this._draw.markSlotPerParticipant();
   }

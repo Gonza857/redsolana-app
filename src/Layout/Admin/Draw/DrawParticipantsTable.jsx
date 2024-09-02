@@ -15,11 +15,12 @@ import { useState } from "react";
 import { ParticipantTr } from "../../../components/ParticipantTr/ParticipantTr";
 import { ModalParticipant } from "../../../components/ModalParticipant/ModalParticipant";
 import { MainButton } from "../../../components/UI/MainButton";
+import { Loader } from "../../../components/UI/Loader";
 
 const iconStyle = { fontSize: "1.5rem" };
 
 export const DrawParticipantsTable = () => {
-  const { participants, deleteParticipant, participantsQuantity } =
+  const { participants, deleteParticipant, participantsQuantity, isLoading } =
     useContext(adminContext);
   const [participant, setParticipant] = useState(null);
 
@@ -106,56 +107,53 @@ export const DrawParticipantsTable = () => {
             Participantes: <strong>{participantsQuantity}</strong>
           </h3>
           <div className="col-11 col-lg-9 col-xl-6">
-            <Table
-              striped
-              bordered
-              hover
-              responsive
-              variant="dark"
-              className="align-middle animate__animated animate__fadeIn"
-              id="tablaParaExcel"
-            >
-              <thead>
-                <tr>
-                  <th className="text-center">N°</th>
-                  <th className="text-center">Usuario</th>
-                  <th className="text-center d-none d-sm-table-cell">
-                    Plataforma
-                  </th>
-                  <th className="text-center d-none d-md-table-cell">
-                    Nombre y apellido
-                  </th>
-                  <th className="text-center d-none d-sm-table-cell">
-                    Ultimos 3 DNI
-                  </th>
-                  <th className="text-center px-lg-3">
-                    <AiOutlineUserDelete
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th>
-                  <th className="text-center px-lg-3">
-                    <AiFillInfoCircle
-                      style={{ color: "fff", fontSize: "20px" }}
-                    />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {solana.draw.participants.map((participant) => {
-                  if (participant !== null) {
-                    return (
-                      <ParticipantTr
-                        handleClose={handleClose}
-                        show={show}
-                        openModal={openModal}
-                        participant={participant}
-                        key={participant.id}
-                      />
-                    );
-                  }
-                })}
-              </tbody>
-            </Table>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <Table
+                  striped
+                  bordered
+                  hover
+                  responsive
+                  variant="dark"
+                  className="align-middle animate__animated animate__fadeIn"
+                  id="tablaParaExcel"
+                >
+                  <thead>
+                    <tr>
+                      <th className="text-center">N°</th>
+                      <th className="text-center">Usuario</th>
+                      <th className="text-center d-none d-sm-table-cell">
+                        Plataforma
+                      </th>
+                      <th className="text-center d-none d-md-table-cell">
+                        Nombre y apellido
+                      </th>
+                      <th className="text-center d-none d-sm-table-cell">
+                        Ultimos 3 DNI
+                      </th>
+                      <th className="text-center px-lg-3">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {participants.map((participant) => {
+                      if (participant !== null) {
+                        return (
+                          <ParticipantTr
+                            handleClose={handleClose}
+                            show={show}
+                            openModal={openModal}
+                            participant={participant}
+                            key={participant._id}
+                          />
+                        );
+                      }
+                    })}
+                  </tbody>
+                </Table>
+              </>
+            )}
           </div>
         </>
       )}

@@ -6,13 +6,8 @@ import { adminContext, solana } from "../../storage/AdminContext";
 import Swal from "sweetalert2";
 import { MainButton } from "../UI/MainButton";
 
-export const ParticipantTr = ({
-  participant,
-  handleClose,
-  show,
-  openModal,
-}) => {
-  const { deleteParticipant } = useContext(adminContext);
+export const ParticipantTr = ({ participant, openModal }) => {
+  const { c_getDrawParticipants } = useContext(adminContext);
   const confirmDelete = (participant) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar este participante?",
@@ -26,39 +21,40 @@ export const ParticipantTr = ({
     }).then((result) => {
       if (result.isConfirmed) {
         solana.draw.deleteParticipant(participant);
+        c_getDrawParticipants();
       }
     });
   };
   return (
     <tr>
-      <td className="text-center">{participant?.numero}</td>
-      <td className="text-center">{participant?.usuario}</td>
+      <td className="text-center">{participant._number}</td>
+      <td className="text-center">{participant._user}</td>
       <td className="text-center d-none d-sm-table-cell">
-        {participant?.plataforma}
+        {participant._platform}
       </td>
       <td className="text-center d-none d-md-table-cell">
-        {participant?.nombre_apellido}
+        {participant._fullname}
       </td>
       <td className="text-center d-none d-sm-table-cell">
-        {participant?.dni_ultimos}
+        {participant?._lastDni}
       </td>
-      <td className="p-0 text-center">
-        <MainButton circle={true}>
-          <FaEye
-            style={{ fontSize: "1rem" }}
-            onClick={() => {
-              openModal(participant);
-            }}
-          />
-        </MainButton>
-      </td>
-      <td className="p-0 text-center">
-        <MainButton circle={true} red={true}>
-          <FaTrash
-            style={{ fontSize: "1rem" }}
-            onClick={() => confirmDelete(participant)}
-          />
-        </MainButton>
+      <td className="p-1 text-center">
+        <div className="d-flex gap-2">
+          <MainButton circle={true}>
+            <FaEye
+              style={{ fontSize: "1rem" }}
+              onClick={() => {
+                openModal(participant);
+              }}
+            />
+          </MainButton>
+          <MainButton circle={true} red={true}>
+            <FaTrash
+              style={{ fontSize: "1rem" }}
+              onClick={() => confirmDelete(participant)}
+            />
+          </MainButton>
+        </div>
       </td>
     </tr>
   );

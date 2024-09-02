@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -25,11 +25,12 @@ import { MainButton } from "../../components/UI/MainButton";
 import Firebase from "../../classes/Firebase";
 import { toastError, toastSuccess } from "../../helpers/helpers";
 import { Loader } from "../../components/UI/Loader";
+import { updateDraw } from "../../firebase/database/sorteo";
 
 const iconStyle = { fontSize: "1.5rem" };
 
 export const VistaAdmin = () => {
-  const { isLoading } = useContext(adminContext);
+  const { isLoading, draw } = useContext(adminContext);
   const { newsImage, scheduleImage } = useContext(cronoAndNewsContext);
 
   return (
@@ -40,20 +41,6 @@ export const VistaAdmin = () => {
       <RequestsRow delay={500} />
       <TimelineRow delay={600} scheduleImage={scheduleImage} />
       <NewsRow delay={700} newsImage={newsImage} />
-      <div>
-        <h3>Hello World</h3>
-        <div className="d-flex gap-2">
-          <MainButton onClick={() => modifyCheckers([...solana.cajeros])}>
-            Modificar cajeros
-          </MainButton>
-          <MainButton onClick={() => modifyCasinos([...solana.casinos])}>
-            Modificar casinos
-          </MainButton>
-          <MainButton onClick={() => modifyRequests([...solana.solicitudes])}>
-            Modificar solicitudes
-          </MainButton>
-        </div>
-      </div>
     </StyledView>
   );
 };
@@ -313,122 +300,6 @@ const NewsRow = ({ delay, newsImage }) => {
       </StyledAdminOption>
     </AnimatedContainer>
   );
-};
-
-const modifyRequests = (requests) => {
-  console.log("tenemos esto", requests);
-  let newArrayXD = [];
-  for (const c of requests) {
-    console.log(c);
-    let caj = {};
-    caj._id = c._id;
-    caj._email = c._email; // c.email
-    caj._fullname = c._fullname; // c.fullname
-    caj._phone = c._phone; // c.phone
-    caj._platform = c._platform; // c.platform
-    caj._solved = null;
-    caj._state = c._state; // c.state
-    caj._time = null;
-    caj._date = c.date; // c.date
-    newArrayXD.push(caj);
-  }
-  console.table(newArrayXD);
-  for (const newC of newArrayXD) {
-    Firebase.deleteRequest(newC)
-      .then(() => {
-        toastSuccess("todo bien capo, lo borré");
-        Firebase.postRequest(newC)
-          .then(() => {
-            toastSuccess("subido capo");
-          })
-          .catch((e) => {
-            toastError(e.message);
-          });
-      })
-      .catch((e) => {
-        toastError(e.message);
-      });
-  }
-};
-
-const modifyCasinos = (casinos) => {
-  console.log("tenemos esto", casinos);
-  let newArrayXD = [];
-  for (const c of casinos) {
-    console.log(c);
-    let caj = {};
-    caj._id = c._id;
-    caj._image = c._image == null ? null : c._image; // c.imagen
-    caj._link = c._link;
-    caj._name = c._name;
-    newArrayXD.push(caj);
-  }
-  console.table(newArrayXD);
-  for (const newC of newArrayXD) {
-    Firebase.deleteCasino(newC)
-      .then(() => {
-        toastSuccess("todo bien capo, lo borré");
-        Firebase.postCasino(newC)
-          .then(() => {
-            toastSuccess("subido capo");
-          })
-          .catch((e) => {
-            console.log("error en postCashier()");
-            toastError(e.message);
-          });
-      })
-      .catch((e) => {
-        console.log("error en deleteCashier()");
-        toastError(e.message);
-      });
-  }
-};
-const modifyCheckers = (cajeros) => {
-  console.log("tenemos esto", cajeros);
-  let newArrayXD = [];
-  for (const c of cajeros) {
-    console.log(c);
-    let caj = {};
-    // caj._id = c._id; // c.id
-    // caj._link = c._link; // c.enlace
-    // caj._state = c._state; // c.estado
-    // caj._genre = c._genre; // c.genero
-    // caj._image = c._image == null ? null : c._image; //c.imagen
-    // caj._phone = c._phone; // c.numero
-    // caj._position = c._position; // c.pos
-    // caj._network = c._network; // c.red
-    // caj._name = c._name; //c.nombre
-    caj._id = c.id;
-    caj._link = c.enlace;
-    caj._state = c.estado;
-    caj._genre = c.genero;
-    caj._image = c.imagen == null ? null : c.imagen;
-    caj._phone = c.numero;
-    caj._position = c.pos;
-    caj._network = c.red;
-    caj._name = c.nombre;
-    newArrayXD.push(caj);
-  }
-  console.table(newArrayXD);
-  for (const newC of newArrayXD) {
-    console.log("voy con", newC);
-    Firebase.deleteCashier(newC._id)
-      .then(() => {
-        toastSuccess("todo bien capo, lo borré");
-        Firebase.postCashier(newC)
-          .then(() => {
-            toastSuccess("subido capo");
-          })
-          .catch((e) => {
-            console.log("error en postCashier()");
-            toastError(e.message);
-          });
-      })
-      .catch((e) => {
-        console.log("error en deleteCashier()");
-        toastError(e.message);
-      });
-  }
 };
 
 const AnimatedContainer = ({ delay, children }) => {

@@ -249,14 +249,14 @@ export default class Firebase {
       const docRef = await addDoc(collectionRef, participant);
       return {
         ...participant,
-        id: docRef.id,
+        _id: docRef.id,
       };
     } catch (error) {
       toastError(error.message);
     }
   }
   static async deleteParticipant(participant) {
-    await deleteDoc(doc(DATABASE, "participantes", participant.id));
+    await deleteDoc(doc(DATABASE, "participantes", participant._id));
   }
   static async updateDrawBooleanArray(newBooleanArray) {
     const docRef = doc(DATABASE, "sorteo", "0");
@@ -293,12 +293,12 @@ export default class Firebase {
       let participantes = response.docs.map((participante) => {
         return {
           ...participante.data(),
-          id: participante.id,
+          _id: participante.id,
         };
       });
       let copiaParticipantes = [...participantes];
       let ordenarParticipantes = copiaParticipantes.sort(
-        (a, b) => a.numero - b.numero
+        (a, b) => a._number - b._number
       );
       return ordenarParticipantes;
     } catch (error) {

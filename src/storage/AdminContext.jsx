@@ -61,7 +61,7 @@ export const AdminContextProvider = (props) => {
   const navigate = useNavigate();
   const fb = new Firebase();
 
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdminAction, setIsAdminAction] = useState(false);
   const [successState, setSuccessState] = useState(false);
@@ -152,6 +152,7 @@ export const AdminContextProvider = (props) => {
 
   useEffect(() => {
     abrir();
+    keepSession();
   }, []);
 
   const c_deleteCashier = (cashier) => {
@@ -215,6 +216,16 @@ export const AdminContextProvider = (props) => {
       }
     });
   };
+  const c_getDrawParticipants = async () => {
+    setIsLoading(true);
+    Firebase.getParticipants().then(() => {
+      solana.getDrawAgain().then((r) => {
+        setDraw(solana.draw);
+        setParticipants(solana.draw.participants);
+        setIsLoading(false);
+      });
+    });
+  };
 
   const resetDraw = async () => {
     let emptyDraw = {
@@ -242,6 +253,7 @@ export const AdminContextProvider = (props) => {
     }
   };
 
+  // CASINOS
   const c_addCasino = async (casino, previewImage) => {
     const result = await Firebase.postCasinoImage(previewImage);
     if (result != undefined) {
@@ -358,6 +370,7 @@ export const AdminContextProvider = (props) => {
     c_postDrawImg,
     c_updateDraw,
     c_deleteDraw,
+    c_getDrawParticipants,
     // --- ACTIVADOS PARA HACER FUNCIONAR -> LUEGO OPTIMIZAR
     setPreviewDraw, // pre-vista del sorteo
     setPreviewImage,

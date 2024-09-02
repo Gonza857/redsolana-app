@@ -1,6 +1,6 @@
-import React from "react";
-import { solana } from "../../../storage/AdminContext";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { adminContext, solana } from "../../../storage/AdminContext";
 
 export const DrawNumbersTable = ({ slots, preview = false }) => {
   if (preview) {
@@ -12,7 +12,7 @@ export const DrawNumbersTable = ({ slots, preview = false }) => {
               className={`numberBox ${value ? "marcado" : "noMarcado"}`}
               key={i}
             >
-              {i}
+              {i + 1}
             </div>
           );
         })}
@@ -35,7 +35,7 @@ export const DrawNumbersTable = ({ slots, preview = false }) => {
                 key={i}
                 className={`numberBox ${value ? "marcado" : "noMarcado"}`}
               >
-                {i}
+                {i + 1}
               </div>
             );
           })}

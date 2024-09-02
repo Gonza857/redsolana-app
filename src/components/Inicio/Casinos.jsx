@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { adminContext } from "../../storage/AdminContext";
+import { adminContext, solana } from "../../storage/AdminContext";
 import { CasinoCard } from "../CasinoCard/CasinoCard";
 
 export const Casinos = () => {
-  const { casinos } = useContext(adminContext);
+  const { casinos, isLoading } = useContext(adminContext);
   const [loadFake, setLoadFake] = useState(false);
   useEffect(() => {
     if (casinos.length == 0) {
@@ -16,16 +16,16 @@ export const Casinos = () => {
 
   return (
     <Wrapper className="col-12 gap-4 col-lg-12 py-4">
-      {loadFake ? (
+      {isLoading ? (
         <>
-          {new Array(6).fill(null).map((card) => (
-            <CasinoCard key={card?._link} {...card} loadFake={loadFake} />
+          {new Array(6).fill(null).map((data) => (
+            <CasinoCard key={data?._id} data={data} isLoading={isLoading} />
           ))}
         </>
       ) : (
         <>
-          {casinos.map((card) => (
-            <CasinoCard key={card?._link} {...card} loadFake={loadFake} />
+          {casinos.map((data) => (
+            <CasinoCard key={data?._id} data={data} isLoading={isLoading} />
           ))}
         </>
       )}
